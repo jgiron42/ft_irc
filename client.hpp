@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <fcntl.h>
+#include <cstring>
 
 class client {
 public:

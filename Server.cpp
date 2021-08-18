@@ -1,11 +1,10 @@
 #include "Server.hpp"
 
 Server::Server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
-	struct sockaddr_in sin = {
-			.sin_addr.s_addr = htonl(INADDR_ANY),
-			.sin_family = AF_INET,
-			.sin_port = htons(PORT)
-	};
+	struct sockaddr_in sin = {};
+	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(PORT);
 	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1)
 		throw std::exception();
 	if(listen(sock, MAX_CLIENT) == -1)
