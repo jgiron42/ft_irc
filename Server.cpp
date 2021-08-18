@@ -43,7 +43,9 @@ void Server::routine() {
 			{
 				while((ret = read(this->fds[i].fd, buf, 10)) >  0)
 					this->clients[this->fds[i].fd].bufappend(buf, ret);
-				this->clients[this->fds[i].fd].printBuf();
+				std::string stmp = this->clients[this->fds[i].fd].popLine();
+				if (stmp != "")
+					std::cout << stmp << std::endl;
 			}
 			else
 				while((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)

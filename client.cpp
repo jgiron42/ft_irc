@@ -43,3 +43,28 @@ void client::printBuf() {
 	}
 	std::cout << std::endl;
 }
+
+std::string client::getBufStr() {
+	std::string ret = "";
+
+	if (this->end > this->begin)
+		ret.append(this->buf + this->begin, this->end - this->begin);
+	else
+	{
+		ret.append( this->buf + this->begin, 512 - this->begin);
+		ret.append( this->buf, this->end);
+	}
+	return(ret);
+}
+
+std::string client::popLine() {
+	std::string ret;
+
+	ret = getBufStr();
+	if (ret.find('\n') == std::string::npos)
+		return ("");
+	ret = ret.substr(0, ret.find('\n') + 1);
+	this->begin += ret.length();
+	this->begin %= 512;
+	return (ret);
+}
