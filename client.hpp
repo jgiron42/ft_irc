@@ -10,8 +10,12 @@ public:
 	client(const client &);
 	~client();
 	client &operator=(const client &);
-	char	buf[512];
+	void	bufappend(const char *, size_t);
+	void	printBuf();
 private:
+	char	buf[512];
+	int		end;
+	int		begin;
 	int		sock;
 };
 

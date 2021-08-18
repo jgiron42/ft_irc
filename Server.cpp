@@ -40,8 +40,11 @@ void Server::routine() {
 		if (this->fds[i].revents & POLLIN)
 		{
 			if (this->fds[i].fd != this->sock)
+			{
 				while((ret = read(this->fds[i].fd, buf, 10)) >  0)
-					write(1, buf, ret);
+					this->clients[this->fds[i].fd].bufappend(buf, ret);
+				this->clients[this->fds[i].fd].printBuf();
+			}
 			else
 				while((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)
 				{
