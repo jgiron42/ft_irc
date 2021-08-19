@@ -69,3 +69,7 @@ std::string client::popLine() {
 	this->begin %= 512;
 	return (ret);
 }
+
+void client::send(std::string str) {
+	this->to_send.push_back(str);
+}

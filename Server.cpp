@@ -39,7 +39,8 @@ void Server::routine() {
 		{
 			if (this->fds[i].fd != this->sock)
 			{
-				while((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
+				if((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
+//				while((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
 					this->clients[this->fds[i].fd].bufappend(buf, ret);
 				std::string stmp = this->clients[this->fds[i].fd].popLine();
 				if (!ret)
@@ -56,14 +57,15 @@ void Server::routine() {
 					this->dispatch(this->clients[this->fds[i].fd]);
 			}
 			else
-				while((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)
+				if ((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)
+//				while((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)
 				{
 					this->clients.insert(std::make_pair(tmp, client(tmp)));
 					this->fds.push_back((struct pollfd){.fd = tmp, .events = POLLIN});
 				}
 		}
 		else if (this->fds[i].revents & POLLOUT && !this->clients[this->fds[i].fd].to_send.empty())
-			while (!this->clients[this->fds[i].fd].to_send.empty())
+//			 (!this->clients[this->fds[i].fd].to_send.empty())
 			{
 				send(this->fds[i].fd, this->clients[this->fds[i].fd].to_send.front().data(), this->clients[this->fds[i].fd].to_send.front().length(), 0);
 				this->clients[this->fds[i].fd].to_send.pop_front();
@@ -84,10 +86,12 @@ void Server::routine() {
 }
 
 void Server::dispatch(client &c) {
-	std::string command = c.popLine();
+	std::string command;
 
-	if (command.empty())
-		return;
-	//parsing
-
+	while ((command = c.popLine()) != "")
+	{
+		if (command == "zbeub\n")
+			c.send("-> zboub\n");
+		//parsing
+	}
 }

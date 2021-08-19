@@ -18,6 +18,7 @@ public:
 	void	printBuf();
 	std::string getBufStr();
 	std::string popLine();
+	void	send(std::string);
 	std::deque<std::string> to_send;
 private:
 	std::vector<channel *> channels;
