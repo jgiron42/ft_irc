@@ -1,8 +1,17 @@
 #include "Server.hpp"
 
+bool running = true;
+
+void	stop(int sig)
+{
+	running = false;
+}
+
 int main(int argc, char **argv)
 {
 	 Server s;
-	 while(1)
+
+	 signal(SIGINT, stop);
+	 while(running)
 		 s.routine();
 }

@@ -6,6 +6,8 @@
 #include <cstring>
 #include <deque>
 #include "channel.hpp"
+#define ABS(n) ((n) > 0 ? (n) : -(n))
+
 class channel;
 class client {
 public:

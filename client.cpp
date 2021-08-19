@@ -62,7 +62,7 @@ std::string client::popLine() {
 	std::string ret;
 
 	ret = getBufStr();
-	if (ret.find('\n') == std::string::npos)
+	if (ret.find('\n') == std::string::npos || ret.find('\n') > (ABS(this->end - this->begin)))
 		return ("");
 	ret = ret.substr(0, ret.find('\n') + 1);
 	this->begin += ret.length();

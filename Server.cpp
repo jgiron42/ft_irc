@@ -17,6 +17,8 @@ Server::Server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
 Server::Server(const Server &src) : sock(src.sock), fds(src.fds), clients(src.clients) {}
 
 Server::~Server() {
+	for (std::map<int, client>::iterator i = this->clients.begin(); i != this->clients.end(); i++)
+		close(i->first);
 	close(this->sock);
 }
 
@@ -42,7 +44,7 @@ void Server::routine() {
 				if((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
 //				while((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
 					this->clients[this->fds[i].fd].bufappend(buf, ret);
-				std::string stmp = this->clients[this->fds[i].fd].popLine();
+//				std::string stmp = this->clients[this->fds[i].fd].popLine();
 				if (!ret)
 				{
 					this->clients.erase(this->fds[i].fd);
@@ -88,7 +90,7 @@ void Server::routine() {
 void Server::dispatch(client &c) {
 	std::string command;
 
-	while ((command = c.popLine()) != "")
+	while (!(command = c.popLine()).empty())
 	{
 		if (command == "zbeub\n")
 			c.send("-> zboub\n");
