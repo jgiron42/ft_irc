@@ -4,7 +4,9 @@
 #include <string>
 #include <fcntl.h>
 #include <cstring>
-
+#include <deque>
+#include "channel.hpp"
+class channel;
 class client {
 public:
 	client();
@@ -16,7 +18,18 @@ public:
 	void	printBuf();
 	std::string getBufStr();
 	std::string popLine();
+	std::deque<std::string> to_send;
 private:
+	std::vector<channel *> channels;
+	std::string username;
+	std::string nickname;
+	std::string hostname;
+	std::string servername;
+	std::string realname;
+	bool	invisible : 1;
+	bool 	notices : 1;
+	bool	wallops : 1;
+	bool	op : 1;
 	char	buf[512];
 	int		end;
 	int		begin;

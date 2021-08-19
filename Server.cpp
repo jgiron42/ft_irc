@@ -32,7 +32,6 @@ void Server::routine() {
 	char buf[10];
 	int ret;
 
-
 	poll(this->fds.begin().operator->(), this->fds.size(), -1);
 	for (size_t i = 0; i < this->fds.size(); i++)
 	{
@@ -40,11 +39,21 @@ void Server::routine() {
 		{
 			if (this->fds[i].fd != this->sock)
 			{
-				while((ret = read(this->fds[i].fd, buf, 10)) >  0)
+				while((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
 					this->clients[this->fds[i].fd].bufappend(buf, ret);
 				std::string stmp = this->clients[this->fds[i].fd].popLine();
-				if (stmp != "")
-					std::cout << stmp << std::endl;
+				if (!ret)
+				{
+					this->clients.erase(this->fds[i].fd);
+					std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
+					for (int j = i; j > 0; j--)
+						tmpit++;
+					this->fds.erase(tmpit);
+					std::cout << "client disconnected" << std::endl;
+					break;
+				}
+				else
+					this->dispatch(this->clients[this->fds[i].fd]);
 			}
 			else
 				while((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)
@@ -53,6 +62,32 @@ void Server::routine() {
 					this->fds.push_back((struct pollfd){.fd = tmp, .events = POLLIN});
 				}
 		}
+		else if (this->fds[i].revents & POLLOUT && !this->clients[this->fds[i].fd].to_send.empty())
+			while (!this->clients[this->fds[i].fd].to_send.empty())
+			{
+				send(this->fds[i].fd, this->clients[this->fds[i].fd].to_send.front().data(), this->clients[this->fds[i].fd].to_send.front().length(), 0);
+				this->clients[this->fds[i].fd].to_send.pop_front();
+			}
+//		else if (this->fds[i].revents & POLLHUP || this->fds[i].revents & POLLNVAL || this->fds[i].revents & POLLERR)
+//		{
+//			this->clients.erase(this->fds[i].fd);
+//			std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
+//			for (int j = 0; j <= i; i++, j++);
+//			std::cout << this->fds.size() << std::endl;
+//			this->fds.erase(tmpit);
+//			std::cout << this->fds.size() << std::endl;
+//			break;
+//		}
 		this->fds[i].revents = 0;
+		this->fds[i].events = (!this->clients[this->fds[i].fd].to_send.empty() * POLLOUT) | POLLIN;
 	}
+}
+
+void Server::dispatch(client &c) {
+	std::string command = c.popLine();
+
+	if (command.empty())
+		return;
+	//parsing
+
 }

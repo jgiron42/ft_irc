@@ -28,6 +28,7 @@ public:
 	~Server();
 	Server &operator=(const Server &);
 	void	routine();
+	void	dispatch(client &c);
 };
 
 

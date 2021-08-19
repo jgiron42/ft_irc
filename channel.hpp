@@ -4,6 +4,7 @@
 #include <vector>
 #include "client.hpp"
 
+class client;
 class channel {
 public:
 	channel(void);
@@ -13,8 +14,8 @@ public:
 	channel &operator=(const channel &);
 private:
 	std::string			id;
-	std::vector<client &>	members;
-	std::vector<client &>	chops;
+	std::vector<client *>	members;
+	std::vector<client *>	chops;
 	bool 				private_channel : 1;
 	bool 				secret_channel : 1;
 	bool 				invite_only : 1;

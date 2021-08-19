@@ -1,13 +1,13 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client() : sock(-1), end(0), begin(0){};
-client::client(int fd) : sock(fd), end(0), begin(0){
+client::client() : sock(-1), end(0), begin(0), channels(){};
+client::client(int fd) : sock(fd), end(0), begin(0), channels(){
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	std::cout << "new client" << std::endl;
 }
 
-client::client(const client &src) : sock(src.sock), end(src.end), begin(src.begin) {
+client::client(const client &src) : sock(src.sock), end(src.end), begin(src.begin), channels(src.channels) {
 	memcpy(this->buf, src.buf, 512);
 }
 
@@ -18,6 +18,7 @@ client &client::operator=(const client &src) {
 	memcpy(this->buf, src.buf, 512);
 	this->begin = src.begin;
 	this->end = src.end;
+	this->channels = src.channels;
 	return (*this);
 }
 
