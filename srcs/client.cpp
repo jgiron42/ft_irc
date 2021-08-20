@@ -73,3 +73,11 @@ std::string client::popLine() {
 void client::send(std::string str) {
 	this->to_send.push_back(str);
 }
+
+std::string client::getIP() const {
+	return this->ip;
+}
+
+void client::setIP(std::string ip) {
+	this->ip = ip;
+}

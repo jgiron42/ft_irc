@@ -22,6 +22,8 @@ public:
 	std::string popLine();
 	void	send(std::string);
 	std::deque<std::string> to_send;
+	std::string getIP() const;
+	void	setIP(std::string);
 private:
 	std::vector<channel *> channels;
 	std::string username;
@@ -29,6 +31,7 @@ private:
 	std::string hostname;
 	std::string servername;
 	std::string realname;
+	std::string ip;
 	bool	invisible : 1;
 	bool 	notices : 1;
 	bool	wallops : 1;

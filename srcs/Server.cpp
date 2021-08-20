@@ -47,12 +47,12 @@ void Server::routine() {
 //				std::string stmp = this->clients[this->fds[i].fd].popLine();
 				if (!ret)
 				{
+					std::cout << "client " << this->clients.at(this->fds[i].fd).getIP() << " disconnected" << std::endl;
 					this->clients.erase(this->fds[i].fd);
 					std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
 					for (int j = i; j > 0; j--)
 						tmpit++;
 					this->fds.erase(tmpit);
-					std::cout << "client disconnected" << std::endl;
 					break;
 				}
 				else
@@ -64,6 +64,7 @@ void Server::routine() {
 				{
 					this->clients.insert(std::make_pair(tmp, client(tmp)));
 					this->fds.push_back((struct pollfd){.fd = tmp, .events = POLLIN});
+					this->clients.at(tmp).setIP(std::string(inet_ntoa(csin.sin_addr)));
 				}
 		}
 		else if (this->fds[i].revents & POLLOUT && !this->clients[this->fds[i].fd].to_send.empty())
@@ -92,6 +93,7 @@ void Server::dispatch(client &c) {
 
 	while (!(command = c.popLine()).empty())
 	{
+		std::cout << "From " << c.getIP() << " >> " << command;
 		if (command == "zbeub\n")
 			c.send("-> zboub\n");
 		//parsing
