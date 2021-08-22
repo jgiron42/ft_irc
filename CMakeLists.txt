@@ -5,12 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
 
-add_executable(ft_irc
-        client.cpp
-        client.hpp
-        Server.cpp
-        Server.hpp
-        channel.cpp
-        channel.hpp
-        main.cpp
-        )
+file(GLOB SOURCES srcs/*.cpp)
+
+add_executable(ft_irc ${SOURCES} includes/parse_struct.hpp)
