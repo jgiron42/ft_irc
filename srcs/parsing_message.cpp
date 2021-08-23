@@ -66,5 +66,5 @@ message parse_msg(std::string str){
     if (str.at(0) == ':')
         res->prefix = get_prefix(str);
     res->command_str = get_command(str);
-    //need to be finish to parse the params
+    //need to bei finish to parse the params
 }
