@@ -1,6 +1,10 @@
 #include "Server.hpp"
 #include "command.hpp"
 #include "user.hpp"
+#include "pass.hpp"
+#include "nick.hpp"
+#include "parse_struct.hpp"
+message *parse_msg(std::string str);
 
 server::server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
 	std::cout << "server created" << std::endl;
@@ -92,19 +96,34 @@ void server::routine() {
 }
 
 void server::dispatch(client &c) {
-	std::string command;
+	std::string str;
 
-	while (!(command = c.popLine()).empty())
+	while (!(str = c.popLine()).empty())
 	{
-		std::cout << "From " << c.getIP() << " >> " << command;
-		if (command == "zbeub\n")
-		{
-			user_command com(c, *this);
-			com.args["username"].push_back("coucou");
-			com.args["hostname"].push_back("coucou");
-			com.args["servername"].push_back("coucou");
-			com.args["realname"].push_back("coucou");
-		com.execute();
-		}
+		std::cout << "From " << c.getIP() << " >> " << str;
+		message *parse = parse_msg(str);
+		command *com;
+		if (parse->command_str == "USER")
+			com = new user_command(c, *this);
+		else if (parse->command_str == "NICK")
+			com = new nick_command(c, *this);
+		else if (parse->command_str == "PASS")
+			com = new pass_command(c, *this);
+		else
+			return;
+
+		com->parse(*parse);
+		com->execute();
+
+
+//		if (command == "zbeub\n")
+//		{
+//			user_command com(c, *this);
+//			com.args["username"].push_back("coucou");
+//			com.args["hostname"].push_back("coucou");
+//			com.args["servername"].push_back("coucou");
+//			com.args["realname"].push_back("coucou");
+//		com.execute();
+//		}
 	}
 }

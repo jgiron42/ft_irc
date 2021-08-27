@@ -7,13 +7,14 @@
 #include "command.hpp"
 
 class pass_command : public command {
-	pass_command(class client &c, class server &s) : command(c, s) {};
+public:
+	pass_command(class client &c, class server &s) : command(c, s) {
+		name = "PASS";
+		syntax = "<password>";
+	};
 	void execute() {
 		this->client.password = this->args["password"].front();
 	}
-private:
-	name = "PASS";
-	syntax = "<password>";
 };
 
 #endif //FT_IRC_PASS_HPP

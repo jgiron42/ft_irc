@@ -13,12 +13,15 @@
 SRCS	 	=	./srcs/main.cpp		\
 				./srcs/Server.cpp	\
 				./srcs/channel.cpp	\
-				./srcs/client.cpp
+				./srcs/client.cpp	\
+				./srcs/command.cpp	\
+				./srcs/numerics.cpp	\
+				./srcs/parsing_message.cpp
 
 NAME		=	ircserv
 
 #FLAGS		=	 -Wall -Wextra -Werror -std=c++98
-FLAGS		=	 -std=c++98
+FLAGS		=	 -std=c++98 -g3 -fsanitize=address
 
 OBJS		=	$(SRCS:.cpp=.o)
 
@@ -38,6 +41,6 @@ fclean: clean
 re: fclean all
 
 .cpp.o:
-	$(COMPILER) $(FLAGS) -c $<  -o $(<:.cpp=.o) -I includes
+	$(COMPILER) $(FLAGS) -c $<  -o $(<:.cpp=.o) -I includes -I srcs/commands
 
 .PHONY:	clean fclean re

@@ -37,10 +37,13 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 			throw command::argumentMissing();
 		return;
 	}
-	while (**syntax)
+	while (**syntax && p)
 	{
 		if (**syntax != ' ' && **syntax != p->str[0])
-			value.push_back(**syntax);
+		{
+			value.push_back(p->str[0]);
+			p->str.erase(p->str.begin());
+		}
 		else
 		{
 			if (key.empty())
@@ -67,7 +70,7 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 			if (!p && !is_optional)
 				throw command::syntaxError();
 			else
-				key = get_name(++syntax);
+				key = get_name(&(++(*syntax)));
 		}
 		else if (**syntax == '[')
 		{
@@ -103,8 +106,19 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 	}
 }
 
+char *ft_string_dup(std::string str)
+{
+	const char *data = str.data();
+	char *ret = (char*)malloc(str.length() + 1);
+
+	for (int i = 0; i < str.length(); i++)
+		ret[i] = data[i];
+	ret[str.length()] = 0;
+	return (ret);
+}
+
 void command::parse(message m) {
-	char *str = (char *)this->syntax.data();
+	char *str = ft_string_dup(this->syntax);
 	try {
 		this->parse_recurse(&str, m.params, false);
 	}

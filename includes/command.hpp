@@ -23,17 +23,17 @@ public:
 	virtual void		execute() {  };
 	void		reply(int);
 	class invalidSyntaxException : std::exception {
-		const char * what() const noexcept override {
+		const char * what() const  throw() {
 			return ("syntax is invalid");
 		}
 	};
 	class syntaxError : std::exception {
-		const char * what() const noexcept override {
+		const char * what() const  throw() {
 			return ("syntax error");
 		}
 	};
 	class argumentMissing : std::exception {
-		const char * what() const noexcept override {
+		const char * what() const  throw() {
 			return ("missing argument");
 		}
 	};

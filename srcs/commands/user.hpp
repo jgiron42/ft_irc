@@ -10,7 +10,10 @@
 
 class user_command : public command {
 public:
-	user_command(class client &c, class server &s) : command(c, s) {};
+	user_command(class client &c, class server &s) : command(c, s) {
+		this->name = "USER";
+		this->syntax = "<username> <hostname> <servername> <realname>";
+	};
 	void execute() {
 		if (!this->client.username.empty())
 			this->reply(ERR_ALREADYREGISTRED);
@@ -29,9 +32,6 @@ public:
 				this->reply(ERR_PASSWDMISMATCH);
 		}
 	};
-private:
-	std::string name = "USER";
-	std::string syntax = "<username> <hostname> <servername> <realname>";
 };
 
 #endif //FT_IRC_USER_HPP
