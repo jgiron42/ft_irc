@@ -10,7 +10,7 @@ typedef std::string t_host;
 
 typedef struct s_params {
     std::string		str;
-    t_params	*next;
+    struct s_params	*next;
 }				t_params;
 
 typedef struct s_prefix
@@ -22,10 +22,11 @@ typedef struct s_prefix
 } prefix;
 
 typedef struct s_message{
-	t_prefix	*prefix;//optional
-	std::string		command_str;
+	struct s_prefix	*prefix;//optional
+	std::string	command_str;
 	short int	command_nbr;
-	t_params	*params;
+    std::string tmp_to_parse; // i need it to the parsing
+    t_params	*params;
 }				message;
 
 #endif //FT_IRC_PARSE_STRUCT_HPP
