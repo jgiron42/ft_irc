@@ -1,0 +1,31 @@
+ PING :BCDAEF64
+ PONG :BCDAEF64
+ :irc.botspot.com 001 ccoe :Welcome to the BotSpot
+ IRC Network ccoe!ccoe@192.168.1.59
+ :irc.botspot.com 002 ccoe :Your host is
+ irc.botspot.com, running version Unreal3.2.3
+ :irc.botspot.com 003 ccoe :This server was created
+ Sun Mar 13 21:40:50 2005
+ :irc.botspot.com 004 ccoe irc.botspot.com
+ Unreal3.2.3 iowghraAsORTVSxNCWqBzvdHtGp
+ lvhopsmntikrRcaqOALQbSeIKVfMCuzNTGj
+ :irc.botspot.com 005 ccoe SAFELIST HCN
+ MAXCHANNELS=10 CHANLIMIT=#:10
+ MAXLIST=b:60,e:60,I:60 NICKLEN=30 CHANNELLEN=32
+ TOPICLEN=307 KICKLEN=307 AWAYLEN=307 MAXTARGETS=20
+ WALLCHOPS WATCH=128 :are supported by this server
+ :irc.botspot.com 005 ccoe SILENCE=15 MODES=12
+ CHANTYPES=# PREFIX=(qaohv)~&@%+
+ CHANMODES=beI,kfL,lj,psmntirRcOAQKVGCuzNSMTG
+ NETWORK=ROXnet CASEMAPPING=ascii EXTBAN=~,cqnr
+ ELIST=MNUCT STATUSMSG=~&@%+ EXCEPTS INVEX
+ CMDS=KNOCK,MAP,DCCALLOW,USERIP :are supported by
+ this server
+ :irc.botspot.com 251 ccoe :There are 1 users and 0
+ invisible on 1 servers
+ :irc.botspot.com 255 ccoe :I have 1 clients and 0
+ servers
+ :irc.botspot.com 265 ccoe :Current Local Users: 1
+ Max: 5
+ :irc.botspot.com 266 ccoe :Current Global Users: 1
+ Max: 1
