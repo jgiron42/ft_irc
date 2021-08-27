@@ -9,8 +9,9 @@ void	stop(int sig)
 
 int main(int argc, char **argv)
 {
-	 Server s;
+	 server s;
 
+	 signal(SIGTERM, stop);
 	 signal(SIGINT, stop);
 	 while(running)
 		 s.routine();

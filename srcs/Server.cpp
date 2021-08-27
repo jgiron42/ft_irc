@@ -1,6 +1,9 @@
 #include "Server.hpp"
+#include "command.hpp"
+#include "user.hpp"
 
-Server::Server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
+server::server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
+	std::cout << "server created" << std::endl;
 	struct sockaddr_in sin = {};
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	sin.sin_family = AF_INET;
@@ -14,20 +17,24 @@ Server::Server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
 	fcntl(sock, F_SETFL, O_NONBLOCK);
 }
 
-Server::Server(const Server &src) : sock(src.sock), fds(src.fds), clients(src.clients) {}
+server::server(const server &src) : sock(src.sock), fds(src.fds), clients(src.clients),password(src.password) {}
 
-Server::~Server() {
+server::~server() {
 	for (std::map<int, client>::iterator i = this->clients.begin(); i != this->clients.end(); i++)
 		close(i->first);
 	close(this->sock);
+	std::cout << "server destroyed" << std::endl;
 }
 
-Server &Server::operator=(const Server &src) {
+server &server::operator=(const server &src) {
 	this->sock = src.sock;
+	this->fds = src.fds;
+	this->clients = src.clients;
+	this->password = src.password;
 	return (*this);
 }
 
-void Server::routine() {
+void server::routine() {
 	int tmp;
 	struct sockaddr_in csin = { 0 };
 	socklen_t sinsize = sizeof csin;
@@ -42,9 +49,7 @@ void Server::routine() {
 			if (this->fds[i].fd != this->sock)
 			{
 				if((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
-//				while((ret = recv(this->fds[i].fd, buf, 10, 0)) >  0)
 					this->clients[this->fds[i].fd].bufappend(buf, ret);
-//				std::string stmp = this->clients[this->fds[i].fd].popLine();
 				if (!ret)
 				{
 					std::cout << "client " << this->clients.at(this->fds[i].fd).getIP() << " disconnected" << std::endl;
@@ -60,7 +65,6 @@ void Server::routine() {
 			}
 			else
 				if ((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)
-//				while((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) > 0)
 				{
 					this->clients.insert(std::make_pair(tmp, client(tmp)));
 					this->fds.push_back((struct pollfd){.fd = tmp, .events = POLLIN});
@@ -68,7 +72,6 @@ void Server::routine() {
 				}
 		}
 		else if (this->fds[i].revents & POLLOUT && !this->clients[this->fds[i].fd].to_send.empty())
-//			 (!this->clients[this->fds[i].fd].to_send.empty())
 			{
 				send(this->fds[i].fd, this->clients[this->fds[i].fd].to_send.front().data(), this->clients[this->fds[i].fd].to_send.front().length(), 0);
 				this->clients[this->fds[i].fd].to_send.pop_front();
@@ -88,14 +91,20 @@ void Server::routine() {
 	}
 }
 
-void Server::dispatch(client &c) {
+void server::dispatch(client &c) {
 	std::string command;
 
 	while (!(command = c.popLine()).empty())
 	{
 		std::cout << "From " << c.getIP() << " >> " << command;
 		if (command == "zbeub\n")
-			c.send("-> zboub\n");
-		//parsing
+		{
+			user_command com(c, *this);
+			com.args["username"].push_back("coucou");
+			com.args["hostname"].push_back("coucou");
+			com.args["servername"].push_back("coucou");
+			com.args["realname"].push_back("coucou");
+		com.execute();
+		}
 	}
 }

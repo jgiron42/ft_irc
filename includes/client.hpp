@@ -24,8 +24,11 @@ public:
 	std::deque<std::string> to_send;
 	std::string getIP() const;
 	void	setIP(std::string);
-private:
+	void	close();
+//private:
+	bool identified;
 	std::vector<channel *> channels;
+	std::string password;
 	std::string username;
 	std::string nickname;
 	std::string hostname;

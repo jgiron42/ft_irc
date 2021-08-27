@@ -3,8 +3,8 @@ project(ft_irc)
 
 set(CMAKE_CXX_STANDARD 14)
 
-include_directories(.)
+include_directories(includes srcs/commands)
 
-file(GLOB SOURCES srcs/*.cpp)
+file(GLOB SOURCES srcs/*.cpp includes/*.hpp)
 
-add_executable(ft_irc ${SOURCES} includes/parse_struct.hpp)
+add_executable(ft_irc ${SOURCES} srcs/numerics.cpp)

@@ -17,18 +17,19 @@
 #define MAX_CLIENT 1000
 #define PORT	1111
 
-class Server {
+class server {
 private:
 	std::map<int, client>		clients;
 	std::vector<struct pollfd>	fds;
 	int	sock;
 public:
-	Server(void);
-	Server(const Server &);
-	~Server();
-	Server &operator=(const Server &);
+	server(void);
+	server(const server &);
+	~server();
+	server &operator=(const server &);
 	void	routine();
 	void	dispatch(client &c);
+	std::string password;
 };
 
 

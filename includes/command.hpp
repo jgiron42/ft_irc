@@ -9,15 +9,19 @@
 #include <list>
 #include <map>
 #include <exception>
+#include "numerics.hpp"
 #include "client.hpp"
 #include "Server.hpp"
 #include "parse_struct.hpp"
 
+//extern char **replies;
+
 class command {
 public:
-	command(client &c, server &s) : client(c), server(s) {};
-	void		parse(t_command c);
-	void		execute();
+	command(client &c, server &s) : replied(false), client(c), server(s) {};
+	void		parse(message);
+	virtual void		execute() {  };
+	void		reply(int);
 	class invalidSyntaxException : std::exception {
 		const char * what() const noexcept override {
 			return ("syntax is invalid");
@@ -33,18 +37,18 @@ public:
 			return ("missing argument");
 		}
 	};
-private:
 	std::map<std::string, std::list<std::string> > args;
+protected:
+	bool replied;
 	std::string name;
 	std::string syntax;
 	client &client;
 	server &server;
-	void parse_recurse (char *syntax, t_params p);
+	void parse_recurse (char **syntax, t_params *p, bool is_optional);
 };
 
 #include <map>
 
-std::map<std::string, command> a;
 
 
 #endif //FT_IRC_COMMAND_HPP

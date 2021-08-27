@@ -1,5 +1,8 @@
 
 #include <command.hpp>
+#include <sstream>
+
+extern char replies[512][100];
 
 std::vector<std::string> ft_split(std::string str, char c)
 {
@@ -28,15 +31,21 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 {
 	static std::string key;
 	static std::string value;
+	if (!p)
+	{
+		if (is_optional)
+			throw command::argumentMissing();
+		return;
+	}
 	while (**syntax)
 	{
 		if (**syntax != ' ' && **syntax != p->str[0])
 			value.push_back(**syntax);
 		else
 		{
-			if (!key)
+			if (key.empty())
 				throw syntaxError();
-			this->args[key] = value;
+			this->args[key].push_back(value);
 			key = "";
 			value = "";
 		}
@@ -86,7 +95,7 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 				}
 				if (**syntax != '}')
 					throw command::invalidSyntaxException();
-				*syntax = tmp;
+				*syntax = stmp;
 			}
 			while (**syntax != '}')
 				(*syntax)++;
@@ -95,5 +104,30 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 }
 
 void command::parse(message m) {
-	this->parse_recurse(this->syntax, m.params, false);
+	char *str = (char *)this->syntax.data();
+	try {
+		this->parse_recurse(&str, m.params, false);
+	}
+	catch (std::exception e)
+	{
+		if (std::string(e.what()) == "syntax is invalid")
+		{
+			std::cerr <<e.what()  << std::endl;
+			exit(1);
+		}
+//		else if (std::string(e.what()) == "syntax error")
+//				this->reply();
+		else if (std::string(e.what()) == "missing argument")
+				this->reply(ERR_NEEDMOREPARAMS);
+	}
+}
+
+void command::reply(int nbr) {
+	if (!this->replied)
+	{
+		this->replied = true;
+		std::string reply(replies[nbr]);
+		//some substitutions
+		this->client.send(reply + "\n");
+	}
 }
