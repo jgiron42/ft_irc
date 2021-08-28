@@ -1,8 +1,6 @@
 #include "Server.hpp"
 #include "command.hpp"
-#include "user.hpp"
-#include "pass.hpp"
-#include "nick.hpp"
+#include "commands.hpp"
 #include "parse_struct.hpp"
 message *parse_msg(std::string str);
 
@@ -102,28 +100,10 @@ void server::dispatch(client &c) {
 	{
 		std::cout << "From " << c.getIP() << " >> " << str;
 		message *parse = parse_msg(str);
-		command *com;
-		if (parse->command_str == "USER")
-			com = new user_command(c, *this);
-		else if (parse->command_str == "NICK")
-			com = new nick_command(c, *this);
-		else if (parse->command_str == "PASS")
-			com = new pass_command(c, *this);
-		else
+		command *com = get_command(parse->command_str)(c, *this);
+		if (!com)
 			return;
-
 		com->parse(*parse);
 		com->execute();
-
-
-//		if (command == "zbeub\n")
-//		{
-//			user_command com(c, *this);
-//			com.args["username"].push_back("coucou");
-//			com.args["hostname"].push_back("coucou");
-//			com.args["servername"].push_back("coucou");
-//			com.args["realname"].push_back("coucou");
-//		com.execute();
-//		}
 	}
 }
