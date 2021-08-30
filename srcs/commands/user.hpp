@@ -16,7 +16,7 @@ public:
 	};
 	void execute() {
 		if (!this->client.username.empty())
-			this->reply(ERR_ALREADYREGISTRED);
+			this->reply_nbr(ERR_ALREADYREGISTRED);
 		else
 		{
 			if (this->client.password == this->server.password)
@@ -26,10 +26,10 @@ public:
 				this->client.servername = this->args["servername"].front();
 				this->client.realname = this->args["realname"].front();
 				this->client.identified = true;
-				this->reply(RPL_WELCOME);
+				this->reply_nbr(RPL_WELCOME);
 			}
 			else
-				this->reply(ERR_PASSWDMISMATCH);
+				this->reply_nbr(ERR_PASSWDMISMATCH);
 		}
 	};
 };

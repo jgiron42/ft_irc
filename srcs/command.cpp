@@ -152,7 +152,7 @@ void command::parse(message m) {
 //		else if (std::string(e.what()) == "syntax error")
 //				this->reply();
 		else if (std::string(e.what()) == "missing argument")
-				this->reply(ERR_NEEDMOREPARAMS);
+				this->reply_nbr(ERR_NEEDMOREPARAMS);
 	}
 }
 
