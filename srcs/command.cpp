@@ -39,7 +39,7 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 	}
 	while (**syntax && p)
 	{
-		if (**syntax != ' ' && **syntax != p->str[0])
+		if (**syntax != ' ' && **syntax != '\n' && **syntax != p->str[0])
 		{
 			value.push_back(p->str[0]);
 			p->str.erase(p->str.begin());
@@ -104,6 +104,11 @@ void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
 				(*syntax)++;
 		}
 	}
+	if (key.empty())
+		throw syntaxError();
+	this->args[key].push_back(value);
+	key = "";
+	value = "";
 }
 
 char *ft_string_dup(std::string str)
@@ -121,6 +126,13 @@ void command::parse(message m) {
 	char *str = ft_string_dup(this->syntax);
 	try {
 		this->parse_recurse(&str, m.params, false);
+		std::cout << "printing args:" << std::endl;
+		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
+		{
+			std::cout << "  " << i->first << std::endl;
+			for (std::list<std::string>::iterator j = i->second.begin(); j != i->second.end(); j++)
+				std::cout << "    " << *j << std::endl;
+		}
 	}
 	catch (std::exception e)
 	{

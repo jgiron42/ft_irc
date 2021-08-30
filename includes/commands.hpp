@@ -12,29 +12,29 @@
 #include "nick.hpp"
 #include "pass.hpp"
 
+typedef command *creator(client &, server &);
+
 template <class U>
 command *f(client &c, server &s)
 {
 	return (new U(c, s));
 }
 
-typedef command *creator(client &, server &);
-
 command *nullf(client &, server &) {
 	return(NULL);
-};
+}
 
 creator *get_command(std::string name)
 {
 	static std::map<std::string, creator*> map;
 	if (map.empty())
 	{
-		map["user"] = &f<user_command>;
-		map["nick"] = &f<nick_command>;
-		map["pass"] = &f<pass_command>;
+		map["USER"] = &f<user_command>;
+		map["NICK"] = &f<nick_command>;
+		map["PASS"] = &f<pass_command>;
 	}
 	try {
-		return (map[name]);
+		return (map.at(name));
 	}
 	catch (std::out_of_range e)	{
 		return (nullf);

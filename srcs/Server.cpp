@@ -96,10 +96,11 @@ void server::routine() {
 void server::dispatch(client &c) {
 	std::string str;
 
-	while (!(str = c.popLine()).empty())
+	while ((str = c.popLine()) != "\n" && !str.empty())
 	{
 		std::cout << "From " << c.getIP() << " >> " << str;
 		message *parse = parse_msg(str);
+		std::cout << "command: " << parse->command_str << std::endl;
 		command *com = get_command(parse->command_str)(c, *this);
 		if (!com)
 			return;
