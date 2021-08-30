@@ -1,8 +1,16 @@
 
 #include <command.hpp>
 #include <sstream>
+#include <cstdlib>
 
 extern char replies[512][100];
+
+template <typename T> std::string toStr(T tmp)
+{
+	std::ostringstream out;
+	out << tmp;
+	return out.str();
+}
 
 std::vector<std::string> ft_split(std::string str, char c)
 {
@@ -148,12 +156,16 @@ void command::parse(message m) {
 	}
 }
 
-void command::reply(int nbr) {
+void command::reply_nbr(int nbr) {
+	this->replied = true;
+	std::string reply(replies[nbr]);
+	//some substitutions
+	this->reply(toStr(nbr), reply);
+}
+
+void command::reply(std::string command, std::string str) {
 	if (!this->replied)
 	{
-		this->replied = true;
-		std::string reply(replies[nbr]);
-		//some substitutions
-		this->client.send(reply + "\n");
+		this->client.send(":" + this->server.hostname + " " + command + " " + this->client.username + " " + str + "\n");
 	}
 }

@@ -5,6 +5,11 @@
 #ifndef FT_IRC_NUMERICS_HPP
 #define FT_IRC_NUMERICS_HPP
 
+#define		RPL_WELCOME					1
+#define		RPL_YOURHOST				2
+#define		RPL_CREATED					3
+#define		RPL_MYINFO					4
+#define		RPL_BOUNCE					5
 #define     ERR_NOSUCHNICK 				401
 #define     ERR_NOSUCHSERVER 			402
 #define     ERR_NOSUCHCHANNEL 			403
@@ -124,7 +129,6 @@
 #define     RPL_ADMINLOC1				257
 #define     RPL_ADMINLOC2				258
 #define     RPL_ADMINEMAIL				259
-#define     RPL_WELCOME					260
 
 
 

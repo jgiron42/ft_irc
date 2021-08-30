@@ -21,7 +21,8 @@ public:
 	command(client &c, server &s) : replied(false), client(c), server(s) {};
 	void		parse(message);
 	virtual void		execute() {  };
-	void		reply(int);
+	void reply(std::string command, std::string str);
+	void reply_nbr(int nbr);
 	class invalidSyntaxException : std::exception {
 		const char * what() const  throw() {
 			return ("syntax is invalid");

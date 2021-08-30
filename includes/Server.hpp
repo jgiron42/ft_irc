@@ -30,6 +30,7 @@ public:
 	void	routine();
 	void	dispatch(client &c);
 	std::string password;
+	std::string hostname;
 };
 
 

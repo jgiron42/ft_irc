@@ -7,6 +7,11 @@
 #include "numerics.hpp"
 
 char replies[512][100] = {
+		[RPL_WELCOME] =	":Welcome to the Internet Relay Network <nick>!<user>@<host>",
+		[RPL_YOURHOST] =	":Your host is <servername>, running version <ver>",
+		[RPL_CREATED] =	":This server was created <date>",
+		[RPL_MYINFO] =	":<servername> <version> <available user modes> <available channel modes>",
+		[RPL_BOUNCE] =	":Try server <server name>, port <port number>",
 		[ERR_NOSUCHNICK] = "<nickname> :No such nick/channel",
 		[ERR_NOSUCHSERVER] = "<server name> :No such server",
 		[ERR_NOSUCHCHANNEL] = "<channel name> :No such channel",
@@ -124,6 +129,5 @@ char replies[512][100] = {
 		[RPL_ADMINME] = "<server> :Administrative info",
 		[RPL_ADMINLOC1] = ":<admin info>",
 		[RPL_ADMINLOC2] = ":<admin info>",
-		[RPL_ADMINEMAIL] = ":<admin info>",
-		[RPL_WELCOME] =	":Welcome to ft_irc!"
+		[RPL_ADMINEMAIL] = ":<admin info>"
 };
