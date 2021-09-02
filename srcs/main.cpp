@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <signal.h>
 
 bool running = true;
 
