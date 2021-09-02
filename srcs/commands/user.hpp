@@ -15,17 +15,17 @@ public:
 		this->syntax = "<username> <hostname> <servername> <realname>";
 	};
 	void execute() {
-		if (!this->client.username.empty())
+		if (!this->c.username.empty())
 			this->reply_nbr(ERR_ALREADYREGISTRED);
 		else
 		{
-			if (this->client.password == this->server.password)
+			if (this->c.password == this->s.password)
 			{
-				this->client.username = this->args["username"].front();
-				this->client.hostname = this->args["hostname"].front();
-				this->client.servername = this->args["servername"].front();
-				this->client.realname = this->args["realname"].front();
-				this->client.identified = true;
+				this->c.username = this->args["username"].front();
+				this->c.hostname = this->args["hostname"].front();
+				this->c.servername = this->args["servername"].front();
+				this->c.realname = this->args["realname"].front();
+				this->c.identified = true;
 				this->reply_nbr(RPL_WELCOME);
 			}
 			else

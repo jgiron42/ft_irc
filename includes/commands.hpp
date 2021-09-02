@@ -12,6 +12,18 @@
 #include "nick.hpp"
 #include "pass.hpp"
 
+
+class zbeub_command : public command {
+public:
+	zbeub_command(class client &c, class server &s) : command(c, s) {
+		name = "ZBEUB";
+		syntax = "<arg1> {,<argn>}";
+	};
+	void execute() {
+	}
+};
+
+
 typedef command *creator(client &, server &);
 
 template <class U>
@@ -32,6 +44,7 @@ creator *get_command(std::string name)
 		map["USER"] = &f<user_command>;
 		map["NICK"] = &f<nick_command>;
 		map["PASS"] = &f<pass_command>;
+		map["ZBEUB"] = &f<zbeub_command>;
 	}
 	try {
 		return (map.at(name));

@@ -13,7 +13,7 @@ public:
 		syntax = "<password>";
 	};
 	void execute() {
-		this->client.password = this->args["password"].front();
+		this->c.password = this->args["password"].front();
 	}
 };
 

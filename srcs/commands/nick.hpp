@@ -15,7 +15,7 @@ public:
 	};
 	void execute() {
 		//check collisions
-		this->client.nickname = this->args["nickname"].front();
+		this->c.nickname = this->args["nickname"].front();
 	}
 };
 

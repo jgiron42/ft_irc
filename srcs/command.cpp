@@ -166,6 +166,6 @@ void command::reply_nbr(int nbr) {
 void command::reply(std::string command, std::string str) {
 	if (!this->replied)
 	{
-		this->client.send(":" + this->server.hostname + " " + command + " " + this->client.username + " " + str + "\n");
+		this->c.send(":" + this->s.hostname + " " + command + " " + this->c.username + " " + str + "\n");
 	}
 }

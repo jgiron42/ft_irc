@@ -18,7 +18,7 @@
 
 class command {
 public:
-	command(client &c, server &s) : replied(false), client(c), server(s) {};
+	command(client &c, server &s) : replied(false), c(c), s(s) {};
 	void		parse(message);
 	virtual void		execute() {  };
 	void reply(std::string command, std::string str);
@@ -43,8 +43,8 @@ protected:
 	bool replied;
 	std::string name;
 	std::string syntax;
-	client &client;
-	server &server;
+	client &c;
+	server &s;
 	void parse_recurse (char **syntax, t_params *p, bool is_optional);
 };
 
