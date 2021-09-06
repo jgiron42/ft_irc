@@ -60,10 +60,14 @@ message *get_command(std::string str, message *res) {
         cmd = str;
     while ( (i = cmd.find_first_of(" ", 0)) == 0)
         cmd = cmd.substr(i, cmd.length());
+
     if (i > cmd.length())
         i = cmd.length() - 1;
-    res->tmp_to_parse = cmd.substr(i, cmd.length() );
-    cmd = cmd.substr(0, i);
+    if (i == std::string::npos)
+        res->tmp_to_parse = "";
+    else
+        res->tmp_to_parse = cmd.substr(i + 1, cmd.length() );
+    cmd = cmd.substr(0, i + 1);
     if (std::isdigit(cmd.at(0)) != 0){
         res->command_nbr = atoi(cmd.c_str());
         return res;
@@ -73,6 +77,8 @@ message *get_command(std::string str, message *res) {
 }
 
 t_params *get_param(std::string str){
+    if (str.length() == 0)
+        return (NULL);
     t_params *res = new s_params;
     res->next = NULL;
     size_t i = str.find_first_of(" ", 0);
@@ -129,8 +135,8 @@ void aff_parse(message *res){
             std::cout << "Servername = " << res->prefix->servername << std::endl;
     }
 }
-/*
-int main()
+
+/*(int main()
 {
     std::string tmp;
     message *m_tmp;
@@ -168,6 +174,16 @@ int main()
         m_tmp = parse_msg(ntm);
         aff_parse(m_tmp);
         ntm = ":irc.botspot.com 251 ccoe :There are 1 users and";
+        std::cout << "==========================" << std::endl;
+        std::cout << ntm << std::endl;
+        m_tmp = parse_msg(ntm);
+        aff_parse(m_tmp);
+        ntm = "NICK ok";
+        std::cout << "==========================" << std::endl;
+        std::cout << ntm << std::endl;
+        m_tmp = parse_msg(ntm);
+        aff_parse(m_tmp);
+        ntm = "NICK";
         std::cout << "==========================" << std::endl;
         std::cout << ntm << std::endl;
         m_tmp = parse_msg(ntm);
