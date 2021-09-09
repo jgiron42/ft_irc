@@ -4,7 +4,7 @@
 #include "parse_struct.hpp"
 message *parse_msg(std::string str);
 
-server::server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
+server::server(void) :  clients(), fds(), sock(socket(AF_INET, SOCK_STREAM, 0)){
 	std::cout << "server created" << std::endl;
 	struct sockaddr_in sin = {};
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -19,7 +19,7 @@ server::server(void) : sock(socket(AF_INET, SOCK_STREAM, 0)), fds(), clients() {
 	fcntl(sock, F_SETFL, O_NONBLOCK);
 }
 
-server::server(const server &src) : sock(src.sock), fds(src.fds), clients(src.clients),password(src.password) {}
+server::server(const server &src) : clients(src.clients), fds(src.fds), sock(src.sock),password(src.password) {}
 
 server::~server() {
 	for (std::map<int, client>::iterator i = this->clients.begin(); i != this->clients.end(); i++)
@@ -38,7 +38,7 @@ server &server::operator=(const server &src) {
 
 void server::routine() {
 	int tmp;
-	struct sockaddr_in csin = { 0 };
+	struct sockaddr_in csin = {};
 	socklen_t sinsize = sizeof csin;
 	char buf[10];
 	int ret;

@@ -6,7 +6,7 @@
 #    By: lejulien <lejulien@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/05 13:10:44 by lejulien          #+#    #+#              #
-#    Updated: 2021/08/20 00:53:35 by lejulien         ###   ########.fr        #
+#    Updated: 2021/09/05 18:39:15 by jgiron           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,8 @@ SRCS	 	=	./srcs/main.cpp		\
 
 NAME		=	ircserv
 
-#FLAGS		=	 -Wall -Wextra -Werror -std=c++98
-FLAGS		=	 -std=c++98 -g3 -fsanitize=address
+FLAGS		=	 -Wall -Wextra -Werror -std=c++98
+#FLAGS		=	 -std=c++98 -g3 -fsanitize=address
 
 OBJS		=	$(SRCS:.cpp=.o)
 

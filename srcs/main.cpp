@@ -3,12 +3,12 @@
 
 bool running = true;
 
-void	stop(int sig)
+void	stop(int)
 {
 	running = false;
 }
 
-int main(int argc, char **argv)
+int main(int , char **)
 {
 	 server s;
 
