@@ -39,9 +39,9 @@ public:
 		}
 	};
 	std::map<std::string, std::list<std::string> > args;
+	std::string name;
 protected:
 	bool replied;
-	std::string name;
 	std::string syntax;
 	client &c;
 	server &s;

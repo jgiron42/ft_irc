@@ -2,6 +2,7 @@
 #define FT_IRC_SERVER_HPP
 #include <map>
 #include <vector>
+#include <cstring>
 #include "client.hpp"
 #include <cstdio>
 #include <iostream>
@@ -31,6 +32,23 @@ public:
 	void	dispatch(client &c);
 	std::string password;
 	std::string hostname;
+
+	typedef std::runtime_error syscall_failure;
+//	class syscall_failure : public std::exception {
+//	private:
+//		std::string error;
+//	public:
+//		syscall_failure() throw() : error(""){}
+//		syscall_failure( const syscall_failure& other ) throw() : error(other.error) {}
+//		explicit syscall_failure( const std::exception& other ) throw() : error("") {}
+//		syscall_failure(std::string &error) throw() {
+//			this->error = error;
+//		}
+//		virtual const char    *what() const throw() {
+//			return (this->error.data());
+//		}
+//		~syscall_failure() throw();
+//	};
 };
 
 

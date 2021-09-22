@@ -133,6 +133,7 @@ char *ft_string_dup(std::string str)
 void command::parse(message m) {
 	char *str = ft_string_dup(this->syntax);
 	try {
+		this->args["command"].push_back(m.command_str);
 		this->parse_recurse(&str, m.params, false);
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
@@ -146,7 +147,7 @@ void command::parse(message m) {
 	{
 		if (std::string(e.what()) == "syntax is invalid")
 		{
-			std::cerr <<e.what()  << std::endl;
+			std::cerr << e.what()  << std::endl;
 			exit(1);
 		}
 //		else if (std::string(e.what()) == "syntax error")

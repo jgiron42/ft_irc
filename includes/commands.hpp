@@ -11,6 +11,7 @@
 #include "user.hpp"
 #include "nick.hpp"
 #include "pass.hpp"
+#include "command_not_found.hpp"
 
 
 class zbeub_command : public command {
@@ -50,7 +51,7 @@ creator *get_command(std::string name)
 		return (map.at(name));
 	}
 	catch (std::out_of_range e)	{
-		return (nullf);
+		return (&f<command_not_found>);
 	}
 }
 
