@@ -6,20 +6,20 @@ message *parse_msg(std::string str);
 
 server::server(void) :  clients(), fds(), sock(socket(AF_INET, SOCK_STREAM, 0)){ // syscall
 	if (this->sock == -1)
-		throw syscall_failure(strerror(errno));
+		throw syscall_failure(my_strerror((char *)"socket: ", errno));
 	std::cout << "server created" << std::endl;
 	struct sockaddr_in sin = {};
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(PORT);
 	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1) // syscall
-		throw syscall_failure(strerror(errno));
+		throw syscall_failure(my_strerror((char *)"bind: ", errno));
 	if(listen(sock, MAX_CLIENT) == -1) // syscall
-		throw syscall_failure(strerror(errno));
+		throw syscall_failure(my_strerror((char *)"listen: ", errno));
 	this->fds.clear();
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
 	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
-		throw syscall_failure(strerror(errno));
+		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
 }
 
 server::server(const server &src) : clients(src.clients), fds(src.fds), sock(src.sock),password(src.password) {}
@@ -47,8 +47,8 @@ void server::routine() {
 	int ret;
 
 	ret = poll(this->fds.begin().operator->(), this->fds.size(), -1); // syscall
-	if (ret == -1)
-		throw syscall_failure(strerror(errno));
+	if (ret == -1 && errno != EINTR)
+		throw syscall_failure(my_strerror((char *)"poll: ", errno));
 	if (ret == 0)
 	{} // do something
 	for (size_t i = 0; i < this->fds.size(); i++)
@@ -73,7 +73,7 @@ void server::routine() {
 				else if (ret > 0)
 					this->dispatch(this->clients[this->fds[i].fd]);
 				else
-					throw syscall_failure(strerror(errno));
+					throw syscall_failure(my_strerror((char *)"recv: ", errno));
 			}
 			else
 				if ((tmp = accept(sock, (sockaddr *)&csin, &sinsize)) >= 0) // syscall
@@ -83,12 +83,12 @@ void server::routine() {
 					this->clients.at(tmp).setIP(std::string(inet_ntoa(csin.sin_addr)));
 				}
 				else
-					throw syscall_failure(strerror(errno));
+					throw syscall_failure(my_strerror((char *)"accept: ", errno));
 		}
 		else if (this->fds[i].revents & POLLOUT && !this->clients[this->fds[i].fd].to_send.empty())
 			{
 				if (send(this->fds[i].fd, this->clients[this->fds[i].fd].to_send.front().data(), this->clients[this->fds[i].fd].to_send.front().length(), 0) == -1)  //syscall
-					throw syscall_failure(strerror(errno));
+					throw syscall_failure(my_strerror((char *)"send: ", errno));
 				this->clients[this->fds[i].fd].to_send.pop_front();
 			}
 		else if (this->fds[i].revents & POLLHUP || this->fds[i].revents & POLLNVAL || this->fds[i].revents & POLLERR)
@@ -120,7 +120,7 @@ void server::dispatch(client &c) {
 		com->name = parse->command_str;
 		com->parse(*parse);
 		com->execute();
-		delete com;
+//		delete com;
 		delete parse;
 	}
 }

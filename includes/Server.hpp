@@ -18,6 +18,8 @@
 #define MAX_CLIENT 1000
 #define PORT	1111
 
+char *my_strerror(char *s1, int err);
+
 class server {
 private:
 	std::map<int, client>		clients;

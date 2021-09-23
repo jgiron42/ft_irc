@@ -16,12 +16,13 @@ SRCS	 	=	./srcs/main.cpp		\
 				./srcs/client.cpp	\
 				./srcs/command.cpp	\
 				./srcs/numerics.cpp	\
-				./srcs/parsing_message.cpp
+				./srcs/parsing_message.cpp \
+				./srcs/utils.cpp
 
 NAME		=	ircserv
 
-FLAGS		=	 -Wall -Wextra -Werror -std=c++98
-#FLAGS		=	 -std=c++98 -g3 -fsanitize=address
+#FLAGS		=	 -Wall -Wextra -Werror -std=c++98
+FLAGS		=	 -std=c++98 -g3 -fsanitize=address
 
 OBJS		=	$(SRCS:.cpp=.o)
 
