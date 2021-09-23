@@ -14,3 +14,28 @@ const char *my_strerror(char *s1, int err)
 		return s2;
 	}
 }
+
+bool glob_include(char * glob, char * str)
+{
+	do {
+		if (*glob == '*')
+		{
+			while (*glob == '*')
+				++glob;
+			if (!*glob)
+				return true;
+			while (*str) {
+				if ((*glob == *str || *glob == '?') && glob_include(glob, str))
+					return true;
+				++str;
+			}
+			return false;
+		}
+		else if (*glob && (*glob == '?' || *glob == *str))
+		{
+			++str;
+			++glob;
+		}
+	} while (*glob && (*str || *glob == '*'));
+	return (*str == *glob);
+}
