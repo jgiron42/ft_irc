@@ -12,111 +12,35 @@ template <typename T> std::string toStr(T tmp)
 	return out.str();
 }
 
-std::vector<std::string> ft_split(std::string str, char c)
+void
+	command::add_block(int bt, std::string val)
 {
-	std::vector<std::string> ret;
-	std::string tmp;
-	std::istringstream stream(str);
+	block b;
 
-	while (std::getline(stream, tmp, c))
-		ret.push_back(tmp);
-	return (ret);
+	b.bloc_type = bt;
+	b.value = val;
+	this->token.push_back(b);
 }
 
-std::string get_name(char **syntax)
+void
+	command::add_elem(t_params *p, std::list<block>::iterator it)
 {
-	char *begin = *syntax;
-
-	while(**syntax && **syntax != '>')
-		(*syntax)++;
-	if (!**syntax)
-		throw command::invalidSyntaxException();
-	(*syntax)++;
-	return (std::string(begin).substr(0, *syntax - begin - 1));
-}
-
-void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
-{
-	static std::string key;
-	static std::string value;
 	if (!p)
+		throw command::argumentMissing();
+	this->args[it->value].push_back(p->str);
+}
+
+void command::parse_recurse (t_params *p)
+{
+	std::list<block>::iterator it = this->token.begin();
+
+	while (it != this->token.end())
 	{
-		if (is_optional)
-			throw command::argumentMissing();
-		return;
+		if (it->bloc_type == ELEM)
+			add_elem(p, it);
+		p = p->next;
+		it++;
 	}
-	while (**syntax && p)
-	{
-		if (**syntax != ' ' && **syntax != '\n' && **syntax != p->str[0])
-		{
-			value.push_back(p->str[0]);
-			p->str.erase(p->str.begin());
-		}
-		else
-		{
-			if (key.empty())
-				throw syntaxError();
-			this->args[key].push_back(value);
-			key = "";
-			value = "";
-		}
-		if (**syntax == p->str[0])
-		{
-			(*syntax)++;
-			p->str.erase(p->str.begin());
-		}
-		else if (**syntax == ' ')
-		{
-			while(**syntax == ' ')
-				(*syntax)++;
-			p = p->next;
-		}
-		else if (**syntax == '}' || **syntax == ']')
-			return;
-		else if (**syntax == '<')
-		{
-			if (!p && !is_optional)
-				throw command::syntaxError();
-			else
-				key = get_name(&(++(*syntax)));
-		}
-		else if (**syntax == '[')
-		{
-			(*syntax)++;
-			try	{
-				parse_recurse(syntax, p, true);
-				if (**syntax != ']')
-					throw command::invalidSyntaxException();
-			}
-			catch (argumentMissing s){}
-			while (**syntax != ']')
-				(*syntax)++;
-		}
-		else if (**syntax == '{')
-		{
-			(*syntax)++;
-			char *stmp = *syntax;
-			while (1)
-			{
-				try	{
-					parse_recurse(syntax, p, true);
-				}
-				catch (argumentMissing s){
-					break;
-				}
-				if (**syntax != '}')
-					throw command::invalidSyntaxException();
-				*syntax = stmp;
-			}
-			while (**syntax != '}')
-				(*syntax)++;
-		}
-	}
-	if (key.empty())
-		throw syntaxError();
-	this->args[key].push_back(value);
-	key = "";
-	value = "";
 }
 
 char *ft_string_dup(std::string str)
@@ -134,7 +58,7 @@ void command::parse(message m) {
 	char *str = ft_string_dup(this->syntax);
 	try {
 		this->args["command"].push_back(m.command_str);
-		this->parse_recurse(&str, m.params, false);
+		parse_recurse(m.params);
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{

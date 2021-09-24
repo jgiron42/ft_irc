@@ -6,7 +6,7 @@
 /*   By: lejulien <lejulien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/10 17:17:38 by lejulien          #+#    #+#             */
-/*   Updated: 2021/09/22 00:55:22 by lejulien         ###   ########.fr       */
+/*   Updated: 2021/09/24 17:36:12 by lejulien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ void
 void print(std::list<block> list)
 {
     for (std::list<block>::iterator itra = list.begin(); itra != list.end(); itra++) {
-        std::cout << "add_block(this->token, " << block_enum_printer(*itra) << ", \"" << itra->value << "\");" << std::endl;
+        std::cout << "add_block(" << block_enum_printer(*itra) << ", \"" << itra->value << "\");" << std::endl;
     }
 }
 
@@ -195,7 +195,6 @@ int
 			opt_end_parser(&av[1][i+1], &i, token);
 		i++;
 	}
-	std::cout << "std::list<block> token;" << std::endl;
 	print(token);
 	//delete token;
 	return 0;
