@@ -1,21 +1,17 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client() : sock(-1), end(0), begin(0), channels(), identified(false){};
-client::client(int fd) : sock(fd), end(0), begin(0), channels(), identified(false){
+client::client() : sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)){}
+client::client(int fd) : sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)){
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	std::cout << "new client" << std::endl;
 }
 
-client::client(const client &src) : sock(src.sock), end(src.end), begin(src.begin), channels(src.channels), identified(src.identified) {
-	memcpy(this->buf, src.buf, 512);
+client::client(const client &src){
+	*this = src;
 }
 
 client::~client() {}
-
-void client::close() {
-//	::close(this->sock);
-}
 
 client &client::operator=(const client &src) {
 	this->sock = src.sock;
@@ -23,6 +19,7 @@ client &client::operator=(const client &src) {
 	this->begin = src.begin;
 	this->end = src.end;
 	this->channels = src.channels;
+	this->last_activity = src.last_activity;
 	return (*this);
 }
 
@@ -74,7 +71,7 @@ std::string client::popLine() {
 	return (ret);
 }
 
-void client::send(std::string str) {
+void client::send(const std::string &str) {
 	this->to_send.push_back(str);
 }
 
@@ -82,6 +79,11 @@ std::string client::getIP() const {
 	return this->ip;
 }
 
-void client::setIP(std::string ip) {
+void client::setIP(const std::string &ip) {
 	this->ip = ip;
+}
+
+void client::pong() {
+	this->last_activity = std::time(NULL);
+	this->ping_send = false;
 }

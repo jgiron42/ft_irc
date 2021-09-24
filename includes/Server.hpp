@@ -15,10 +15,12 @@
 #include <netdb.h>
 #include <exception>
 #include <poll.h>
-#define MAX_CLIENT 1000
-#define PORT	1111
+#define LIVENESS_TIMEOUT	10
+#define PING_TIMEOUT		5
+#define MAX_CLIENT			1000
+#define PORT				1111
 
-char *my_strerror(char *s1, int err);
+const char *my_strerror(char *s1, int err);
 
 class server {
 private:
@@ -29,28 +31,18 @@ public:
 	server(void);
 	server(const server &);
 	~server();
-	server &operator=(const server &);
+	server	&operator=(const server &);
 	void	routine();
+	void	routine_sock(struct pollfd fd);
+	void	routine_client(struct pollfd fd, time_t now);
 	void	dispatch(client &c);
+	void	disconnect(int fd);
+	bool	check_liveness(client &, time_t);
+	void	send_ping(client &);
 	std::string password;
 	std::string hostname;
 
 	typedef std::runtime_error syscall_failure;
-//	class syscall_failure : public std::exception {
-//	private:
-//		std::string error;
-//	public:
-//		syscall_failure() throw() : error(""){}
-//		syscall_failure( const syscall_failure& other ) throw() : error(other.error) {}
-//		explicit syscall_failure( const std::exception& other ) throw() : error("") {}
-//		syscall_failure(std::string &error) throw() {
-//			this->error = error;
-//		}
-//		virtual const char    *what() const throw() {
-//			return (this->error.data());
-//		}
-//		~syscall_failure() throw();
-//	};
 };
 
 

@@ -20,11 +20,11 @@ public:
 	void	printBuf();
 	std::string getBufStr();
 	std::string popLine();
-	void	send(std::string);
+	void	send(const std::string &);
 	std::deque<std::string> to_send;
 	std::string getIP() const;
-	void	setIP(std::string);
-	void	close();
+	void	setIP(const std::string &);
+	void	pong();
 //private:
 	bool identified;
 	std::vector<channel *> channels;
@@ -43,6 +43,8 @@ public:
 	int		end;
 	int		begin;
 	int		sock;
+	time_t	last_activity;
+	bool	ping_send;
 };
 
 
