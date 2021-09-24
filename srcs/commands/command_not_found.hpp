@@ -13,7 +13,8 @@ public:
 		name = "";
 		syntax = "";
 	};
-	void execute() {
+	void	parse(message){};
+	void	execute() {
 		this->reply_nbr(ERR_UNKNOWNCOMMAND);
 	}
 };

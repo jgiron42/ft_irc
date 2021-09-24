@@ -123,7 +123,7 @@ void server::dispatch(client &c) {
 	{
 		std::cout << "From " << c.getIP() << " >> " << str;
 		message *parse = parse_msg(str);
-		std::cout << "command: " << parse->command_str << std::endl;
+		std::cout << "command: |" << parse->command_str << "|" << std::endl;
 		command *com = get_command(parse->command_str)(c, *this);
 		com->name = parse->command_str;
 		com->parse(*parse);

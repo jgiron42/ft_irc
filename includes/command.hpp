@@ -19,7 +19,7 @@
 class command {
 public:
 	command(client &c, server &s) : replied(false), c(c), s(s) {};
-	void		parse(message);
+	virtual void		parse(message);
 	virtual void		execute() {  };
 	void reply(std::string command, std::string str);
 	void reply_nbr(int nbr);

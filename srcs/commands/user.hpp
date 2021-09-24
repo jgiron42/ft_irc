@@ -7,7 +7,6 @@
 
 #include "command.hpp"
 
-
 class user_command : public command {
 public:
 	user_command(class client &c, class server &s) : command(c, s) {

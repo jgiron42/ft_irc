@@ -73,7 +73,9 @@ message *get_command(std::string str, message *res) {
         return res;
     }
     res->command_str = cmd;
-    return res;
+	size_t end = cmd.find_last_not_of(" ");
+	res->command_str = (end == std::string::npos) ? std::string("") : cmd.substr(0, end + 1);
+	return res;
 }
 
 t_params *get_param(std::string str){
