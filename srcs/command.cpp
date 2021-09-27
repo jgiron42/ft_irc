@@ -25,8 +25,6 @@ void
 void
 	command::add_elem(t_params *p, std::list<block>::iterator it)
 {
-	if (!p)
-		throw command::argumentMissing();
 	this->args[it->value].push_back(p->str);
 }
 
@@ -38,6 +36,8 @@ void command::parse_recurse (t_params *p)
 	{
 		if (it->bloc_type == ELEM)
 			add_elem(p, it);
+		if (it != this->token.end() && p->next == NULL)
+			throw command::argumentMissing();
 		p = p->next;
 		it++;
 	}
@@ -48,17 +48,16 @@ char *ft_string_dup(std::string str)
 	const char *data = str.data();
 	char *ret = (char*)malloc(str.length() + 1);
 
-	for (int i = 0; i < str.length(); i++)
+	for (unsigned long i = 0; i < str.length(); i++)
 		ret[i] = data[i];
 	ret[str.length()] = 0;
 	return (ret);
 }
 
 void command::parse(message m) {
-	char *str = ft_string_dup(this->syntax);
 	try {
 		this->args["command"].push_back(m.command_str);
-		parse_recurse(m.params);
+		command::parse_recurse(m.params);
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{

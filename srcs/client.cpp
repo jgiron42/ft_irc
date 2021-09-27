@@ -1,8 +1,9 @@
 #include <unistd.h>
 #include "client.hpp"
+#include <ctime>
 
-client::client() : sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){}
-client::client(int fd) : sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){
+client::client() : identified(false), channels(), end(0), begin(0), sock(-1), last_activity(std::time(NULL)), ping_send(false){}
+client::client(int fd) : identified(false), channels(), end(0), begin(0), sock(fd), last_activity(std::time(NULL)), ping_send(false){
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	std::cout << "new client" << std::endl;
 }
@@ -24,9 +25,9 @@ client &client::operator=(const client &src) {
 }
 
 void client::bufappend(const char *str, size_t size) {
-	if (this->end + size > this->begin + ((this->end >= this->begin) * 512))
+	if (static_cast<int>(this->end + size) > this->begin + ((this->end >= this->begin) * 512))
 		this->begin = (this->end + size + 1) % 512;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < static_cast<int>(size); i++)
 	{
 		this->buf[this->end] = str[i];
 		this->end++;
@@ -63,7 +64,7 @@ std::string client::popLine() {
 	std::string ret;
 
 	ret = getBufStr();
-	if (ret.find('\n') == std::string::npos || ret.find('\n') > (ABS(this->end - this->begin)))
+	if (ret.find('\n') == std::string::npos || static_cast<int>(ret.find('\n')) > (ABS(this->end - this->begin)))
 		return ("");
 	ret = ret.substr(0, ret.find('\n') + 1);
 	this->begin += ret.length();

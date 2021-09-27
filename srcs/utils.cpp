@@ -1,6 +1,6 @@
 #include <exception>
 #include <string>
-
+#include <cstring>
 
 const char *my_strerror(char *s1, int err)
 {

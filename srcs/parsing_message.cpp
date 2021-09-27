@@ -5,6 +5,8 @@
 #include "../includes/parse_struct.hpp"
 #include "string"
 #include "iostream"
+#include <cstdlib>
+#include <cstring>
 
 message *init_msg(void){
     message *res = new message;

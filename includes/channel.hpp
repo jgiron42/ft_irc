@@ -16,14 +16,14 @@ private:
 	std::string			id;
 	std::vector<client *>	members;
 	std::vector<client *>	chops;
-	bool 				private_channel : 1;
-	bool 				secret_channel : 1;
-	bool 				invite_only : 1;
-	bool 				topic_only_operator : 1;
-	bool				server_clients_only : 1;
-	bool				moderated : 1;
-	int					user_limit;
-	int 				ban_mask;
+//	bool 				private_channel : 1;
+//	bool 				secret_channel : 1;
+//	bool 				invite_only : 1;
+//	bool 				topic_only_operator : 1;
+//	bool				server_clients_only : 1;
+//	bool				moderated : 1;
+//	int					user_limit;
+//	int 				ban_mask;
 	std::string 		password;
 };
 
