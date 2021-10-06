@@ -31,13 +31,17 @@ void
 void command::parse_recurse (t_params *p)
 {
 	std::list<block>::iterator it = this->token.begin();
-
+	
 	while (it != this->token.end())
 	{
+		if (p == NULL && it->bloc_type == OPT)
+			return;
+		if (p == NULL && it->bloc_type != OPTE)
+			throw command::argumentMissing();
+		if (it->bloc_type == OPT)
+			it++;
 		if (it->bloc_type == ELEM)
 			add_elem(p, it);
-		if (it != this->token.end() && p->next == NULL)
-			throw command::argumentMissing();
 		p = p->next;
 		it++;
 	}
@@ -57,7 +61,7 @@ char *ft_string_dup(std::string str)
 void command::parse(message m) {
 	try {
 		this->args["command"].push_back(m.command_str);
-		command::parse_recurse(m.params);
+		parse_recurse(m.params);
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{
@@ -66,17 +70,17 @@ void command::parse(message m) {
 				std::cout << "    " << *j << std::endl;
 		}
 	}
-	catch (std::exception e)
+	catch (std::exception &e)
 	{
-		if (std::string(e.what()) == "syntax is invalid")
+		if (std::string(e.what()).compare("missing argument"))
+			this->reply_nbr(ERR_NEEDMOREPARAMS);
+		if (std::string(e.what()).compare("syntax is invalid"))
 		{
 			std::cerr << e.what()  << std::endl;
-			exit(1);
+			return ;
 		}
 //		else if (std::string(e.what()) == "syntax error")
 //				this->reply();
-		else if (std::string(e.what()) == "missing argument")
-				this->reply_nbr(ERR_NEEDMOREPARAMS);
 	}
 }
 

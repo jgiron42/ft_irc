@@ -41,7 +41,7 @@ public:
 	virtual void		execute() {  };
 	void reply(std::string command, std::string str);
 	void reply_nbr(int nbr);
-	class invalidSyntaxException : std::exception {
+	class invalidSyntaxException :public std::exception {
 		public:
 			invalidSyntaxException() throw() {};
 			virtual ~invalidSyntaxException() throw() {};
@@ -49,7 +49,7 @@ public:
 				return ("syntax is invalid");
 			}
 	};
-	class syntaxError : std::exception {
+	class syntaxError : public std::exception {
 		public:
 			syntaxError() throw() {};
 			virtual ~syntaxError() throw() {};
@@ -57,7 +57,7 @@ public:
 				return ("syntax error");
 			}
 	};
-	class argumentMissing : std::exception {
+	class argumentMissing : public std::exception {
 		public:
 			argumentMissing() throw() {};
 			virtual ~argumentMissing() throw() {};
