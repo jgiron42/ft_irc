@@ -34,6 +34,8 @@ std::string block_enum_printer(block b)
 	return ("unknown");
 }
 
+// END of debugging func
+
 void
 	command::add_block(int bt, std::string val)
 {
@@ -50,10 +52,42 @@ void
 	this->args[it->value].push_back(p->str);
 }
 
+void
+	command::add_elem_str(std::string str, std::list<block>::iterator it)
+{
+	this->args[it->value].push_back(str);
+}
+
+void
+	command::add_list(std::string str, std::list<block>::iterator &it)
+{
+	it++;
+	int sep_pos;
+	std::list<block>::iterator tmp = it;
+	std::string sep = tmp->value;
+	if ((sep_pos = str.find(sep, 0)) == -1)
+	{
+		tmp++;
+		add_elem_str(str, tmp);
+		tmp++;
+		std::cout << block_enum_printer(*tmp) << std::endl;
+		it = tmp;
+		return ;
+	}
+		// Here add what you should need to do when there is separator after
+		// while there is still a string and erase all the allready used first
+		// Characters
+	std::cout << "sep_pos = " << sep_pos << std::endl;
+	exit(0);//DEBUG DBUG DBG
+}
+
 void command::parse_recurse (t_params *p)
 {
 	std::list<block>::iterator it = this->token.begin();
+	std::list<block>::iterator tmp;
 	static int is_opt = 0;
+	static int is_rep = 0;
+
 	while (it != this->token.end())
 	{
 		if (it->bloc_type == OPT)
@@ -65,11 +99,28 @@ void command::parse_recurse (t_params *p)
 			throw command::argumentMissing();
 		if (p == NULL && is_opt)
 			return ;
+		if (is_rep)
+			command::add_list(p->str, it);
 		if (it->bloc_type == ELEM && p != NULL)
-			add_elem(p, it);
+		{
+			tmp = it;
+			tmp++;
+			if (tmp != this->token.end() && tmp->bloc_type == REP)
+			{
+				it = tmp;
+				command::add_list(p->str, it);
+			}
+			else
+				add_elem(p, it);
+		}
 		if (it->bloc_type == ELEM)
 			p = p->next;
 		it++;
+		if (it->bloc_type == REPE)
+		{
+			is_rep = 0;
+			it++;
+		}
 		if (it->bloc_type == OPTE)
 		{
 			is_opt = 0;

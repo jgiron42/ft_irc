@@ -1,3 +1,3 @@
 g++ -o lexer main.cpp
-./lexer "<nickname> [<hopcount>]"
+./lexer "<arg1> { ',' <argn> }"
 rm ./lexer

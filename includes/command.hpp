@@ -76,6 +76,8 @@ protected:
 	void parse_recurse (t_params *p);
 	void add_block(int bt, std::string value);
 	void add_elem(t_params *p, std::list<block>::iterator it);
+	void add_elem_str(std::string, std::list<block>::iterator it);
+	void add_list(std::string str, std::list<block>::iterator &it);
 };
 
 #include <map>
