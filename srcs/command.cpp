@@ -11,6 +11,28 @@ template <typename T> std::string toStr(T tmp)
 	out << tmp;
 	return out.str();
 }
+// Need to delete the below func later (DEBUG only)
+std::string block_enum_printer(block b)
+{
+	if (b.bloc_type == ELEM)
+		return ("ELEM");
+	else if (b.bloc_type == OPT)
+		return ("OPT");
+	else if (b.bloc_type == OPTE)
+		return ("OPTE");
+	else if (b.bloc_type == REP)
+		return ("REP");
+	else if (b.bloc_type == REPE)
+		return ("REPE");
+	else if (b.bloc_type == STR)
+		return ("STR");
+	else if (b.bloc_type == CHAR)
+		return ("CHAR");
+	else if (b.bloc_type == OR)
+		return ("OR");
+
+	return ("unknown");
+}
 
 void
 	command::add_block(int bt, std::string val)
@@ -31,19 +53,28 @@ void
 void command::parse_recurse (t_params *p)
 {
 	std::list<block>::iterator it = this->token.begin();
-	
+	static int is_opt = 0;
 	while (it != this->token.end())
 	{
-		if (p == NULL && it->bloc_type == OPT)
-			return;
-		if (p == NULL && it->bloc_type != OPTE)
-			throw command::argumentMissing();
 		if (it->bloc_type == OPT)
+		{
 			it++;
-		if (it->bloc_type == ELEM)
+			is_opt = 1;
+		}
+		if (p == NULL && !is_opt && it != this->token.end())
+			throw command::argumentMissing();
+		if (p == NULL && is_opt)
+			return ;
+		if (it->bloc_type == ELEM && p != NULL)
 			add_elem(p, it);
-		p = p->next;
+		if (it->bloc_type == ELEM)
+			p = p->next;
 		it++;
+		if (it->bloc_type == OPTE)
+		{
+			is_opt = 0;
+			it++;
+		}
 	}
 }
 

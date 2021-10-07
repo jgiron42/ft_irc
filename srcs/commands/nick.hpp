@@ -14,7 +14,7 @@ public:
 		syntax = "<nickname> [<hopcount>]";
 		add_block(ELEM, "nickname");
 		add_block(OPT, "");
-		add_block(ELEM, "nickname");
+		add_block(ELEM, "hopcount");
 		add_block(OPTE, "");
 	};
 	void execute() {
