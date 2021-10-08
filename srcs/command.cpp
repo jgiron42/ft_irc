@@ -62,10 +62,12 @@ void
 	command::add_list(std::string str, std::list<block>::iterator &it)
 {
 	it++;
-	int sep_pos;
+	std::size_t sep_pos;
 	std::list<block>::iterator tmp = it;
 	std::string sep = tmp->value;
-	if ((sep_pos = str.find(sep, 0)) == -1)
+	std::string tmp_str;
+
+	if ((sep_pos = str.find(sep)) == std::string::npos)
 	{
 		tmp++;
 		add_elem_str(str, tmp);
@@ -74,11 +76,27 @@ void
 		it = tmp;
 		return ;
 	}
-		// Here add what you should need to do when there is separator after
-		// while there is still a string and erase all the allready used first
-		// Characters
-	std::cout << "sep_pos = " << sep_pos << std::endl;
-	exit(0);//DEBUG DBUG DBG
+	while (!str.empty())
+	{
+		if (tmp->bloc_type == REPE)
+			tmp = it;
+		sep = tmp->value;
+		tmp++;
+		tmp++;
+		if ((sep_pos = str.find(sep)) == std::string::npos) // end of the list
+		{
+			tmp--;
+			add_elem_str(str, tmp);
+			tmp++;
+			it = tmp;
+			return ;
+		}
+		tmp_str.assign(str);
+		tmp--;
+		add_elem_str(tmp_str.erase(sep_pos, std::string::npos), tmp);
+		tmp++;
+		str = str.substr(sep_pos + 1, std::string::npos);
+	}
 }
 
 void command::parse_recurse (t_params *p)
