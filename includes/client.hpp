@@ -4,6 +4,7 @@
 #include <string>
 #include <fcntl.h>
 #include <cstring>
+#include <ctime>
 #include <deque>
 #include "channel.hpp"
 #define ABS(n) ((n) > 0 ? (n) : -(n))

@@ -4,6 +4,7 @@
 
 #include "../includes/parse_struct.hpp"
 #include "string"
+#include <cstdlib>
 #include "iostream"
 
 message *init_msg(void){
