@@ -18,7 +18,9 @@
 
 
 //extern char **replies;
+template <class C>
 class token_it;
+
 class command {
 public:
 	command(client &c, server &s) : replied(false), c(c), s(s) {};
@@ -54,7 +56,7 @@ public:
 	std::map<std::string, std::list<std::string> > args;
 	std::string name;
 protected:
-	std::list<block> token;
+	std::list<struct block> token;
 //	std::list<block> token;
 	bool replied;
 	std::string syntax;

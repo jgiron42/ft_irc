@@ -11,7 +11,7 @@
 message *init_msg(void){
     message *res = new message;
     res->prefix = NULL;
-    res->params = NULL;
+    res->params = std::string();
     return res;
 }
 

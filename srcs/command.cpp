@@ -108,96 +108,21 @@ enum scope : bool {_OPT,_REP};
 
 void command::parse_recurse (char *str)
 {
-	std::list<block>::iterator it = this->token.begin();
-	std::list<block>::iterator tmp;
-	std::stack<std::list<block>::iterator> loop_begin;
+//	std::list<block>::iterator it = this->token.begin();
+	token_it<std::list<struct block> > tmp;
+	std::stack<token_it<std::list<struct block> > > loop_begin;
 	std::stack<enum scope, std::vector<bool> > current_scope;
-	std::list<block>::iterator next;
+	token_it<std::list<struct block> > next;
 	char delim;
 	size_t pos;
+	token_it<std::list<struct block> > it = this->token.begin();
 
 	while (it != this->token.end())
 	{
-		switch (it->bloc_type)
-		{
-			case OPT:
-				current_scope.push(_OPT);
-				break;
-			case OPTE:
-				if (current_scope.top() == _OPT)
-					current_scope.pop();
-				else
-					throw syntaxError();
-				break;
-			case REP:
-				current_scope.push(_REP);
-				loop_begin.push(it);
-				break;
-			case REPE:
-				if (loop_begin.empty())
-					throw syntaxError();
-				it = loop_begin.top();
-				loop_begin.pop();
-				break;
-			case ELEM:
-				next = it;
-				++next;
-				if (next == this->token.end())
-					delim = 0;
-				else if (next->bloc_type == REPE)
-				{
-					if (loop_begin.empty())
-						throw syntaxError();
-					next = loop_begin.top();
-				}
-				else if (next->bloc_type != CHAR)
-					throw syntaxError();
-				else
-					delim = next->value[0];
-				pos = 0;
-				if (*str == ':')
-					pos = strlen(str);
-				else
-					while (str[pos] != delim && str[pos] != ' ')
-						++pos;
-				if (str[pos] != delim)
-					throw argumentMissing();
-				this->args[it->value].push_back(std::string(str, 0, pos));
-				break;
-			case CHAR:
-				if (it->value[0] == ' ' && *str == ' ')
-					while (*str == ' ')
-						++str;
-				else if (it->value[0] == *str)
-					++str;
-				else if (!current_scope.empty())
-					for (int s = current_scope.size() - 1; current_scope.size() == s;it++)
-						switch (it->bloc_type) {
-							case OPT:
-								current_scope.push(_OPT);
-								break;
-							case OPTE:
-								if (current_scope.top() == _OPT)
-									current_scope.pop();
-								else
-									throw syntaxError();
-								break;
-							case REP:
-								current_scope.push(_REP);
-								break;
-							case REPE:
-								if (current_scope.top() == _REP)
-									current_scope.pop();
-								else
-									throw syntaxError();
-								break;
-						}
-				else
-					throw argumentMissing();
-				break;
-		}
-		++it
+		it.advance(*str);
+		std::cout << it->value << std::endl;
 	}
+	exit (0);
 }
 
 char *ft_string_dup(std::string str)
