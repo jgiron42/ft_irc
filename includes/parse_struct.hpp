@@ -26,7 +26,7 @@ typedef struct s_message{
 	std::string	command_str;
 	short int	command_nbr;
     std::string tmp_to_parse; // i need it to the parsing
-    t_params	*params;
+    std::string	params;
 }				message;
 
 #endif //FT_IRC_PARSE_STRUCT_HPP

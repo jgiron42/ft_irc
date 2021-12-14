@@ -18,11 +18,13 @@ class zbeub_command : public command {
 public:
 	zbeub_command(class client &c, class server &s) : command(c, s) {
 		name = "ZBEUB";
-		syntax = "<argn>{,<argn>}";
+		syntax = "{,<argn>;<argt>}";
 		add_block(ELEM, "argn");
 		add_block(REP, "");
 		add_block(CHAR, ",");
 		add_block(ELEM, "argn");
+		add_block(CHAR, ";");
+		add_block(ELEM, "argt");
 		add_block(REPE, "");
 	};
 	void execute() {

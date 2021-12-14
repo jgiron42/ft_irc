@@ -15,8 +15,8 @@
 #include <netdb.h>
 #include <exception>
 #include <poll.h>
-#define LIVENESS_TIMEOUT	10
-#define PING_TIMEOUT		5
+#define LIVENESS_TIMEOUT	120
+#define PING_TIMEOUT		10
 #define MAX_CLIENT			1000
 #define PORT				1111
 

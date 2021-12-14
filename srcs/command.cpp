@@ -2,6 +2,7 @@
 #include <command.hpp>
 #include <sstream>
 #include <cstdlib>
+#include <stack>
 
 extern char replies[512][100];
 
@@ -99,51 +100,103 @@ void
 	}
 }
 
-void command::parse_recurse (t_params *p)
+enum scope : bool {_OPT,_REP};
+
+// advance (char)
+// get_potential_delim
+
+
+void command::parse_recurse (char *str)
 {
 	std::list<block>::iterator it = this->token.begin();
 	std::list<block>::iterator tmp;
-	static int is_opt = 0;
-	static int is_rep = 0;
+	std::stack<std::list<block>::iterator> loop_begin;
+	std::stack<enum scope, std::vector<bool> > current_scope;
+	std::list<block>::iterator next;
+	char delim;
+	size_t pos;
 
 	while (it != this->token.end())
 	{
-		if (it->bloc_type == OPT)
+		switch (it->bloc_type)
 		{
-			it++;
-			is_opt = 1;
+			case OPT:
+				current_scope.push(_OPT);
+				break;
+			case OPTE:
+				if (current_scope.top() == _OPT)
+					current_scope.pop();
+				else
+					throw syntaxError();
+				break;
+			case REP:
+				current_scope.push(_REP);
+				loop_begin.push(it);
+				break;
+			case REPE:
+				if (loop_begin.empty())
+					throw syntaxError();
+				it = loop_begin.top();
+				loop_begin.pop();
+				break;
+			case ELEM:
+				next = it;
+				++next;
+				if (next == this->token.end())
+					delim = 0;
+				else if (next->bloc_type == REPE)
+				{
+					if (loop_begin.empty())
+						throw syntaxError();
+					next = loop_begin.top();
+				}
+				else if (next->bloc_type != CHAR)
+					throw syntaxError();
+				else
+					delim = next->value[0];
+				pos = 0;
+				if (*str == ':')
+					pos = strlen(str);
+				else
+					while (str[pos] != delim && str[pos] != ' ')
+						++pos;
+				if (str[pos] != delim)
+					throw argumentMissing();
+				this->args[it->value].push_back(std::string(str, 0, pos));
+				break;
+			case CHAR:
+				if (it->value[0] == ' ' && *str == ' ')
+					while (*str == ' ')
+						++str;
+				else if (it->value[0] == *str)
+					++str;
+				else if (!current_scope.empty())
+					for (int s = current_scope.size() - 1; current_scope.size() == s;it++)
+						switch (it->bloc_type) {
+							case OPT:
+								current_scope.push(_OPT);
+								break;
+							case OPTE:
+								if (current_scope.top() == _OPT)
+									current_scope.pop();
+								else
+									throw syntaxError();
+								break;
+							case REP:
+								current_scope.push(_REP);
+								break;
+							case REPE:
+								if (current_scope.top() == _REP)
+									current_scope.pop();
+								else
+									throw syntaxError();
+								break;
+						}
+				else
+					throw argumentMissing();
+				break;
 		}
-		if (p == NULL && !is_opt && it != this->token.end())
-			throw command::argumentMissing();
-		if (p == NULL && is_opt)
-			return ;
-		if (is_rep)
-			command::add_list(p->str, it);
-		if (it->bloc_type == ELEM && p != NULL)
-		{
-			tmp = it;
-			tmp++;
-			if (tmp != this->token.end() && tmp->bloc_type == REP)
-			{
-				it = tmp;
-				command::add_list(p->str, it);
-			}
-			else
-				add_elem(p, it);
-		}
-		if (it->bloc_type == ELEM)
-			p = p->next;
-		it++;
-		if (it->bloc_type == REPE)
-		{
-			is_rep = 0;
-			it++;
-		}
-		if (it->bloc_type == OPTE)
-		{
-			is_opt = 0;
-			it++;
-		}
+		++it
 	}
 }
 
@@ -161,7 +214,7 @@ char *ft_string_dup(std::string str)
 void command::parse(message m) {
 	try {
 		this->args["command"].push_back(m.command_str);
-		parse_recurse(m.params);
+		parse_recurse(ft_string_dup(m.params));
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{

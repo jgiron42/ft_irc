@@ -14,25 +14,11 @@
 #include "Server.hpp"
 #include "parse_struct.hpp"
 
-#ifndef TOKEN_UTILITY
-#define TOKEN_UTILITY
-#define ELEM 0
-#define OPT  1
-#define OPTE 2
-#define REP  3
-#define REPE 4
-#define STR  5
-#define CHAR 6
-#define OR	 4
-#endif
+#include "t_token.hpp"
 
-struct block {
-	int bloc_type;
-	std::string value;
-};
 
 //extern char **replies;
-
+class token_it;
 class command {
 public:
 	command(client &c, server &s) : replied(false), c(c), s(s) {};
@@ -69,11 +55,12 @@ public:
 	std::string name;
 protected:
 	std::list<block> token;
+//	std::list<block> token;
 	bool replied;
 	std::string syntax;
 	client &c;
 	server &s;
-	void parse_recurse (t_params *p);
+	void parse_recurse (char * p);
 	void add_block(int bt, std::string value);
 	void add_elem(t_params *p, std::list<block>::iterator it);
 	void add_elem_str(std::string, std::list<block>::iterator it);
