@@ -109,20 +109,24 @@ enum scope : bool {_OPT,_REP};
 void command::parse_recurse (char *str)
 {
 //	std::list<block>::iterator it = this->token.begin();
-	token_it<std::list<struct block> > tmp;
+	token_it<std::list<struct block> > tmp(this->token);
 	std::stack<token_it<std::list<struct block> > > loop_begin;
 	std::stack<enum scope, std::vector<bool> > current_scope;
-	token_it<std::list<struct block> > next;
+	token_it<std::list<struct block> > next(this->token);
 	char delim;
 	size_t pos;
-	token_it<std::list<struct block> > it = this->token.begin();
+	token_it<std::list<struct block> > it(this->token.begin(), this->token);
 
-	while (it != this->token.end())
+	while (it != it.end())
 	{
 		it.advance(*str);
-		std::cout << it->value << std::endl;
+		if (it->bloc_type == ELEM)
+		{
+			this->args[it->value].push_back("coucou");
+			it++;
+		}
+//		std::cout << it->value << std::endl;end
 	}
-	exit (0);
 }
 
 char *ft_string_dup(std::string str)
@@ -139,7 +143,14 @@ char *ft_string_dup(std::string str)
 void command::parse(message m) {
 	try {
 		this->args["command"].push_back(m.command_str);
-		parse_recurse(ft_string_dup(m.params));
+		try
+		{
+			parse_recurse(ft_string_dup(m.params));
+		}
+		catch (std::exception &e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{

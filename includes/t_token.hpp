@@ -36,9 +36,9 @@ public:
 	typedef typename iterator::reference reference;
 	typedef typename iterator::difference_type difference_type;
 	typedef std::bidirectional_iterator_tag iterator_category;
-	token_it() {}
-	token_it(token_it const &src) : i(src.i), loop_begin(src.loop_begin) {}
-	token_it(iterator const &src) : i(src), loop_begin() {}
+	token_it(C &underlying) : c(underlying) {}
+	token_it(token_it const &src) : i(src.i), loop_begin(src.loop_begin),c(src.c) {}
+	token_it(iterator const &src, C &underlying) : i(src), loop_begin(), c(underlying) {}
 	token_it &operator=(token_it const &src) {
 		this->i = src.i;
 		this->loop_begin = src.loop_begin;
@@ -72,13 +72,21 @@ public:
 		i--;
 		return (tmp);
 	}
+	token_it end() {return token_it(iterator(this->c.end()), c);}
 	void advance(char c) {
 		i = this->recursive_advance(++token_it(*this), c).i;
+	}
+	void	get_delim(char charset[256])
+	{
+		token_it tmp(*this);
+		++tmp;
+		tmp.recursive_get_delim(tmp, charset);
+		return;
 	}
 	token_it &skip_loop()
 	{
 		int scope = 1;
-		while (scope > 0)
+		while (scope > 0 && this->i != this->c.end())
 		{
 			if (this->i->bloc_type == REP || this->i->bloc_type == OPT)
 				scope++;
@@ -95,28 +103,29 @@ public:
 		return (lhs.i != rhs.i);
 	}
 private:
+	C &c;
 	iterator i;
 	std::stack<token_it> loop_begin;
 	token_it recursive_advance(token_it current, char c){
-		token_it tmp;
+		token_it tmp(this->c);
 		switch (current->bloc_type)
 		{
 			case CHAR:
 				if (c != current->value[0])
-					return (iterator(0));
+					return (end());
 				++*this;
 				return (*this);
 			case REP:
 				tmp = recursive_advance(++token_it(current),c);
-				if (tmp != iterator(0))
+				if (tmp != end())
 				{
-					loop_begin.push(this->i);
+					loop_begin.push(*this);
 					return (tmp);
 				}
-				return (recursive_advance(token_it(current).skip_loop().i,c));
+				return (recursive_advance(token_it(current).skip_loop(),c));
 			case REPE:
 				tmp = recursive_advance(this->loop_begin.top(),c);
-				if (tmp != iterator(0))
+				if (tmp != end())
 				{
 					this->loop_begin.pop();
 					return (tmp);
@@ -124,14 +133,44 @@ private:
 				return (recursive_advance(++token_it(current),c));
 			case OPT:
 				tmp = recursive_advance(++token_it(current),c);
-				if (tmp != iterator(0))
+				if (tmp != end())
 					return (tmp);
-				return (recursive_advance(token_it(current).skip_loop().i,c));
+				return (recursive_advance(token_it(current).skip_loop(),c));
 			case OPTE:
 				return (recursive_advance(++token_it(current),c));
 			default:
 			case ELEM:
 				return (*this);
+		}
+	}
+	void	recursive_get_delim(token_it current, bool *charset)
+	{
+		if (current == current.end())
+			return;
+		switch (current->bloc_type)
+		{
+			case CHAR:
+				charset[current->value[0]]= 1;
+				return;
+			case REP:
+				recursive_get_delim(++token_it(current),charset);
+				loop_begin.push(*this);
+				recursive_get_delim(token_it(current).skip_loop(),charset);
+				return;
+			case REPE:
+				recursive_get_delim(this->loop_begin.top(),charset);
+				this->loop_begin.pop();
+				recursive_get_delim(++token_it(current),charset);
+				return;
+			case OPT:
+				recursive_get_delim(++token_it(current),charset);
+				recursive_get_delim(token_it(current).skip_loop(),charset);
+				return;
+			case OPTE:
+				recursive_get_delim(++token_it(current),charset);
+			default:
+			case ELEM:
+				throw command::invalidSyntaxException();
 		}
 	}
 };
