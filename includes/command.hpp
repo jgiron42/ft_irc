@@ -29,30 +29,6 @@ public:
 	virtual void		execute() {  };
 	void reply(std::string command, std::string str);
 	void reply_nbr(int nbr);
-	class invalidSyntaxException :public std::exception {
-		public:
-			invalidSyntaxException() throw() {};
-			virtual ~invalidSyntaxException() throw() {};
-			const char * what() const  throw() {
-				return ("syntax is invalid");
-			}
-	};
-	class syntaxError : public std::exception {
-		public:
-			syntaxError() throw() {};
-			virtual ~syntaxError() throw() {};
-			const char * what() const  throw() {
-				return ("syntax error");
-			}
-	};
-	class argumentMissing : public std::exception {
-		public:
-			argumentMissing() throw() {};
-			virtual ~argumentMissing() throw() {};
-			const char * what() const  throw() {
-				return ("missing argument");
-			}
-	};
 	std::map<std::string, std::list<std::string> > args;
 	std::string name;
 protected:

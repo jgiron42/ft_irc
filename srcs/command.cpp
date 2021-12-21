@@ -3,6 +3,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <stack>
+#include "exceptions.hpp"
 
 extern char replies[512][100];
 
@@ -113,16 +114,20 @@ void command::parse_recurse (char *str)
 	std::stack<token_it<std::list<struct block> > > loop_begin;
 	std::stack<enum scope, std::vector<bool> > current_scope;
 	token_it<std::list<struct block> > next(this->token);
-	char delim;
+	bool delim[256];
 	size_t pos;
 	token_it<std::list<struct block> > it(this->token.begin(), this->token);
 
-	while (it != it.end())
+	while (it != it.end() && *str)
 	{
 		it.advance(*str);
 		if (it->bloc_type == ELEM)
 		{
 			this->args[it->value].push_back("coucou");
+			bzero(delim, 256);
+			it.get_delim(delim);
+			while (*str && !delim[*str])
+				++str;
 			it++;
 		}
 //		std::cout << it->value << std::endl;end

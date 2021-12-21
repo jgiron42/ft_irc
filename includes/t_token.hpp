@@ -8,6 +8,7 @@
 #include <string>
 #include <stack>
 #include "command.hpp"
+#include "exceptions.hpp"
 #ifndef TOKEN_UTILITY
 #define TOKEN_UTILITY
 #define ELEM 0
@@ -74,9 +75,9 @@ public:
 	}
 	token_it end() {return token_it(iterator(this->c.end()), c);}
 	void advance(char c) {
-		i = this->recursive_advance(++token_it(*this), c).i;
+		i = this->recursive_advance(token_it(*this), c).i;
 	}
-	void	get_delim(char charset[256])
+	void	get_delim(bool charset[256])
 	{
 		token_it tmp(*this);
 		++tmp;
@@ -170,7 +171,7 @@ private:
 				recursive_get_delim(++token_it(current),charset);
 			default:
 			case ELEM:
-				throw command::invalidSyntaxException();
+				throw ft_irc::invalidSyntaxException();
 		}
 	}
 };
