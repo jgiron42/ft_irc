@@ -106,7 +106,6 @@ enum scope : bool {_OPT,_REP};
 // advance (char)
 // get_potential_delim
 
-
 void command::parse_recurse (char *str)
 {
 //	std::list<block>::iterator it = this->token.begin();
