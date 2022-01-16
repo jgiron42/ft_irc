@@ -1,0 +1,6 @@
+// TODO                                                 Status
+
+    - Fixing leaxs inside lexer                         ND
+    - Incorporate lexer into Irc                        ND
+    - Fix parser segfaults                              ND
+    - Handle the forgotten cases                        ND
