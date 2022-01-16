@@ -1,5 +1,6 @@
 // TODO                                                 Status
 
+	- Add OR case inside the lexer						ND
     - Fixing leaxs inside lexer                         ND
     - Incorporate lexer into Irc                        ND
     - Fix parser segfaults                              ND
