@@ -11,7 +11,7 @@ public:
 	pass_command(class client &c, class server &s) : command(c, s) {
 		name = "PASS";
 		syntax = "<password>";
-		add_block(ELEM, "password");
+		token = generate_token(std::string(syntax));
 	};
 	void execute() {
 		this->c.password = this->args["password"].front();

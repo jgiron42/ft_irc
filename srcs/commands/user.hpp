@@ -12,10 +12,7 @@ public:
 	user_command(class client &c, class server &s) : command(c, s) {
 		this->name = "USER";
 		this->syntax = "<username> <hostname> <servername> <realname>";
-		add_block(ELEM, "username");
-		add_block(ELEM, "hostname");
-		add_block(ELEM, "servername");
-		add_block(ELEM, "realname");
+		token = generate_token(std::string(syntax));
 	};
 	void execute() {
 		if (!this->c.username.empty())

@@ -1,7 +1,7 @@
-// TODO                                                 Status
+// TODO                                                 Status                          Additional notes
 
-	- Add OR case inside the lexer						ND
-    - Fixing leaxs inside lexer                         ND
-    - Incorporate lexer into Irc                        ND
+	- Add OR case inside the lexer						?                              Seem to be coded in but want to add lexer to code first
+    - Fixing leaxs inside lexer                         Done
+    - Incorporate lexer into Irc                        Done
     - Fix parser segfaults                              ND
     - Handle the forgotten cases                        ND

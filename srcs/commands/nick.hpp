@@ -12,10 +12,7 @@ public:
 	nick_command(class client &c, class server &s) : command(c, s) {
 		name = "NICK";
 		syntax = "<nickname> [<hopcount>]";
-		add_block(ELEM, "nickname");
-		add_block(OPT, "");
-		add_block(ELEM, "hopcount");
-		add_block(OPTE, "");
+		token = generate_token(std::string(syntax));
 	};
 	void execute() {
 		//check collisions

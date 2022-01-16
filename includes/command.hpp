@@ -43,6 +43,8 @@ protected:
 	void add_elem(t_params *p, std::list<block>::iterator it);
 	void add_elem_str(std::string, std::list<block>::iterator it);
 	void add_list(std::string str, std::list<block>::iterator &it);
+	std::list<block>	&generate_token(std::string syntax);
+
 };
 
 #include <map>
