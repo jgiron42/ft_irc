@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <stack>
 #include "exceptions.hpp"
+#include "t_token.hpp"
 
 extern char replies[512][100];
 
@@ -55,83 +56,100 @@ void
 }
 
 void
-	command::add_elem_str(std::string str, std::list<block>::iterator it)
+    command::add_list(std::string str, std::list<block>::iterator &it)
 {
-	this->args[it->value].push_back(str);
+    it++;
+    std::size_t sep_pos;
+    std::list<block>::iterator tmp = it;
+    std::string sep = tmp->value;
+    std::string tmp_str;
+
+    if ((sep_pos = str.find(sep)) == std::string::npos)
+    {
+        tmp++;
+        add_elem_str(str, tmp);
+        tmp++;
+        std::cout << block_enum_printer(*tmp) << std::endl;
+        it = tmp;
+        return ;
+    }
+    while (!str.empty())
+    {
+        if (tmp->bloc_type == REPE)
+            tmp = it;
+        sep = tmp->value;
+        tmp++;
+        tmp++;
+        if ((sep_pos = str.find(sep)) == std::string::npos) // end of the list
+        {
+            tmp--;
+            add_elem_str(str, tmp);
+            tmp++;
+            it = tmp;
+            return ;
+        }
+        tmp_str.assign(str);
+        tmp--;
+        add_elem_str(tmp_str.erase(sep_pos, std::string::npos), tmp);
+        tmp++;
+        str = str.substr(sep_pos + 1, std::string::npos);
+    }
 }
 
-void
-	command::add_list(std::string str, std::list<block>::iterator &it)
-{
-	it++;
-	std::size_t sep_pos;
-	std::list<block>::iterator tmp = it;
-	std::string sep = tmp->value;
-	std::string tmp_str;
-
-	if ((sep_pos = str.find(sep)) == std::string::npos)
-	{
-		tmp++;
-		add_elem_str(str, tmp);
-		tmp++;
-		std::cout << block_enum_printer(*tmp) << std::endl;
-		it = tmp;
-		return ;
-	}
-	while (!str.empty())
-	{
-		if (tmp->bloc_type == REPE)
-			tmp = it;
-		sep = tmp->value;
-		tmp++;
-		tmp++;
-		if ((sep_pos = str.find(sep)) == std::string::npos) // end of the list
-		{
-			tmp--;
-			add_elem_str(str, tmp);
-			tmp++;
-			it = tmp;
-			return ;
-		}
-		tmp_str.assign(str);
-		tmp--;
-		add_elem_str(tmp_str.erase(sep_pos, std::string::npos), tmp);
-		tmp++;
-		str = str.substr(sep_pos + 1, std::string::npos);
-	}
-}
 
 enum scope : bool {_OPT,_REP};
 
 // advance (char)
 // get_potential_delim
 
-void command::parse_recurse (char *str)
+void command::parse_recurse()
 {
-//	std::list<block>::iterator it = this->token.begin();
-	token_it<std::list<struct block> > tmp(this->token);
-	std::stack<token_it<std::list<struct block> > > loop_begin;
-	std::stack<enum scope, std::vector<bool> > current_scope;
-	token_it<std::list<struct block> > next(this->token);
-	bool delim[256];
-	size_t pos;
-	token_it<std::list<struct block> > it(this->token.begin(), this->token);
+	int is_rep = 0;
+	int is_opt = 0;
+	std::list<struct block>::iterator tmp = token.begin();
 
-	while (it != it.end() && *str)
-	{
-		it.advance(*str);
-		if (it->bloc_type == ELEM)
-		{
-			this->args[it->value].push_back("coucou");
-			bzero(delim, 256);
-			it.get_delim(delim);
-			while (*str && !delim[*str])
-				++str;
-			it++;
-		}
-//		std::cout << it->value << std::endl;end
-	}
+	while (it != this->token.end())
+    {
+        if (it->bloc_type == OPT)
+        {
+            it++;
+            is_opt = 1;
+        }
+        if (p == NULL && !is_opt && it != this->token.end())
+            throw command::argumentMissing();
+        if (p == NULL && is_opt)
+            return ;
+        if (is_rep)
+            command::add_list(p->str, it);
+        if (it->bloc_type == ELEM && p != NULL)
+        {
+            tmp = it;
+            tmp++;
+            if (tmp != this->token.end() && tmp->bloc_type == REP)
+            {
+                it = tmp;
+                command::add_list(p->str, it);
+            }
+            else
+                add_elem(p, it);
+        }
+        if (it->bloc_type == ELEM)
+            p = p->next;
+        it++;
+        if (it->bloc_type == REPE)
+        {
+            is_rep = 0;
+            it++;
+        }
+        if (it->bloc_type == OPTE)
+        {
+            is_opt = 0;
+            it++;
+        }
+    }
+
 }
+
 
 char *ft_string_dup(std::string str)
 {
@@ -149,7 +167,7 @@ void command::parse(message m) {
 		this->args["command"].push_back(m.command_str);
 		try
 		{
-			parse_recurse(ft_string_dup(m.params));
+			parse_recurse();
 		}
 		catch (std::exception &e)
 		{

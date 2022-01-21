@@ -38,7 +38,7 @@ protected:
 	std::string syntax;
 	client &c;
 	server &s;
-	void parse_recurse (char * p);
+	void parse_recurse (void);
 	void add_block(int bt, std::string value);
 	void add_elem(t_params *p, std::list<block>::iterator it);
 	void add_elem_str(std::string, std::list<block>::iterator it);
