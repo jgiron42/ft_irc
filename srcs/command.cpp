@@ -102,10 +102,15 @@ enum scope : bool {_OPT,_REP};
 // advance (char)
 // get_potential_delim
 
-void command::parse_recurse()
+//need to split the string
+//to handle this like before
+
+void command::parse_recurse(char *str)
 {
+    char *p = str;
 	int is_rep = 0;
 	int is_opt = 0;
+	std::list<struct block>::iterator it = token.begin();
 	std::list<struct block>::iterator tmp = token.begin();
 
 	while (it != this->token.end())
@@ -116,7 +121,7 @@ void command::parse_recurse()
             is_opt = 1;
         }
         if (p == NULL && !is_opt && it != this->token.end())
-            throw command::argumentMissing();
+            return ;
         if (p == NULL && is_opt)
             return ;
         if (is_rep)
@@ -167,7 +172,7 @@ void command::parse(message m) {
 		this->args["command"].push_back(m.command_str);
 		try
 		{
-			parse_recurse();
+			parse_recurse(ft_string_dup(m.params));
 		}
 		catch (std::exception &e)
 		{
