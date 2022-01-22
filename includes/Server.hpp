@@ -15,6 +15,7 @@
 #include <netdb.h>
 #include <exception>
 #include <poll.h>
+#include "shell_colors.hpp"
 #define LIVENESS_TIMEOUT	10
 #define PING_TIMEOUT		5
 #define MAX_CLIENT			1000
@@ -34,7 +35,7 @@ public:
 	server	&operator=(const server &);
 	void	routine();
 	void	routine_sock(struct pollfd fd);
-	void	routine_client(struct pollfd fd, time_t now);
+	void	routine_client(struct pollfd &fd, time_t now);
 	void	dispatch(client &c);
 	void	disconnect(int fd);
 	bool	check_liveness(client &, time_t);

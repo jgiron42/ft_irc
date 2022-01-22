@@ -8,4 +8,4 @@ include_directories(includes srcs/commands)
 
 file(GLOB SOURCES srcs/*.cpp includes/*.hpp)
 
-add_executable(ft_irc ${SOURCES} srcs/numerics.cpp)
+add_executable(ft_irc ${SOURCES})

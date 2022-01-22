@@ -1,8 +1,8 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client() : sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){}
-client::client(int fd) : sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){
+client::client() : nickname("anon"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){}
+client::client(int fd) : nickname("anon"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	std::cout << "new client" << std::endl;
 }
@@ -13,7 +13,8 @@ client::client(const client &src){
 
 client::~client() {}
 
-client &client::operator=(const client &src) {
+client &client::operator=(const client &src) { //  TODO: check if all the variables are present
+	this->nickname = src.nickname;
 	this->sock = src.sock;
 	memcpy(this->buf, src.buf, 512);
 	this->begin = src.begin;
@@ -72,6 +73,7 @@ std::string client::popLine() {
 }
 
 void client::send(const std::string &str) {
+	std::cout << "[" << this->nickname << "](" << this->getIP() << ") => " << GREEN << str << WHITE;
 	this->to_send.push_back(str);
 }
 

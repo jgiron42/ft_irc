@@ -13,7 +13,12 @@ public:
 		syntax = "<password>";
 	};
 	void execute() {
-		this->c.password = this->args["password"].front();
+		if (this->c.identified)
+			this->reply_nbr(ERR_ALREADYREGISTRED);
+		else if (!this->args.count("password"))
+			this->reply_nbr(ERR_NEEDMOREPARAMS);
+		else
+			this->c.password = this->args["password"].front();
 	}
 };
 

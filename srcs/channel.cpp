@@ -1,4 +1,6 @@
+#include <sys/syscall.h>
 #include "channel.hpp"
+#include <stdlib.h>
 
 channel::channel(void) : id(), members(), chops(){}
 

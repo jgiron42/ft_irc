@@ -24,6 +24,7 @@ public:
 				this->c.hostname = this->args["hostname"].front();
 				this->c.servername = this->args["servername"].front();
 				this->c.realname = this->args["realname"].front();
+				// TODO: check syntax
 				this->c.identified = true;
 				this->reply_nbr(RPL_WELCOME);
 			}

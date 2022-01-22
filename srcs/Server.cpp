@@ -80,7 +80,7 @@ void server::routine_sock(struct pollfd fd)
 
 }
 
-void server::routine_client(struct pollfd fd, time_t now)
+void server::routine_client(struct pollfd &fd, time_t now)
 {
 	ssize_t ret;
 	char buf[10];
@@ -121,7 +121,7 @@ void server::dispatch(client &c) {
 
 	while ((str = c.popLine()) != "\n" && !str.empty())
 	{
-		std::cout << "From " << c.getIP() << " >> " << str;
+		std::cout << "[" << c.nickname << "](" << c.getIP() << ") <= " << BLUE << str << WHITE;
 		message *parse = parse_msg(str);
 		std::cout << "command: |" << parse->command_str << "|" << std::endl;
 		command *com = get_command(parse->command_str)(c, *this);
@@ -134,7 +134,8 @@ void server::dispatch(client &c) {
 }
 
 void server::disconnect(int fd) {
-	std::string ip = this->clients[fd].getIP();
+	client &c = this->clients[fd];
+	std::cout << "[" << c.nickname << "](" << c.getIP() << ") " << RED << "DISCONNECTED" << WHITE << std::endl;
 	this->clients.erase(fd);
 	std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
 	while (tmpit != this->fds.end() && tmpit->fd != fd)
@@ -142,7 +143,6 @@ void server::disconnect(int fd) {
 	if (tmpit->fd == fd)
 		this->fds.erase(tmpit);
 	close(fd);
-	std::cout << "client " << ip << " disconnected" << std::endl;
 }
 
 bool server::check_liveness(client &c, time_t now) {
@@ -163,7 +163,6 @@ bool server::check_liveness(client &c, time_t now) {
 }
 
 void server::send_ping(client &c) {
-	// send ping message
-	std::cout << "PING" << std::endl;
+	c.send("PING " + this->hostname + "\n"); // multiserver
 	c.ping_send = true;
 }

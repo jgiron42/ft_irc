@@ -7,6 +7,7 @@
 #include <ctime>
 #include <deque>
 #include "channel.hpp"
+#include "shell_colors.hpp"
 #define ABS(n) ((n) > 0 ? (n) : -(n))
 
 class channel;
