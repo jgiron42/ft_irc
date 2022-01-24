@@ -42,6 +42,7 @@ protected:
 	void add_elem(t_params *p, std::list<block>::iterator it);
 	void add_elem_str(std::string, std::list<block>::iterator it);
 	void add_list(std::string str, std::list<block>::iterator &it);
+	void token_displayer(std::list<struct block> token);
 	void generate_token(std::string syntax);
 
 };

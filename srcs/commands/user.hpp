@@ -13,6 +13,7 @@ public:
 		this->name = "USER";
 		this->syntax = "<username> <hostname> <servername> <realname>";
 		generate_token(std::string(syntax));
+		token_displayer(token);
 	};
 	void execute() {
 		if (!this->c.username.empty())

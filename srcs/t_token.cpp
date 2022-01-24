@@ -3,6 +3,9 @@
 //
 
 #include "t_token.hpp"
+#include "command.hpp"
+
+
 
 //void token_it::advance(char c) {
 //	iterator next = *this;

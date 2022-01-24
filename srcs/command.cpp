@@ -40,6 +40,14 @@ std::string block_enum_printer(block b)
 // END of debugging func
 
 
+void command::token_displayer(std::list<struct block> token) {
+    std::list<struct block> tmp = token;
+    while (!tmp.empty()) {
+        std::cout << "bt : " << block_enum_printer(tmp.front()) << " | " << token.front().value << std::endl;
+        tmp.pop_front();
+    }
+}
+
 void
         command::add_elem_str(std::string str, std::list<block>::iterator it)
 {

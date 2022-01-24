@@ -12,6 +12,7 @@ public:
 		name = "PASS";
 		syntax = "<password>";
 		generate_token(std::string(syntax));
+		token_displayer(token);
 	};
 	void execute() {
 		this->c.password = this->args["password"].front();

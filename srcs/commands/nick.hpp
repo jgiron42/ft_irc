@@ -13,6 +13,7 @@ public:
 		name = "NICK";
 		syntax = "<nickname> [<hopcount>]";
 		generate_token(std::string(syntax));
+		token_displayer(token);
 	};
 	void execute() {
 		//check collisions
