@@ -68,7 +68,7 @@ static void opt_end_parser(std::string str, int *i, std::list<struct block> &tok
     token.push_back(b);
 }
 
-std::list<struct block> &command::generate_token(std::string syntax) {
+void command::generate_token(std::string syntax) {
     std::list<struct block> token;
     int i = 0;
 
@@ -92,6 +92,6 @@ std::list<struct block> &command::generate_token(std::string syntax) {
 			opt_end_parser(&syntax[i+1], &i, token);
 		i++;
     }
-    return token;
+    this->token = token;
 }
 

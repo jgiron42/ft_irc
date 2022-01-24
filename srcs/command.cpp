@@ -39,6 +39,14 @@ std::string block_enum_printer(block b)
 
 // END of debugging func
 
+
+void
+        command::add_elem_str(std::string str, std::list<block>::iterator it)
+{
+        this->args[it->value].push_back(str);
+}
+
+
 void
 	command::add_block(int bt, std::string val)
 {
@@ -105,13 +113,12 @@ enum scope : bool {_OPT,_REP};
 //need to split the string
 //to handle this like before
 
-void command::parse_recurse(char *str)
+void command::parse_recurse(t_params *p)
 {
-    char *p = str;
 	int is_rep = 0;
 	int is_opt = 0;
 	std::list<struct block>::iterator it = token.begin();
-	std::list<struct block>::iterator tmp = token.begin();
+	std::list<struct block>::iterator tmp;
 
 	while (it != this->token.end())
     {
@@ -172,7 +179,8 @@ void command::parse(message m) {
 		this->args["command"].push_back(m.command_str);
 		try
 		{
-			parse_recurse(ft_string_dup(m.params));
+            std::cout << "the new string" << m.params << "end ?" << std::endl;
+			//parse_recurse(m.params);
 		}
 		catch (std::exception &e)
 		{
