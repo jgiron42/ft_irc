@@ -33,7 +33,6 @@ public:
 	std::string name;
 protected:
 	std::list<struct block> token;
-//	std::list<block> token;
 	bool replied;
 	std::string syntax;
 	client &c;
