@@ -37,9 +37,9 @@ protected:
 	std::string syntax;
 	client &c;
 	server &s;
-	void parse_recurse (t_params *p);
+	void parse_recurse (std::string str);
 	void add_block(int bt, std::string value);
-	void add_elem(t_params *p, std::list<block>::iterator it);
+	void add_elem(std::string str, std::list<block>::iterator it);
 	void add_elem_str(std::string, std::list<block>::iterator it);
 	void add_list(std::string str, std::list<block>::iterator &it);
 	void token_displayer(std::list<struct block> token);

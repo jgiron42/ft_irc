@@ -1,7 +1,10 @@
 
 #include <command.hpp>
 #include <sstream>
+#include <vector>
+#include <iostream>
 #include <cstdlib>
+#include <algorithm>
 #include <stack>
 #include "exceptions.hpp"
 #include "t_token.hpp"
@@ -66,9 +69,9 @@ void
 }
 
 void
-	command::add_elem(t_params *p, std::list<block>::iterator it)
+	command::add_elem(std::string str, std::list<block>::iterator it)
 {
-	this->args[it->value].push_back(p->str);
+	this->args[it->value].push_back(str);
 }
 
 void
@@ -121,12 +124,20 @@ enum scope : bool {_OPT,_REP};
 //need to split the string
 //to handle this like before
 
-void command::parse_recurse(t_params *p)
+void command::parse_recurse(std::string str)
 {
+    std::vector<std::string> p;
+    str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+    std::istringstream temp(str);
+    std::string s;
 	int is_rep = 0;
 	int is_opt = 0;
 	std::list<struct block>::iterator it = token.begin();
 	std::list<struct block>::iterator tmp;
+
+    while (std::getline(temp, s, ' ')) {
+        p.push_back(s);
+    }
 
 	while (it != this->token.end())
     {
@@ -135,26 +146,26 @@ void command::parse_recurse(t_params *p)
             it++;
             is_opt = 1;
         }
-        if (p == NULL && !is_opt && it != this->token.end())
+        if (p.empty() && !is_opt && it != this->token.end())
             return ;
-        if (p == NULL && is_opt)
+        if (p.empty() && is_opt)
             return ;
         if (is_rep)
-            command::add_list(p->str, it);
-        if (it->bloc_type == ELEM && p != NULL)
+            command::add_list(p.front(), it);
+        if (it->bloc_type == ELEM && !p.empty())
         {
             tmp = it;
             tmp++;
             if (tmp != this->token.end() && tmp->bloc_type == REP)
             {
                 it = tmp;
-                command::add_list(p->str, it);
+                command::add_list(p.front(), it);
             }
             else
-                add_elem(p, it);
+                add_elem(p.front(), it);
         }
         if (it->bloc_type == ELEM)
-            p = p->next;
+            p.erase(p.begin());
         it++;
         if (it->bloc_type == REPE)
         {
@@ -167,7 +178,6 @@ void command::parse_recurse(t_params *p)
             it++;
         }
     }
-
 }
 
 
@@ -187,8 +197,7 @@ void command::parse(message m) {
 		this->args["command"].push_back(m.command_str);
 		try
 		{
-            std::cout << "the new string" << m.params << "end ?" << std::endl;
-			//parse_recurse(m.params);
+            parse_recurse(m.params);
 		}
 		catch (std::exception &e)
 		{
