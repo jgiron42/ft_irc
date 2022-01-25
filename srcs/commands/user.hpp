@@ -11,7 +11,7 @@ class user_command : public command {
 public:
 	user_command(class client &c, class server &s) : command(c, s) {
 		this->name = "USER";
-		this->syntax = "<username> <hostname> <servername> <realname>";
+		this->syntax = "<channel> { [ + | - ] | o | p | s | i | t | n | b | v } [ <limit> ] [ <user> ]";
 		generate_token(std::string(syntax));
 	};
 	void execute() {
