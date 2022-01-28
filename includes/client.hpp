@@ -22,8 +22,8 @@ public:
 	void	printBuf();
 	std::string getBufStr();
 	std::string popLine();
-	void	send(const std::string &);
 	std::deque<std::string> to_send;
+	void	send(const std::string &);
 	std::string getIP() const;
 	void	setIP(const std::string &);
 	void	pong();

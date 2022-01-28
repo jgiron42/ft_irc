@@ -6,11 +6,13 @@
 #include "string"
 #include <cstdlib>
 #include "iostream"
+#include <cstdlib>
+#include <cstring>
 
 message *init_msg(void){
     message *res = new message;
     res->prefix = NULL;
-    res->params = NULL;
+    res->params = std::string();
     return res;
 }
 
@@ -79,39 +81,39 @@ message *get_command(std::string str, message *res) {
 	return res;
 }
 
-t_params *get_param(std::string str){
-    if (str.length() == 0)
-        return (NULL);
-    t_params *res = new s_params;
-    res->next = NULL;
-    size_t i = str.find_first_of(" ", 0);
-    if (i == std::string::npos)
-        i = str.length();
-    while (i == 0){
-        str = str.substr(1, str.length());
-        i = str.find_first_of(" ", 0);
-    }
-    i = str.find_first_of(" ", 0);
-    if (i == std::string::npos)
-        i = str.length();
-    res->str = str.substr(0, i);
-    str = str.substr(i, str.length());
-    i = str.find_first_of(" ", 0);
-    while (i == 0){
-        str = str.substr(1, str.length());
-        i = str.find_first_of(" ", 0);
-    }
-    if (str.length() != 0 || !(str.empty()))
-        res->next = get_param(str);
-    return res;
-}
+//t_params *get_param(std::string str){
+//    if (str.length() == 0)
+//        return (NULL);
+//    t_params *res = new s_params;
+//    res->next = NULL;
+//    size_t i = str.find_first_of(" ", 0);
+//    if (i == std::string::npos)
+//        i = str.length();
+//    while (i == 0){
+//        str = str.substr(1, str.length());
+//        i = str.find_first_of(" ", 0);
+//    }
+//    i = str.find_first_of(" ", 0);
+//    if (i == std::string::npos)
+//        i = str.length();
+//    res->str = str.substr(0, i);
+//    str = str.substr(i, str.length());
+//    i = str.find_first_of(" ", 0);
+//    while (i == 0){
+//        str = str.substr(1, str.length());
+//        i = str.find_first_of(" ", 0);
+//    }
+//    if (str.length() != 0 || !(str.empty()))
+//        res->next = get_param(str);
+//    return res;
+//}
 
 message *parse_msg(std::string str){
     message *res = init_msg();
     if (str.at(0) == ':')
         res->prefix = get_prefix(str);
     res = get_command(str, res);
-    res->params = get_param(res->tmp_to_parse);
+    res->params = res->tmp_to_parse;//get_param(res->tmp_to_parse);
     return res;
 }
 
@@ -120,12 +122,8 @@ void aff_parse(message *res){
         std::cout << "CMD STR " << res->command_str <<  std::endl;
     else
         std::cout << "CMD NBR " << res->command_nbr <<  std::endl;
-    if (res->params){
-        t_params *par = res->params;
-        while(par){
-           std::cout << "param = " << par->str << std::endl;
-           par = par->next;
-        }
+    if (!res->params.empty()){
+		std::cout << res->params << std::endl;
     }
     if (res->prefix){
         if (!(res->prefix->nick.empty())){

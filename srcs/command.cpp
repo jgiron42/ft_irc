@@ -1,7 +1,13 @@
 
 #include <command.hpp>
 #include <sstream>
+#include <vector>
+#include <iostream>
 #include <cstdlib>
+#include <algorithm>
+#include <stack>
+#include "exceptions.hpp"
+#include "t_token.hpp"
 
 extern char replies[512][100];
 
@@ -11,130 +17,192 @@ template <typename T> std::string toStr(T tmp)
 	out << tmp;
 	return out.str();
 }
-
-std::vector<std::string> ft_split(std::string str, char c)
+// Need to delete the below func later (DEBUG only)
+std::string block_enum_printer(block b)
 {
-	std::vector<std::string> ret;
-	std::string tmp;
-	std::istringstream stream(str);
+	if (b.bloc_type == ELEM)
+		return ("ELEM");
+	else if (b.bloc_type == OPT)
+		return ("OPT");
+	else if (b.bloc_type == OPTE)
+		return ("OPTE");
+	else if (b.bloc_type == REP)
+		return ("REP");
+	else if (b.bloc_type == REPE)
+		return ("REPE");
+	else if (b.bloc_type == STR)
+		return ("STR");
+	else if (b.bloc_type == CHAR)
+		return ("CHAR");
+	else if (b.bloc_type == OR)
+		return ("OR");
 
-	while (std::getline(stream, tmp, c))
-		ret.push_back(tmp);
-	return (ret);
+	return ("unknown");
 }
 
-std::string get_name(char **syntax)
-{
-	char *begin = *syntax;
+// END of debugging func
 
-	while(**syntax && **syntax != '>')
-		(*syntax)++;
-	if (!**syntax)
-		throw command::invalidSyntaxException();
-	(*syntax)++;
-	return (std::string(begin).substr(0, *syntax - begin - 1));
+
+void command::token_displayer(std::list<struct block> token) {
+    std::list<struct block> tmp = token;
+    while (!tmp.empty()) {
+        std::cout << "bt : " << block_enum_printer(tmp.front()) << " | " << token.front().value << std::endl;
+        tmp.pop_front();
+    }
 }
 
-void command::parse_recurse (char **syntax, t_params *p, bool is_optional)
+void
+        command::add_elem_str(std::string str, std::list<block>::iterator it)
 {
-	static std::string key;
-	static std::string value;
-	if (!p)
-	{
-		if (is_optional)
-			throw command::argumentMissing();
-		return;
-	}
-	while (**syntax && p)
-	{
-		if (**syntax != ' ' && **syntax != '\n' && **syntax != p->str[0])
-		{
-			value.push_back(p->str[0]);
-			p->str.erase(p->str.begin());
-		}
-		else
-		{
-			if (key.empty())
-				throw syntaxError();
-			this->args[key].push_back(value);
-			key = "";
-			value = "";
-		}
-		if (**syntax == p->str[0])
-		{
-			(*syntax)++;
-			p->str.erase(p->str.begin());
-		}
-		else if (**syntax == ' ')
-		{
-			while(**syntax == ' ')
-				(*syntax)++;
-			p = p->next;
-		}
-		else if (**syntax == '}' || **syntax == ']')
-			return;
-		else if (**syntax == '<')
-		{
-			if (!p && !is_optional)
-				throw command::syntaxError();
-			else
-				key = get_name(&(++(*syntax)));
-		}
-		else if (**syntax == '[')
-		{
-			(*syntax)++;
-			try	{
-				parse_recurse(syntax, p, true);
-				if (**syntax != ']')
-					throw command::invalidSyntaxException();
-			}
-			catch (argumentMissing s){}
-			while (**syntax != ']')
-				(*syntax)++;
-		}
-		else if (**syntax == '{')
-		{
-			(*syntax)++;
-			char *stmp = *syntax;
-			while (1)
-			{
-				try	{
-					parse_recurse(syntax, p, true);
-				}
-				catch (argumentMissing s){
-					break;
-				}
-				if (**syntax != '}')
-					throw command::invalidSyntaxException();
-				*syntax = stmp;
-			}
-			while (**syntax != '}')
-				(*syntax)++;
-		}
-	}
-	if (key.empty())
-		throw syntaxError();
-	this->args[key].push_back(value);
-	key = "";
-	value = "";
+        this->args[it->value].push_back(str);
 }
+
+
+void
+	command::add_block(int bt, std::string val)
+{
+	block b;
+
+	b.bloc_type = bt;
+	b.value = val;
+	this->token.push_back(b);
+}
+
+void
+	command::add_elem(std::string str, std::list<block>::iterator it)
+{
+	this->args[it->value].push_back(str);
+}
+
+void
+    command::add_list(std::string str, std::list<block>::iterator &it)
+{
+    it++;
+    std::size_t sep_pos;
+    std::list<block>::iterator tmp = it;
+    std::string sep = tmp->value;
+    std::string tmp_str;
+
+    if ((sep_pos = str.find(sep)) == std::string::npos)
+    {
+        tmp++;
+        add_elem_str(str, tmp);
+        tmp++;
+        std::cout << block_enum_printer(*tmp) << std::endl;
+        it = tmp;
+        return ;
+    }
+    while (!str.empty())
+    {
+        if (tmp->bloc_type == REPE)
+            tmp = it;
+        sep = tmp->value;
+        tmp++;
+        tmp++;
+        if ((sep_pos = str.find(sep)) == std::string::npos) // end of the list
+        {
+            tmp--;
+            add_elem_str(str, tmp);
+            tmp++;
+            it = tmp;
+            return ;
+        }
+        tmp_str.assign(str);
+        tmp--;
+        add_elem_str(tmp_str.erase(sep_pos, std::string::npos), tmp);
+        tmp++;
+        str = str.substr(sep_pos + 1, std::string::npos);
+    }
+}
+
+
+enum scope : bool {_OPT,_REP};
+
+// advance (char)
+// get_potential_delim
+
+//need to split the string
+//to handle this like before
+
+void command::parse_recurse(std::string str)
+{
+    std::vector<std::string> p;
+    str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+    std::istringstream temp(str);
+    std::string s;
+	int is_rep = 0;
+	int is_opt = 0;
+	std::list<struct block>::iterator it = token.begin();
+	std::list<struct block>::iterator tmp;
+
+    while (std::getline(temp, s, ' ')) {
+        p.push_back(s);
+    }
+
+	while (it != this->token.end())
+    {
+        if (it->bloc_type == OPT)
+        {
+            it++;
+            is_opt = 1;
+        }
+        if (p.empty() && !is_opt && it != this->token.end())
+            return ;
+        if (p.empty() && is_opt)
+            return ;
+        if (is_rep)
+            command::add_list(p.front(), it);
+        if (it->bloc_type == ELEM && !p.empty())
+        {
+            tmp = it;
+            tmp++;
+            if (tmp != this->token.end() && tmp->bloc_type == REP)
+            {
+                it = tmp;
+                command::add_list(p.front(), it);
+            }
+            else
+                add_elem(p.front(), it);
+        }
+        if (it->bloc_type == ELEM)
+            p.erase(p.begin());
+        it++;
+        if (it->bloc_type == REPE)
+        {
+            is_rep = 0;
+            it++;
+        }
+        if (it->bloc_type == OPTE)
+        {
+            is_opt = 0;
+            it++;
+        }
+    }
+}
+
 
 char *ft_string_dup(std::string str)
 {
 	const char *data = str.data();
 	char *ret = (char*)malloc(str.length() + 1);
 
-	for (int i = 0; i < str.length(); i++)
+	for (unsigned long i = 0; i < str.length(); i++)
 		ret[i] = data[i];
 	ret[str.length()] = 0;
 	return (ret);
 }
 
 void command::parse(message m) {
-	char *str = ft_string_dup(this->syntax);
 	try {
 		this->args["command"].push_back(m.command_str);
-		this->parse_recurse(&str, m.params, false);
+		try
+		{
+            parse_recurse(m.params);
+		}
+		catch (std::exception &e)
+		{
+			std::cerr << e.what() << std::endl;
+		}
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{
@@ -143,17 +211,17 @@ void command::parse(message m) {
 				std::cout << "    " << *j << std::endl;
 		}
 	}
-	catch (std::exception e)
+	catch (std::exception &e)
 	{
-		if (std::string(e.what()) == "syntax is invalid")
+		if (std::string(e.what()).compare("missing argument"))
+			this->reply_nbr(ERR_NEEDMOREPARAMS);
+		if (std::string(e.what()).compare("syntax is invalid"))
 		{
 			std::cerr << e.what()  << std::endl;
-			exit(1);
+			return ;
 		}
 //		else if (std::string(e.what()) == "syntax error")
 //				this->reply();
-		else if (std::string(e.what()) == "missing argument")
-				this->reply_nbr(ERR_NEEDMOREPARAMS);
 	}
 }
 
