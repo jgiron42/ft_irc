@@ -5,6 +5,7 @@
 #ifndef FT_IRC_PASS_HPP
 #define FT_IRC_PASS_HPP
 #include "command.hpp"
+#include "utils.hpp"
 
 class pass_command : public command {
 public:
@@ -13,7 +14,7 @@ public:
 		syntax = "<password>";
 		generate_token(std::string(syntax));
 	};
-	void execute() {
+	void execute() { // TODO: masks
 		if (this->c.identified)
 			this->reply_nbr(ERR_ALREADYREGISTRED);
 		else if (!this->args.count("password"))

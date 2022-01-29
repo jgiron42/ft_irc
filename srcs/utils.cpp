@@ -41,3 +41,8 @@ bool glob_include(char * glob, char * str)
 	} while (*glob && (*str || *glob == '*'));
 	return (*str == *glob);
 }
+
+inline bool	is_channel(const std::string &name)
+{
+	return (name[0] == '&' || name[0] == '#');
+}

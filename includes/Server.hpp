@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstring>
 #include "client.hpp"
+#include "channel.hpp"
 #include <cstdio>
 #include <iostream>
 #include <sys/types.h>
@@ -23,6 +24,7 @@
 const char *my_strerror(char *s1, int err);
 
 class client;
+class channel;
 class server {
 private:
 	std::map<int, client>		clients;
@@ -40,9 +42,10 @@ public:
 	void	disconnect(int fd);
 	bool	check_liveness(client &, time_t);
 	void	send_ping(client &);
+	std::map<std::string, channel> channels;
+	std::map<std::string, client *> users;
 	std::string password;
 	std::string hostname;
-
 	typedef std::runtime_error syscall_failure;
 };
 

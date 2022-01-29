@@ -5,6 +5,7 @@
 #include "client.hpp"
 
 class client;
+class server;
 class channel {
 public:
 	channel(void);

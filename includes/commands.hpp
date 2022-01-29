@@ -11,6 +11,7 @@
 #include "user.hpp"
 #include "nick.hpp"
 #include "pass.hpp"
+#include "pong.hpp"
 #include "command_not_found.hpp"
 
 
@@ -53,6 +54,7 @@ creator *get_command(std::string name)
 		map["NICK"] = &f<nick_command>;
 		map["PASS"] = &f<pass_command>;
 		map["ZBEUB"] = &f<zbeub_command>;
+		map["PONG"] = &f<pong_command>;
 	}
 	try {
 		return (map.at(name));
