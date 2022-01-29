@@ -19,6 +19,7 @@ public:
 		else if (!this->args.count("password"))
 			this->reply_nbr(ERR_NEEDMOREPARAMS);
 		else
+			//TODO: check if input is valid character
 			this->c.password = this->args["password"].front();
 	}
 };

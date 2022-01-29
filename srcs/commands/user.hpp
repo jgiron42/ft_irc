@@ -11,26 +11,27 @@ class user_command : public command {
 public:
 	user_command(class client &c, class server &s) : command(c, s) {
 		this->name = "USER";
-		this->syntax = "<channel> { [ + | - ] | o | p | s | i | t | n | b | v } [ <limit> ] [ <user> ]";
+		this->syntax = "<username> <hostname> <servername> <realname>";
 		generate_token(std::string(syntax));
 	};
 	void execute() {
-		if (!this->c.username.empty())
+		if (this->args.size() < 4)
+			this->reply_nbr(ERR_NEEDMOREPARAMS);
+		else if (this->c.identified)
 			this->reply_nbr(ERR_ALREADYREGISTRED);
 		else
 		{
-			if (this->c.password == this->s.password)
-			{
-				this->c.username = this->args["username"].front();
-				this->c.hostname = this->args["hostname"].front();
-				this->c.servername = this->args["servername"].front();
-				this->c.realname = this->args["realname"].front();
-				// TODO: check syntax
-				this->c.identified = true;
-				this->reply_nbr(RPL_WELCOME);
+			//TODO: check if input is valid character
+			get_arg("username", this->c.username);
+			get_arg("hostname", this->c.hostname);
+			get_arg("servername", this->c.servername);
+			get_arg("realname", this->c.realname);
+			if (this->c.try_login()) {
+				if (this->c.identified)
+					this->reply_nbr(RPL_WELCOME);
+				else
+					this->reply_nbr(ERR_PASSWDMISMATCH);
 			}
-			else
-				this->reply_nbr(ERR_PASSWDMISMATCH);
 		}
 	};
 };

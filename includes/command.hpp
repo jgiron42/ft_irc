@@ -37,6 +37,8 @@ protected:
 	std::string syntax;
 	client &c;
 	server &s;
+	bool		get_arg(const std::string &key, std::string &dst);
+	bool		get_arg(const std::string &key, std::list<std::string> &dst);
 	void parse_recurse (std::string str);
 	void add_block(int bt, std::string value);
 	void add_elem(std::string str, std::list<block>::iterator it);

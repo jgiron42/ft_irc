@@ -15,8 +15,19 @@ public:
 		generate_token(std::string(syntax));
 	};
 	void execute() {
-		//check collisions
-		this->c.nickname = this->args["nickname"].front();
+		std::string tmp;
+		if (this->args.empty())
+			this->reply_nbr(ERR_NONICKNAMEGIVEN);
+		//TODO: check if input is valid character
+		this->get_arg("nickname", tmp);
+		//TODO: check collisions
+		this->c.nickname = tmp;
+		if (!this->c.identified && this->c.try_login()) {
+			if (this->c.identified)
+				this->reply_nbr(RPL_WELCOME);
+			else
+				this->reply_nbr(ERR_PASSWDMISMATCH);
+		}
 	}
 };
 

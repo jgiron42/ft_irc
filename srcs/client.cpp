@@ -1,13 +1,13 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client() : nickname("anon"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){}
-client::client(int fd) : nickname("anon"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false){
+client::client(const server &s) : nickname("anon"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s){}
+client::client(int fd, const server &s) : nickname("anon"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s){
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	std::cout << "new client" << std::endl;
 }
 
-client::client(const client &src){
+client::client(const client &src) : s(src.s){
 	*this = src;
 }
 
@@ -20,6 +20,7 @@ client &client::operator=(const client &src) {
 	this->end = src.end;
 	this->channels = src.channels;
 	this->last_activity = src.last_activity;
+	this->identified = src.identified;
 	return (*this);
 }
 
@@ -72,6 +73,7 @@ std::string client::popLine() {
 }
 
 void client::send(const std::string &str) {
+	std::cout << "[" << this->nickname << "](" << this->getIP() << ") => " << GREEN << str << WHITE;
 	this->to_send.push_back(str);
 }
 
@@ -86,4 +88,15 @@ void client::setIP(const std::string &ip) {
 void client::pong() {
 	this->last_activity = std::time(NULL);
 	this->ping_send = false;
+}
+
+bool client::try_login() {
+	if ((this->password.empty() && !this->s.password.empty()) ||this->nickname.empty() || this->username.empty())
+		return (false);
+	else if (this->password == this->s.password)
+	{
+		this->identified = true;
+		return (true);
+	}
+	return (true);
 }

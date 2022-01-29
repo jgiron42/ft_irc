@@ -203,6 +203,7 @@ void command::parse(message m) {
 		{
 			std::cerr << e.what() << std::endl;
 		}
+#ifdef DEBUGPARSER
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{
@@ -210,6 +211,7 @@ void command::parse(message m) {
 			for (std::list<std::string>::iterator j = i->second.begin(); j != i->second.end(); j++)
 				std::cout << "    " << *j << std::endl;
 		}
+#endif
 	}
 	catch (std::exception &e)
 	{
@@ -225,8 +227,31 @@ void command::parse(message m) {
 	}
 }
 
+bool command::get_arg(const std::string &key, std::string &dst) { // true if successfull
+	std::map<std::string, std::list<std::string> >::iterator tmp =  this->args.find(key);
+	if (tmp == this->args.end())
+	{
+		dst = "";
+		return (false);
+	}
+	dst = tmp->second.front();
+	tmp->second.pop_front();
+	return (true);
+}
+
+bool command::get_arg(const std::string &key, std::list<std::string> &dst) { // true if successfull
+	std::map<std::string, std::list<std::string> >::iterator tmp =  this->args.find(key);
+	if (tmp == this->args.end())
+	{
+		dst = std::list<std::string>();
+		return (false);
+	}
+	dst = tmp->second;
+	return (true);
+
+}
+
 void command::reply_nbr(int nbr) {
-	this->replied = true;
 	std::string reply(replies[nbr]);
 	//some substitutions
 	this->reply(toStr(nbr), reply);
@@ -236,5 +261,6 @@ void command::reply(std::string command, std::string str) {
 	if (!this->replied)
 	{
 		this->c.send(":" + this->s.hostname + " " + command + " " + this->c.username + " " + str + "\n");
+		this->replied = true;
 	}
 }

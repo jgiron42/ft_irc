@@ -22,6 +22,7 @@
 
 const char *my_strerror(char *s1, int err);
 
+class client;
 class server {
 private:
 	std::map<int, client>		clients;
@@ -34,7 +35,7 @@ public:
 	server	&operator=(const server &);
 	void	routine();
 	void	routine_sock(struct pollfd fd);
-	void	routine_client(struct pollfd fd, time_t now);
+	void	routine_client(struct pollfd &fd, time_t now);
 	void	dispatch(client &c);
 	void	disconnect(int fd);
 	bool	check_liveness(client &, time_t);

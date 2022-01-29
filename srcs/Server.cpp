@@ -69,14 +69,14 @@ void server::routine_sock(struct pollfd fd)
 	if (fd.revents & POLLIN) {
 		if ((tmp = accept(sock, (sockaddr *) &csin, &sinsize)) >= 0) // syscall
 		{
-			this->clients[tmp] = client(tmp);
+			this->clients.insert(std::make_pair(tmp, client(tmp, *this)));
 			this->fds.push_back((struct pollfd) {.fd = tmp, .events = POLLIN});
 			this->clients.at(tmp).setIP(std::string(inet_ntoa(csin.sin_addr)));
 		} else
 			throw syscall_failure(my_strerror((char *) "accept: ", errno));
 	}
 	fd.revents = 0;
-	fd.events = POLLIN;
+	fd.events = POLLIN ;
 
 }
 
@@ -84,7 +84,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 {
 	ssize_t ret;
 	char buf[10];
-	client *current_cli = &this->clients[fd.fd];
+	client *current_cli = &this->clients.find(fd.fd)->second;
 
 	if (!this->check_liveness(*current_cli, now))
 		return;
@@ -101,12 +101,14 @@ void server::routine_client(struct pollfd &fd, time_t now)
 			this->dispatch(*current_cli);
 		else
 			throw syscall_failure(my_strerror((char *) "recv: ", errno));
-	} else if (fd.revents & POLLOUT && !current_cli->to_send.empty()) {
+	}
+	if (fd.revents & POLLOUT && !current_cli->to_send.empty()) {
 		if (send(fd.fd, current_cli->to_send.front().data(), current_cli->to_send.front().length(),
 				 0) == -1)  //syscall
 			throw syscall_failure(my_strerror((char *) "send: ", errno));
 		current_cli->to_send.pop_front();
-	} else if (fd.revents & POLLHUP || fd.revents & POLLNVAL ||
+	}
+	if (fd.revents & POLLHUP || fd.revents & POLLNVAL ||
 			   fd.revents & POLLERR) {
 		this->disconnect(fd.fd);
 		std::cerr << " error!!!" << std::endl;
@@ -123,7 +125,9 @@ void server::dispatch(client &c) {
 	{
 		std::cout << "[" << c.nickname << "](" << c.getIP() << ") <= " << BLUE << str << WHITE;
 		message *parse = parse_msg(str);
+#ifdef DEBUGPARSER
 		std::cout << "command: |" << parse->command_str << "|" << std::endl;
+#endif
 		command *com = get_command(parse->command_str)(c, *this);
 		com->name = parse->command_str;
 		com->parse(*parse);
@@ -134,7 +138,7 @@ void server::dispatch(client &c) {
 }
 
 void server::disconnect(int fd) {
-	client &c = this->clients[fd];
+	client &c = this->clients.find(fd)->second;
 	std::cout << "[" << c.nickname << "](" << c.getIP() << ") " << RED << "DISCONNECTED" << WHITE << std::endl;
 	this->clients.erase(fd);
 	std::vector<struct pollfd>::iterator tmpit = this->fds.begin();

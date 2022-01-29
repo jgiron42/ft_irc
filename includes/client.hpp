@@ -8,13 +8,15 @@
 #include <deque>
 #include "channel.hpp"
 #include "shell_colors.hpp"
+#include "Server.hpp"
 #define ABS(n) ((n) > 0 ? (n) : -(n))
 
 class channel;
+class server;
 class client {
 public:
-	client();
-	client(int fd);
+	client(const server &s);
+	client(int fd, const server &s);
 	client(const client &);
 	~client();
 	client &operator=(const client &);
@@ -27,7 +29,9 @@ public:
 	std::string getIP() const;
 	void	setIP(const std::string &);
 	void	pong();
+	bool	try_login();
 //private:
+	const server	&s;
 	bool identified;
 	std::vector<channel *> channels;
 	std::string password;
