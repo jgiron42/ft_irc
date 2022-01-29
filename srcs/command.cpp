@@ -235,7 +235,7 @@ bool command::get_arg(const std::string &key, std::string &dst) { // true if suc
 		return (false);
 	}
 	dst = tmp->second.front();
-	tmp->second.pop_front();
+//	tmp->second.pop_front();
 	return (true);
 }
 
@@ -252,8 +252,23 @@ bool command::get_arg(const std::string &key, std::list<std::string> &dst) { // 
 }
 
 void command::reply_nbr(int nbr) {
-	std::string reply(replies[nbr]);
-	//some substitutions
+	std::string format(replies[nbr]);
+	std::string reply;
+	std::map<std::string, std::list<std::string> >::iterator tmp;
+	int j;
+	for (int i = 0; i < format.size(); i++)
+	{
+		if (format[i] == '<')
+		{
+			for (j = i; format[j] != '>'; j++);
+			tmp = this->args.find(format.substr(i + 1, j - i - 1));
+			if (tmp != this->args.end())
+				reply += tmp->second.front();
+			i = j;
+		}
+		else
+			reply += format[i];
+	}
 	this->reply(toStr(nbr), reply);
 }
 

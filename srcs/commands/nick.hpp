@@ -24,7 +24,11 @@ public:
 		this->c.nickname = tmp;
 		if (!this->c.identified && this->c.try_login()) {
 			if (this->c.identified)
+			{
+				this->args["username"].push_front(this->c.username);
+				this->args["hostname"].push_front(this->c.hostname);
 				this->reply_nbr(RPL_WELCOME);
+			}
 			else
 				this->reply_nbr(ERR_PASSWDMISMATCH);
 		}

@@ -28,7 +28,10 @@ public:
 			get_arg("realname", this->c.realname);
 			if (this->c.try_login()) {
 				if (this->c.identified)
+				{
+					this->args["nickname"].push_front(this->c.nickname);
 					this->reply_nbr(RPL_WELCOME);
+				}
 				else
 					this->reply_nbr(ERR_PASSWDMISMATCH);
 			}
