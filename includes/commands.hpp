@@ -12,6 +12,9 @@
 #include "nick.hpp"
 #include "pass.hpp"
 #include "pong.hpp"
+#include "version.hpp"
+#include "time.hpp"
+#include "quit.hpp"
 #include "command_not_found.hpp"
 
 
@@ -48,13 +51,17 @@ command *nullf(client &, server &) {
 creator *get_command(std::string name)
 {
 	static std::map<std::string, creator*> map;
+
 	if (map.empty())
 	{
 		map["USER"] = &f<user_command>;
 		map["NICK"] = &f<nick_command>;
 		map["PASS"] = &f<pass_command>;
-		map["ZBEUB"] = &f<zbeub_command>;
 		map["PONG"] = &f<pong_command>;
+		map["QUIT"] = &f<quit_command>;
+		map["VERSION"] = &f<version_command>;
+		map["TIME"] = &f<time_command>;
+		map["ZBEUB"] = &f<zbeub_command>;
 	}
 	try {
 		return (map.at(name));
