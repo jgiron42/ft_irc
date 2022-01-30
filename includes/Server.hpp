@@ -20,6 +20,8 @@
 #define PING_TIMEOUT		10
 #define MAX_CLIENT			1000
 #define PORT				1111
+#define VERSION				"1"
+#define DEBUG_LVL			0
 
 const char *my_strerror(char *s1, int err);
 
