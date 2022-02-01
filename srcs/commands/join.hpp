@@ -11,7 +11,7 @@ class join_command : public command {
 public:
 	join_command(class client &c, class server &s) : command(c, s) {
 		name = "JOIN";
-		syntax = "<canal> { ',' <canal> } [ <cle> { ',' <cle> } ]";
+		syntax = "<canal> { ',' <canal> } <plop>";
 		generate_token(std::string(syntax));
 	};
 	void execute() {
@@ -23,7 +23,7 @@ public:
         }
 		//TODO: check if input is valid character
 		this->get_arg("canal", tmp);
-        this->get_arg("cle", key);
+        this->get_arg("plop", key);
         std::cout << "THis is the arg taken : " << tmp << ", " << key << std::endl;
         /*
 		//TODO: check collisions
