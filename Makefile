@@ -34,6 +34,9 @@ all:	$(NAME)
 $(NAME):	$(OBJS)
 	$(COMPILER) -o $(NAME) $(FLAGS) $(OBJS)
 
+debug:		$(OBJ)
+	$(COMPILER) -o $(NAME) $(FLAGS) -D DEBUGPARSER=1 $(OBJS)
+
 clean:
 	rm -f $(OBJS)
 

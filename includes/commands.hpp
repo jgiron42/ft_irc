@@ -11,6 +11,7 @@
 #include "user.hpp"
 #include "nick.hpp"
 #include "pass.hpp"
+#include "join.hpp"
 #include "pong.hpp"
 #include "version.hpp"
 #include "time.hpp"
@@ -62,6 +63,7 @@ creator *get_command(std::string name)
 		map["VERSION"] = &f<version_command>;
 		map["TIME"] = &f<time_command>;
 		map["ZBEUB"] = &f<zbeub_command>;
+		map["JOIN"] = &f<join_command>;
 	}
 	try {
 		return (map.at(name));

@@ -203,6 +203,7 @@ void command::parse(message m) {
 		{
 			std::cerr << e.what() << std::endl;
 		}
+		std::cout << "debug ou je t'encule" << std::endl;
 #ifdef DEBUGPARSER
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
