@@ -18,3 +18,8 @@ channel &channel::operator=(const channel &src) {
 	this->id = src.id;
 	return (*this);
 }
+
+//void channel::send(const std::string &str) {
+//	for (std::vector<client *>::iterator i = this->members.begin(); i != this->members.end(); i++)
+//		(**i).send(str)
+//}

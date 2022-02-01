@@ -41,6 +41,7 @@ public:
 	std::string servername;
 	std::string realname;
 	std::string ip;
+	bool	away : 1;
 	bool	invisible : 1;
 	bool 	notices : 1;
 	bool	wallops : 1;

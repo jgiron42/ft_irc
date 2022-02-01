@@ -13,7 +13,7 @@ public:
 	channel(const channel &);
 	~channel();
 	channel &operator=(const channel &);
-private:
+//	void	send(const std::string &);
 	std::string			id;
 	std::vector<client *>	members;
 	std::vector<client *>	chops;
