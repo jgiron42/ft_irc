@@ -18,7 +18,7 @@
 #define REPE 4
 #define STR  5
 #define CHAR 6
-#define OR	 4
+#define OR	 7
 #endif
 
 struct block {

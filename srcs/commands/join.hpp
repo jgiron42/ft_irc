@@ -19,7 +19,6 @@ public:
 		std::string key;
 		this->get_arg("canal", canal);
 		this->get_arg("key", key);
-		std::cout << "aaaarrgggss : " << canal << " | " << key << std::endl;
 		/*
 		std::string tmp;
 		if (this->args.empty())

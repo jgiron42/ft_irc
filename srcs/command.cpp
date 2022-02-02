@@ -170,8 +170,6 @@ void command::parse_recurse(std::string str)
         }
         if (it->bloc_type == ELEM)
             p.erase(p.begin());
-		if (it != token.end())
-			std::cout << "actual elem" << block_enum_printer(*it) << "|" << it->value << std::endl;
         if (it->bloc_type == REPE)
             is_rep = 0;
         if (it->bloc_type == OPTE)
@@ -203,7 +201,6 @@ void command::parse(message m) {
 		{
 			std::cerr << e.what() << std::endl;
 		}
-		std::cout << "debug ou je t'encule" << std::endl;
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{
