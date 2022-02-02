@@ -161,23 +161,22 @@ void command::parse_recurse(std::string str)
                 it = tmp;
                 command::add_list(p.front(), tmp);
 				p.erase(p.begin());
+				while (tmp->bloc_type != REPE)
+					tmp++;
+				it = tmp++;
             }
             else
                 add_elem(p.front(), it);
         }
-        //if (it->bloc_type == ELEM)
+        if (it->bloc_type == ELEM)
             p.erase(p.begin());
-        it++;
+		if (it != token.end())
+			std::cout << "actual elem" << block_enum_printer(*it) << "|" << it->value << std::endl;
         if (it->bloc_type == REPE)
-        {
             is_rep = 0;
-            it++;
-        }
         if (it->bloc_type == OPTE)
-        {
             is_opt = 0;
-            it++;
-        }
+		it++;
     }
 }
 
