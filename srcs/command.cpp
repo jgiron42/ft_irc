@@ -160,11 +160,12 @@ void command::parse_recurse(std::string str)
             {
                 it = tmp;
                 command::add_list(p.front(), tmp);
+				p.erase(p.begin());
             }
             else
                 add_elem(p.front(), it);
         }
-        if (it->bloc_type == ELEM)
+        //if (it->bloc_type == ELEM)
             p.erase(p.begin());
         it++;
         if (it->bloc_type == REPE)
