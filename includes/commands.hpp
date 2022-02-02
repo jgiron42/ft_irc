@@ -11,6 +11,7 @@
 #include "user.hpp"
 #include "nick.hpp"
 #include "pass.hpp"
+#include "join.hpp"
 #include "pong.hpp"
 #include "privmsg.hpp"
 #include "version.hpp"
@@ -40,6 +41,7 @@ creator *get_command(std::string name)
 		map["QUIT"] = &f<quit_command>;
 		map["VERSION"] = &f<version_command>;
 		map["TIME"] = &f<time_command>;
+		map["JOIN"] = &f<join_command>;
 	}
 	try {
 		return (map.at(name));
@@ -49,4 +51,4 @@ creator *get_command(std::string name)
 	}
 }
 
-#endif //FT_IRC_COMMANDS_HPP.at(
+#endif //FT_IRC_COMMANDS_HPP

@@ -158,24 +158,22 @@ void command::parse_recurse(std::string str)
             if (tmp != this->token.end() && tmp->bloc_type == REP)
             {
                 it = tmp;
-                command::add_list(p.front(), it);
+                command::add_list(p.front(), tmp);
+				p.erase(p.begin());
+				while (tmp->bloc_type != REPE)
+					tmp++;
+				it = tmp++;
             }
             else
                 add_elem(p.front(), it);
         }
         if (it->bloc_type == ELEM)
             p.erase(p.begin());
-        it++;
         if (it->bloc_type == REPE)
-        {
             is_rep = 0;
-            it++;
-        }
         if (it->bloc_type == OPTE)
-        {
             is_opt = 0;
-            it++;
-        }
+		it++;
     }
 }
 
@@ -202,7 +200,6 @@ void command::parse(message m) {
 		{
 			std::cerr << e.what() << std::endl;
 		}
-#ifdef DEBUGPARSER
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{
@@ -210,7 +207,6 @@ void command::parse(message m) {
 			for (std::list<std::string>::iterator j = i->second.begin(); j != i->second.end(); j++)
 				std::cout << "    " << *j << std::endl;
 		}
-#endif
 	}
 	catch (std::exception &e)
 	{
