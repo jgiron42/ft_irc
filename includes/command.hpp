@@ -29,6 +29,8 @@ public:
 	virtual void		execute() {  };
 	void reply(std::string command, std::string str);
 	void reply_nbr(int nbr);
+	void send(std::string command, std::string str, client &);
+	void send_numeric(int, client &);
 	std::map<std::string, std::list<std::string> > args;
 	std::string name;
 protected:

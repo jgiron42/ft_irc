@@ -8,7 +8,7 @@
 
 bool glob_include(char * glob, char * str);
 const char *my_strerror(char *s1, int err);
-inline bool	is_channel(const std::string &);
+bool	is_channel(const std::string &);
 
 
 #endif //FT_IRC_UTILS_HPP

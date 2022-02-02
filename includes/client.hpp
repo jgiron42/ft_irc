@@ -6,6 +6,7 @@
 #include <cstring>
 #include <ctime>
 #include <deque>
+#include <stack>
 #include "channel.hpp"
 #include "shell_colors.hpp"
 #include "Server.hpp"
@@ -15,8 +16,8 @@ class channel;
 class server;
 class client {
 public:
-	client(const server &s);
-	client(int fd, const server &s);
+	client(server &s);
+	client(int fd, server &s);
 	client(const client &);
 	~client();
 	client &operator=(const client &);
@@ -31,12 +32,13 @@ public:
 	void	pong();
 	bool	try_login();
 //private:
-	const server	&s;
+	server	&s;
 	bool identified;
-	std::vector<channel *> channels;
+	std::map<std::string, channel *> channels;
 	std::string password;
 	std::string username;
 	std::string nickname;
+	std::deque<std::string> nick_history;
 	std::string hostname;
 	std::string servername;
 	std::string realname;
@@ -52,6 +54,8 @@ public:
 	int		sock;
 	time_t	last_activity;
 	bool	ping_send;
+
+	void	set_nick(std::string &);
 };
 
 

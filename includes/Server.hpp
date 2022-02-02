@@ -45,9 +45,10 @@ public:
 	bool	check_liveness(client &, time_t);
 	void	send_ping(client &);
 	std::map<std::string, channel> channels;
-	std::map<std::string, client *> users;
+	std::map<std::string, client *> users; // map nickname to user
 	std::string password;
 	std::string hostname;
+	int		history_size;
 	typedef std::runtime_error syscall_failure;
 };
 

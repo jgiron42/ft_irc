@@ -12,6 +12,7 @@
 #include "nick.hpp"
 #include "pass.hpp"
 #include "pong.hpp"
+#include "privmsg.hpp"
 #include "version.hpp"
 #include "time.hpp"
 #include "quit.hpp"
@@ -35,6 +36,7 @@ creator *get_command(std::string name)
 		map["NICK"] = &f<nick_command>;
 		map["PASS"] = &f<pass_command>;
 		map["PONG"] = &f<pong_command>;
+		map["PRIVMSG"] = &f<privmsg_command>;
 		map["QUIT"] = &f<quit_command>;
 		map["VERSION"] = &f<version_command>;
 		map["TIME"] = &f<time_command>;

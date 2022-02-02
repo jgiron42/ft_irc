@@ -42,7 +42,7 @@ bool glob_include(char * glob, char * str)
 	return (*str == *glob);
 }
 
-inline bool	is_channel(const std::string &name)
+bool	is_channel(const std::string &name)
 {
 	return (name[0] == '&' || name[0] == '#');
 }

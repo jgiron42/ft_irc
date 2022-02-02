@@ -8,7 +8,6 @@
 #include <stack>
 #include "exceptions.hpp"
 #include "t_token.hpp"
-
 extern char replies[512][100];
 
 template <typename T> std::string toStr(T tmp)
@@ -252,7 +251,19 @@ bool command::get_arg(const std::string &key, std::list<std::string> &dst) { // 
 }
 
 void command::reply_nbr(int nbr) {
-	std::string format(replies[nbr]);
+	this->send_numeric(nbr, this->c);
+}
+
+void command::reply(std::string command, std::string str) {
+	if (!this->replied)
+	{
+		this->send(command, str, this->c);
+		this->replied = true;
+	}
+}
+
+void command::send_numeric(int n, client &c) {
+	std::string format(replies[n]);
 	std::string reply;
 	std::map<std::string, std::list<std::string> >::iterator tmp;
 	int j;
@@ -269,13 +280,10 @@ void command::reply_nbr(int nbr) {
 		else
 			reply += format[i];
 	}
-	this->reply(toStr(nbr), reply);
+	this->send(toStr(n), reply, this->c);
+
 }
 
-void command::reply(std::string command, std::string str) {
-	if (!this->replied)
-	{
-		this->c.send(":" + this->s.hostname + " " + command + " " + this->c.username + " " + str + "\n");
-		this->replied = true;
-	}
+void command::send(std::string command, std::string str, client &c) {
+		c.send(":" + this->s.hostname + " " + command + " " + c.username + " " + str + "\n");
 }

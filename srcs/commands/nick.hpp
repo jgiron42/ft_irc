@@ -21,7 +21,7 @@ public:
 		//TODO: check if input is valid character
 		this->get_arg("nickname", tmp);
 		//TODO: check collisions
-		this->c.nickname = tmp;
+		this->c.set_nick(tmp);
 		if (!this->c.identified && this->c.try_login()) {
 			if (this->c.identified)
 			{
