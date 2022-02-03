@@ -1,8 +1,11 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client(server &s) : nickname("anon"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s){}
-client::client(int fd, server &s) : nickname("anon"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s){
+client::client(server &s) : nickname("anon"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
+	bzero(this->buf, 512);
+}
+client::client(int fd, server &s) : nickname("anon"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
+	bzero(this->buf, 512);
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	std::cout << "new client" << std::endl;
 }
@@ -50,6 +53,8 @@ void client::printBuf() {
 std::string client::getBufStr() {
 	std::string ret = "";
 
+	if (this->end == this->begin)
+		return (ret);
 	if (this->end > this->begin)
 		ret.append(this->buf + this->begin, this->end - this->begin);
 	else
@@ -64,7 +69,8 @@ std::string client::popLine() {
 	std::string ret;
 
 	ret = getBufStr();
-	if (ret.find('\n') == std::string::npos || ret.find('\n') > (ABS(this->end - this->begin)))
+	if (ret.find('\n') == std::string::npos ||
+	ret.find('\n') > (ABS(this->end - this->begin)))
 		return ("");
 	ret = ret.substr(0, ret.find('\n') + 1);
 	this->begin += ret.length();

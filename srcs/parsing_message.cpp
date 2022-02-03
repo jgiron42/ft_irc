@@ -108,12 +108,13 @@ message *get_command(std::string str, message *res) {
 //    return res;
 //}
 
-message *parse_msg(std::string str){
+message *parse_msg(std::string str)
+{
     message *res = init_msg();
     if (str.at(0) == ':')
         res->prefix = get_prefix(str);
     res = get_command(str, res);
-    res->params = res->tmp_to_parse;//get_param(res->tmp_to_parse);
+    res->params = res->tmp_to_parse; // get_param(res->tmp_to_parse);
     return res;
 }
 
@@ -122,9 +123,8 @@ void aff_parse(message *res){
         std::cout << "CMD STR " << res->command_str <<  std::endl;
     else
         std::cout << "CMD NBR " << res->command_nbr <<  std::endl;
-    if (!res->params.empty()){
+    if (!res->params.empty())
 		std::cout << res->params << std::endl;
-    }
     if (res->prefix){
         if (!(res->prefix->nick.empty())){
             std::cout << "OK" << std::endl;

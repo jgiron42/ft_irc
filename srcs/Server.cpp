@@ -5,7 +5,7 @@
 
 message *parse_msg(std::string str);
 
-server::server(void) :  clients(), fds(){ // syscall
+server::server(void) :  clients(), fds(), history_size(0){ // syscall
 	this->open_socket(INADDR_ANY, PORT);
 	this->open_socket(INADDR_ANY, PORT + 1);
 	std::cout << "server created" << std::endl;
@@ -32,7 +32,7 @@ void server::open_socket(long ip, short port) {
 		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
 }
 
-server::server(const server &src) : clients(src.clients), fds(src.fds),password(src.password) {}
+server::server(const server &src) : clients(src.clients), fds(src.fds),password(src.password), history_size(src.history_size) {}
 
 server::~server() {
 	for (std::vector<struct pollfd>::iterator i = this->fds.begin(); i != this->fds.end(); i++)
@@ -154,8 +154,6 @@ void server::disconnect(int fd) {
 }
 
 bool server::check_liveness(client &c, time_t now) {
-//	std::cout << now << std::endl;
-//	std::cout << c.last_activity << std::endl;
 	if (now - c.last_activity > LIVENESS_TIMEOUT)
 	{
 		if (now - c.last_activity > PING_TIMEOUT + LIVENESS_TIMEOUT)

@@ -12,7 +12,6 @@ public:
 	privmsg_command(class client &c, class server &s) : command(c, s) {
 		name = "PRIVMSG";
 		syntax = "<receiver> { ',' <receiver> } <text to be sent>";
-//		syntax = "<receiver> <text to be sent>";
 		this->generate_token(this->syntax);
 	};
 	void execute() {
