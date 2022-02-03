@@ -5,38 +5,42 @@
 
 message *parse_msg(std::string str);
 
-server::server(void) :  clients(), fds(), sock(socket(AF_INET, SOCK_STREAM, 0)){ // syscall
-	if (this->sock == -1)
+server::server(void) :  clients(), fds(){ // syscall
+	this->open_socket(INADDR_ANY, PORT);
+	this->open_socket(INADDR_ANY, PORT + 1);
+	std::cout << "server created" << std::endl;
+}
+
+void server::open_socket(long ip, short port) {
+	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (sock == -1)
 		throw syscall_failure(my_strerror((char *)"socket: ", errno));
 	int enable = 1;
-	if (setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1) // syscall
+	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
 	struct sockaddr_in sin = {};
-	sin.sin_addr.s_addr = htonl(INADDR_ANY);
+	sin.sin_addr.s_addr = htonl(ip);
 	sin.sin_family = AF_INET;
-	sin.sin_port = htons(PORT);
+	sin.sin_port = htons(port);
 	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));
 	if(listen(sock, MAX_CLIENT) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
-	this->fds.clear();
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
+	this->sockets.insert(sock);
 	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
-	std::cout << "server created" << std::endl;
 }
 
-server::server(const server &src) : clients(src.clients), fds(src.fds), sock(src.sock),password(src.password) {}
+server::server(const server &src) : clients(src.clients), fds(src.fds),password(src.password) {}
 
 server::~server() {
-	for (std::map<int, client>::iterator i = this->clients.begin(); i != this->clients.end(); i++)
-		close(i->first); // syscall
-	close(this->sock); // syscall
+	for (std::vector<struct pollfd>::iterator i = this->fds.begin(); i != this->fds.end(); i++)
+		close(i->fd);
 	std::cout << "server destroyed" << std::endl;
 }
 
 server &server::operator=(const server &src) {
-	this->sock = src.sock;
 	this->fds = src.fds;
 	this->clients = src.clients;
 	this->password = src.password;
@@ -54,7 +58,7 @@ void server::routine() {
 	if (ret == 0)
 	{} // do something
 	for (size_t i = 0; i < this->fds.size(); i++)
-		if (this->fds[i].fd != this->sock)
+		if (!this->sockets.count(this->fds[i].fd))
 			this->routine_client(this->fds[i], now);
 		else
 			this->routine_sock(this->fds[i]);
@@ -67,7 +71,7 @@ void server::routine_sock(struct pollfd fd)
 	socklen_t sinsize = sizeof csin;
 
 	if (fd.revents & POLLIN) {
-		if ((tmp = accept(sock, (sockaddr *) &csin, &sinsize)) >= 0) // syscall
+		if ((tmp = accept(fd.fd, (sockaddr *) &csin, &sinsize)) >= 0) // syscall
 		{
 			this->clients.insert(std::make_pair(tmp, client(tmp, *this)));
 			this->fds.push_back((struct pollfd) {.fd = tmp, .events = POLLIN});

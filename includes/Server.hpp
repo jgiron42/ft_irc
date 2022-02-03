@@ -1,6 +1,7 @@
 #ifndef FT_IRC_SERVER_HPP
 #define FT_IRC_SERVER_HPP
 #include <map>
+#include <set>
 #include <vector>
 #include <cstring>
 #include "client.hpp"
@@ -30,13 +31,14 @@ class channel;
 class server {
 private:
 	std::map<int, client>		clients;
+	std::set<int>				sockets;
 	std::vector<struct pollfd>	fds;
-	int	sock;
 public:
 	server(void);
 	server(const server &);
 	~server();
 	server	&operator=(const server &);
+	void	open_socket(long, short);
 	void	routine();
 	void	routine_sock(struct pollfd fd);
 	void	routine_client(struct pollfd &fd, time_t now);
