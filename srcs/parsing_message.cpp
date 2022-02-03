@@ -114,7 +114,6 @@ message *parse_msg(std::string str){
         res->prefix = get_prefix(str);
     res = get_command(str, res);
     res->params = res->tmp_to_parse;//get_param(res->tmp_to_parse);
-    std::cout << "ici  " << res->params << std::endl;
     return res;
 }
 

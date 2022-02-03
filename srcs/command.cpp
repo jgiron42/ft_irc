@@ -208,6 +208,7 @@ void command::parse(message m) {
 		{
 			std::cerr << e.what() << std::endl;
 		}
+#ifdef DEBUG_PARSER
 		std::cout << "printing args:" << std::endl;
 		for (std::map<std::string, std::list<std::string> >::iterator i = this->args.begin(); i != this->args.end(); i++)
 		{
@@ -215,6 +216,7 @@ void command::parse(message m) {
 			for (std::list<std::string>::iterator j = i->second.begin(); j != i->second.end(); j++)
 				std::cout << "    " << *j << std::endl;
 		}
+#endif
 	}
 	catch (std::exception &e)
 	{

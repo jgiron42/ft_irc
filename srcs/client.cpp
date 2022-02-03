@@ -102,6 +102,7 @@ bool client::try_login() {
 }
 
 void client::set_nick(std::string &str) {
+	this->s.users.erase(this->nickname);
 	this->nickname = str;
 	this->nick_history.push_front(str);
 	this->s.users[str] = this;

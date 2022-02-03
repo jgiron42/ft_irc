@@ -17,7 +17,6 @@ public:
 	std::string	&getPass();
 	void		setPass(std::string	&);
 	void		addMember(client);
-private:
 	std::string			id;
 	std::vector<client *>	members;
 	std::vector<client *>	chops;
