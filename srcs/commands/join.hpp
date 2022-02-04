@@ -18,7 +18,15 @@ public:
 
   void connecting(class client &c, class server &s, std::string &canal) {
     this->s.channels[canal].addMember(this->c);
-    this->reply_nbr(RPL_TOPIC);
+    if (!this->s.channels[canal].topic.empty())
+    {
+      std::cout << "tu est rentre ici connard" << std::endl;
+      if (this->args["channel"].empty())
+        this->args["channel"].push_front(std::string(canal));
+      if (this->args["topic"].empty())
+        this->args["topic"].push_front(this->s.channels[canal].topic);
+      this->send_numeric(RPL_TOPIC, this->c);
+    }
   }
   
 	void execute() {
@@ -44,6 +52,7 @@ public:
           connecting(this->c, this->s, canal);
       }
     }
+    this->get_arg("canal", canal);
 		
 	}
 };

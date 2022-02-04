@@ -29,6 +29,7 @@ public:
 	int							user_limit;
 	int 						ban_mask;
 	std::string 				password;
+	std::string					topic;
 };
 
 

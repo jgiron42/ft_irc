@@ -125,7 +125,6 @@ enum scope : bool {_OPT,_REP};
 
 void command::parse_recurse(std::string str)
 {
-		    std::cout << "polette = " << str << std::endl;
     std::vector<std::string> p;
     std::istringstream temp(str);
     std::string s;
