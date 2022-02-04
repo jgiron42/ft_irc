@@ -125,8 +125,8 @@ enum scope : bool {_OPT,_REP};
 
 void command::parse_recurse(std::string str)
 {
+		    std::cout << "polette = " << str << std::endl;
     std::vector<std::string> p;
-//    str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
     std::istringstream temp(str);
     std::string s;
 	std::string s_tmp;
@@ -136,7 +136,7 @@ void command::parse_recurse(std::string str)
 	std::list<struct block>::iterator it = token.begin();
 	std::list<struct block>::iterator tmp;
 
-    while (std::getline(temp, s, ' ')) {
+    for (std::string s; temp >> s; ) {
 		if (s.at(0) == ':') {
 			colon_pos = str.find(':', 0);
 			p.push_back(str.substr(colon_pos + 1, str.length()));
