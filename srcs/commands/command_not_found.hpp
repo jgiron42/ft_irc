@@ -10,6 +10,7 @@
 class command_not_found : public command {
 public:
 	command_not_found(class client &c, class server &s) : command(c, s) {
+		this->must_register = false;
 		name = "";
 		syntax = "";
 	};

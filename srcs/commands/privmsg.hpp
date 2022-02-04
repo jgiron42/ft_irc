@@ -27,27 +27,35 @@ public:
 			{
 				std::cout << *r << std::endl;
 				std::cout << this->s.users.begin()->first << std::endl;
-				if (is_channel(*r) && this->c.channels.count(*r))
+				if (is_channel(*r))
 				{
-					c = &this->s.channels[*r];
-					for (std::vector<client *>::iterator i = c->members.begin(); i != c->members.end(); i++)
-						if (!(*i)->away)
-							this->send("PRIVMSG", ":" + text, **i);
-						else
-						{
-							this->args["nickname"].push_front(*r);
-							this->reply_nbr(RPL_AWAY);
-							this->replied = false;
-						}
+					if (this->c.channels.count(*r)) {
+						c = &this->s.channels[*r];
+						for (std::set<client *>::iterator i = c->members.begin(); i != c->members.end(); i++)
+							if (!(*i)->away)
+								this->send(this->c, "PRIVMSG", ":" + text, **i);
+							else {
+								this->args["nickname"].push_front(*r);
+								this->reply_nbr(RPL_AWAY);
+								this->replied = false;
+							}
+					}
+					else
+						this->reply_nbr(ERR_CANNOTSENDTOCHAN);
 				}
 				else if (this->s.users.count(*r)) {
 					if (!this->s.users[*r]->away)
-						this->send("PRIVMSG", ":" + text, *this->s.users[*r]);
+						this->send(this->c, "PRIVMSG", ":" + text, *this->s.users[*r]);
 					else {
 						this->args["nickname"].push_front(*r);
 						this->reply_nbr(RPL_AWAY);
 						this->replied = false;
 					}
+				}
+				else
+				{
+					this->args["nickname"].push_front(*r);
+					this->reply_nbr(ERR_NOSUCHNICK);
 				}
 				// user@host
 				// channel

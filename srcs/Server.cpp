@@ -5,7 +5,7 @@
 
 message *parse_msg(std::string str);
 
-server::server(void) :  clients(), fds(), history_size(0){ // syscall
+server::server(void) :  clients(), fds(), history_size(0), hostname(SERVERNAME) { // syscall
 	this->open_socket(INADDR_ANY, PORT);
 	this->open_socket(INADDR_ANY, PORT + 1);
 	std::cout << "server created" << std::endl;
@@ -73,9 +73,16 @@ void server::routine_sock(struct pollfd fd)
 	if (fd.revents & POLLIN) {
 		if ((tmp = accept(fd.fd, (sockaddr *) &csin, &sinsize)) >= 0) // syscall
 		{
-			this->clients.insert(std::make_pair(tmp, client(tmp, *this)));
-			this->fds.push_back((struct pollfd) {.fd = tmp, .events = POLLIN});
-			this->clients.at(tmp).setIP(std::string(inet_ntoa(csin.sin_addr)));
+			if (this->fds.size() - this->sockets.size() > MAX_CLIENT)
+			{
+				std::cout << "client maximum reached!!!" << std::endl;
+				close(tmp);
+			}
+			else {
+				this->clients.insert(std::make_pair(tmp, client(tmp, *this)));
+				this->fds.push_back((struct pollfd) {.fd = tmp, .events = POLLIN});
+				this->clients.at(tmp).setIP(std::string(inet_ntoa(csin.sin_addr)));
+			}
 		} else
 			throw syscall_failure(my_strerror((char *) "accept: ", errno));
 	}
@@ -127,15 +134,19 @@ void server::dispatch(client &c) {
 
 	while ((str = c.popLine()) != "\n" && !str.empty())
 	{
-		std::cout << "[" << c.nickname << "](" << c.getIP() << ") <= " << BLUE << str << WHITE;
+		std::cout << "[" << c.nickname << "](" << c.getIP() << ") <= " << BLUE << str << WHITE << std::endl;
 		message *parse = parse_msg(str);
 #ifdef DEBUGPARSER
 		std::cout << "command: |" << parse->command_str << "|" << std::endl;
 #endif
 		command *com = get_command(parse->command_str)(c, *this);
 		com->name = parse->command_str;
-		com->parse(*parse);
-		com->execute();
+		if (com->must_register && !c.identified)
+			com->reply_nbr(ERR_NOTREGISTERED);
+		else {
+			com->parse(*parse);
+			com->execute();
+		}
 		delete com;
 		delete parse;
 	}
@@ -144,6 +155,8 @@ void server::dispatch(client &c) {
 void server::disconnect(int fd) {
 	client &c = this->clients.find(fd)->second;
 	std::cout << "[" << c.nickname << "](" << c.getIP() << ") " << RED << "DISCONNECTED" << WHITE << std::endl;
+	for (std::map<std::string, channel *>::iterator i = c.channels.begin(); i != c.channels.end(); i++)
+		i->second->members.erase(&c);
 	this->clients.erase(fd);
 	std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
 	while (tmpit != this->fds.end() && tmpit->fd != fd)

@@ -34,5 +34,5 @@ void		channel::setPass(std::string &pass) {
 }
 
 void		channel::addMember(client c) {
-	this->members.push_back(&c);
+	this->members.insert(&c);
 }

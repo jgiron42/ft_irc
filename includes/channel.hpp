@@ -2,6 +2,7 @@
 #define FT_IRC_CHANNEL_HPP
 #include <string>
 #include <vector>
+#include <set>
 #include "client.hpp"
 
 class client;
@@ -18,7 +19,7 @@ public:
 	void		setPass(std::string	&);
 	void		addMember(client);
 	std::string			id;
-	std::vector<client *>	members;
+	std::set<client *>	members;
 	std::vector<client *>	chops;
 	bool 				private_channel : 1;
 	bool 				secret_channel : 1;

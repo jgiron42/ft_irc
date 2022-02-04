@@ -9,7 +9,8 @@
 
 class pass_command : public command {
 public:
-	pass_command(class client &c, class server &s) : command(c, s) {
+	pass_command(class client &c, class server &s) : command(c, s){
+		this->must_register = false;
 		name = "PASS";
 		syntax = "<password>";
 		generate_token(std::string(syntax));

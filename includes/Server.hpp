@@ -22,7 +22,9 @@
 #define MAX_CLIENT			1000
 #define PORT				1111
 #define VERSION				"1"
+#define CRLF				"\n"
 #define DEBUG_LVL			0
+#define SERVERNAME			"ft_ic"
 
 const char *my_strerror(char *s1, int err);
 

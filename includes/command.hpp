@@ -23,16 +23,21 @@ class token_it;
 
 class command {
 public:
-	command(client &c, server &s) : replied(false), c(c), s(s) {};
+	command(client &c, server &s) : replied(false), c(c), s(s), must_register(true) {};
 	virtual ~command() {};
 	virtual void		parse(message);
 	virtual void		execute() {  };
 	void reply(std::string command, std::string str);
 	void reply_nbr(int nbr);
-	void send(std::string command, std::string str, client &);
-	void send_numeric(int, client &);
+	void send(const std::string &prefix, const std::string &command, const std::string &str, client &dst);
+	void send(const client &from, const std::string &command, const std::string &str, client &dst);
+	void send(const std::string &command, const std::string &str, client &dst);
+	void send_numeric(const std::string &prefix, int n, client &dst);
+	void send_numeric(const client &from, int n, client &dst);
+	void send_numeric(int n, client &dst);
 	std::map<std::string, std::list<std::string> > args;
 	std::string name;
+	bool must_register;
 protected:
 	std::list<struct block> token;
 	bool replied;

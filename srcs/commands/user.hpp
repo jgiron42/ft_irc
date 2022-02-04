@@ -10,6 +10,7 @@
 class user_command : public command {
 public:
 	user_command(class client &c, class server &s) : command(c, s) {
+		this->must_register = false;
 		this->name = "USER";
 		this->syntax = "<username> <hostname> <servername> <realname>";
 		generate_token(std::string(syntax));
