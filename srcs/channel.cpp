@@ -11,7 +11,7 @@ channel::channel(const channel &src): id(src.id), members(), chops() {
 }
 
 channel::channel(client creator) : id(), members(), chops(), password() {
-	this->chops.push_back(&creator);
+	this->chops.push_back(creator.nickname);
 	int	user_limit = 25;
 	int ban_mask = 0;
 }

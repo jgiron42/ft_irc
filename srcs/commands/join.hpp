@@ -15,6 +15,12 @@ public:
 		syntax = "<canal> { ',' <canal> } <key> { ',' <key> }";
 		generate_token(std::string(syntax));
 	};
+
+  void connecting(class client &c, class server &s, std::string &canal) {
+    this->s.channels[canal].addMember(this->c);
+    this->reply_nbr(RPL_TOPIC);
+  }
+  
 	void execute() {
 		std::string canal;
 		std::string key;
@@ -25,22 +31,17 @@ public:
 		if (this->s.channels.find(canal) == this->s.channels.end() ) {
       std::cout << "channel successfully created." << std::endl;
       this->s.channels[canal] = channel(this->c);
-      this->s.channels[canal].addMember(this->c);
       if (key.empty() == 0)
         this->s.channels[canal].setPass(key);
+      connecting(this->c, this->s, canal);
     } else {
       if (this->s.channels[canal].getPass().empty())
-        std::cout << "channel found, connecting..." << std::endl;
+        connecting(this->c, this->s, canal);
       else {
         if (key.compare(this->s.channels[canal].getPass()))
-        {
-          std::cout << "Wrong password :o(" << std::endl;
-        }
+          this->reply_nbr(ERR_BADCHANNELKEY);
         else
-        {
-          std::cout << "Correct pwd joining channel !" << std::endl;
-          this->s.channels[canal].addMember(this->c);
-        }
+          connecting(this->c, this->s, canal);
       }
     }
 		
