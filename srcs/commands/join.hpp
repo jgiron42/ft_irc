@@ -19,10 +19,13 @@ public:
 		std::string canal;
 		std::string key;
 		this->get_arg("canal", canal);
+    if (canal.empty())
+      this->reply_nbr(ERR_NEEDMOREPARAMS);
 		this->get_arg("key", key);
 		if (this->s.channels.find(canal) == this->s.channels.end() ) {
       std::cout << "channel successfully created." << std::endl;
       this->s.channels[canal] = channel(this->c);
+      this->s.channels[canal].addMember(this->c);
       if (key.empty() == 0)
         this->s.channels[canal].setPass(key);
     } else {
