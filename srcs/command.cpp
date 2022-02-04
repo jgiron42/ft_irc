@@ -126,7 +126,7 @@ enum scope : bool {_OPT,_REP};
 void command::parse_recurse(std::string str)
 {
     std::vector<std::string> p;
-    str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+//    str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
     std::istringstream temp(str);
     std::string s;
 	std::string s_tmp;

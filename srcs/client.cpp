@@ -72,8 +72,8 @@ std::string client::popLine() {
 	if (ret.find('\n') == std::string::npos ||
 	ret.find('\n') > (ABS(this->end - this->begin)))
 		return ("");
-	ret = ret.substr(0, ret.find('\n') + 1);
-	this->begin += ret.length();
+	ret = ret.substr(0, ret.find('\n'));
+	this->begin += ret.length() + 1;
 	this->begin %= 512;
 	return (ret);
 }
