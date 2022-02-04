@@ -18,14 +18,21 @@ public:
 
   void connecting(class client &c, class server &s, std::string &canal) {
     this->s.channels[canal].addMember(this->c);
+    if (this->args["channel"].empty())
+      this->args["channel"].push_front(std::string(canal));
     if (!this->s.channels[canal].topic.empty())
     {
-      if (this->args["channel"].empty())
-        this->args["channel"].push_front(std::string(canal));
       if (this->args["topic"].empty())
         this->args["topic"].push_front(this->s.channels[canal].topic);
       this->send_numeric(RPL_TOPIC, this->c);
     }
+    if (this->args["nick"].size() != this->s.channels[canal].members.size()) {
+      this->args["nick"].clear();
+      for (std::vector<class client *>::iterator it = this->s.channels[canal].members.begin(); it < this->s.channels[canal].members.end(); it++) {
+          this->args["nick"].push_back((*it)->nickname);
+      }
+    }
+    this->send_numeric(RPL_NAMREPLY, this->c);
   }
   
 	void execute() {
