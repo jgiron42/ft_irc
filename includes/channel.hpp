@@ -19,8 +19,9 @@ public:
 	void		setPass(std::string	&);
 	void		addMember(client);
 	std::string			id;
+	std::string			topic;
 	std::set<client *>	members;
-	std::vector<client *>	chops;
+	std::vector<std::string>	chops;
 	bool 				private_channel : 1;
 	bool 				secret_channel : 1;
 	bool 				invite_only : 1;

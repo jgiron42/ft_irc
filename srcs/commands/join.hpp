@@ -28,7 +28,7 @@ public:
     }
     if (this->args["nick"].size() != this->s.channels[canal].members.size()) {
       this->args["nick"].clear();
-      for (std::vector<class client *>::iterator it = this->s.channels[canal].members.begin(); it < this->s.channels[canal].members.end(); it++) {
+      for (std::set<class client *>::iterator it = this->s.channels[canal].members.begin(); it != this->s.channels[canal].members.end(); it++) {
           this->args["nick"].push_back((*it)->nickname);
       }
     }
