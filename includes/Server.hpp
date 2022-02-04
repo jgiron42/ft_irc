@@ -16,6 +16,8 @@
 #include <netdb.h>
 #include <exception>
 #include <poll.h>
+#include "parse_conf.hpp"
+
 #define LIVENESS_TIMEOUT	120
 #define PING_TIMEOUT		10
 #define MAX_CLIENT			1000
@@ -50,6 +52,19 @@ public:
 	std::string hostname;
 	int		history_size;
 	typedef std::runtime_error syscall_failure;
+	struct info {
+	    long ip;
+	    std::string host_name;
+	    std::string location;
+	    short port;
+	    std::string sid;
+	    std::string name_location;
+	    std::string mail;
+	    std::string other_info;
+	    std::string network_name;
+	    std::vector<struct t_client_authorization> authorization;
+
+	};
 };
 
 

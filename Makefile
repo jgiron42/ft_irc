@@ -18,7 +18,8 @@ SRCS	 	=	./srcs/main.cpp		\
 				./srcs/numerics.cpp	\
 				./srcs/parsing_message.cpp \
 				./srcs/utils.cpp \
-				./srcs/lexer.cpp
+				./srcs/lexer.cpp \
+				./srcs/parse_conf.cpp
 
 NAME		=	ircserv
 

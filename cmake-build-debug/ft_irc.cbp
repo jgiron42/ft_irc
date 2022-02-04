@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="ft_irc"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/francois/Desktop/ft_irc/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/francois/Desktop/ft_irc/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/francois/Desktop/ft_irc/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ft_irc">
+				<Option output="/Users/francois/Desktop/ft_irc/cmake-build-debug/ft_irc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/francois/Desktop/ft_irc/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/francois/Desktop/ft_irc/includes"/>
+					<Add directory="/Users/francois/Desktop/ft_irc/srcs/commands"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 ft_irc"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ft_irc/fast">
+				<Option output="/Users/francois/Desktop/ft_irc/cmake-build-debug/ft_irc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/francois/Desktop/ft_irc/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/francois/Desktop/ft_irc/includes"/>
+					<Add directory="/Users/francois/Desktop/ft_irc/srcs/commands"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 ft_irc/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/francois/Desktop/ft_irc/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/Server.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/channel.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/client.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/command.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/commands.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/exceptions.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/numerics.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/parse_conf.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/parse_struct.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/shell_colors.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/t_token.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/includes/utils.hpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/Server.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/channel.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/client.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/command.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/lexer.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/main.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/numerics.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/parse_conf.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/parsing_message.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/t_token.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/srcs/utils.cpp">
+			<Option target="ft_irc"/>
+		</Unit>
+		<Unit filename="/Users/francois/Desktop/ft_irc/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
