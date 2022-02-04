@@ -20,7 +20,6 @@ public:
     this->s.channels[canal].addMember(this->c);
     if (!this->s.channels[canal].topic.empty())
     {
-      std::cout << "tu est rentre ici connard" << std::endl;
       if (this->args["channel"].empty())
         this->args["channel"].push_front(std::string(canal));
       if (this->args["topic"].empty())
