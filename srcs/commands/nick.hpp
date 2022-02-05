@@ -19,9 +19,17 @@ public:
 		std::string tmp;
 		if (this->args.empty())
 			this->reply_nbr(ERR_NONICKNAMEGIVEN);
-		//TODO: check if input is valid character
 		this->get_arg("nickname", tmp);
-		//TODO: check collisions
+		if (!is_valid_nickname(tmp))
+		{
+			this->reply_nbr(ERR_ERRONEUSNICKNAME);
+			return;
+		}
+		if (this->s.users.count(tmp))
+		{
+			this->reply_nbr(ERR_NICKNAMEINUSE);
+			return;
+		}
 		this->c.set_nick(tmp);
 		if (!this->c.identified && this->c.try_login()) {
 			if (this->c.identified)
@@ -57,6 +65,12 @@ public:
    directly connected, it may issue an ERR_NICKCOLLISION to the local
    client, drop the NICK command, and not generate any kills.
 
+ Numeric Replies:
+		ERR_NONICKNAMEGIVEN ERR_ERRONEUSNICKNAME
+		ERR_NICKNAMEINUSE ERR_NICKCOLLISION
+ Example:
+	 NICK Wiz ; Introducing new nick "Wiz".
+	 :WiZ NICK Kilroy ; WiZ changed his nickname to Kilroy.
  */
 
 #endif //FT_IRC_NICK_HPP

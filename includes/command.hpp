@@ -13,6 +13,7 @@
 #include "client.hpp"
 #include "Server.hpp"
 #include "parse_struct.hpp"
+#include "utils.hpp"
 
 #include "t_token.hpp"
 

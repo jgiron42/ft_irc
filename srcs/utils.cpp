@@ -46,3 +46,18 @@ bool	is_channel(const std::string &name)
 {
 	return (name[0] == '&' || name[0] == '#');
 }
+
+bool	isspecial(const char c)
+{
+	return (c == '-' || c == '[' || c == ']' || c == '\\' || c == '\'' || c == '^' || c == '{' || c == '}');
+}
+
+bool	is_valid_nickname(const std::string &nick)
+{
+	if (!isalpha(nick[0]) || nick.size() > 9)
+		return (false);
+	for (int i = 0; i < nick.length(); i++)
+		if (!isalnum(nick[i]) && !isspecial(nick[i]))
+			return (false);
+	return (true);
+}
