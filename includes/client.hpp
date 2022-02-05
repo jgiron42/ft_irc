@@ -43,6 +43,7 @@ public:
 	std::string servername;
 	std::string realname;
 	std::string ip;
+	std::string away_message;
 	bool	away : 1;
 	bool	invisible : 1;
 	bool 	notices : 1;

@@ -25,20 +25,20 @@ public:
 		else
 			for (std::list<std::string>::iterator r = receivers.begin(); r != receivers.end(); r++)
 			{
-				std::cout << *r << std::endl;
-				std::cout << this->s.users.begin()->first << std::endl;
 				if (is_channel(*r))
 				{
 					if (this->c.channels.count(*r)) {
 						c = &this->s.channels[*r];
-						for (std::set<client *>::iterator i = c->members.begin(); i != c->members.end(); i++)
+						for (std::set<client *>::iterator i = c->members.begin(); i != c->members.end(); i++) {
 							if (!(*i)->away)
 								this->send(this->c, "PRIVMSG", ":" + text, **i);
 							else {
 								this->args["nickname"].push_front(*r);
+								this->args["message"].push_front((*i)->away_message);
 								this->reply_nbr(RPL_AWAY);
 								this->replied = false;
 							}
+						}
 					}
 					else
 						this->reply_nbr(ERR_CANNOTSENDTOCHAN);
@@ -48,6 +48,7 @@ public:
 						this->send(this->c, "PRIVMSG", ":" + text, *this->s.users[*r]);
 					else {
 						this->args["nickname"].push_front(*r);
+						this->args["message"].push_front(this->s.users[*r]->away_message);
 						this->reply_nbr(RPL_AWAY);
 						this->replied = false;
 					}

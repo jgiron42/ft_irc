@@ -5,6 +5,7 @@
 #ifndef FT_IRC_COMMANDS_HPP
 #define FT_IRC_COMMANDS_HPP
 
+#include "away.hpp"
 #include "command.hpp"
 #include "Server.hpp"
 #include "client.hpp"
@@ -33,6 +34,7 @@ creator *get_command(std::string name)
 
 	if (map.empty())
 	{
+		map["AWAY"] = &f<away_command>;
 		map["USER"] = &f<user_command>;
 		map["NICK"] = &f<nick_command>;
 		map["PASS"] = &f<pass_command>;
