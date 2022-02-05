@@ -27,8 +27,16 @@ public:
 		}
 		if (this->s.users.count(tmp))
 		{
-			this->reply_nbr(ERR_NICKNAMEINUSE);
-			return;
+			if (this->s.users.find(tmp)->second->identified)
+			{
+				this->reply_nbr(ERR_NICKNAMEINUSE);
+				return;
+			}
+			else
+			{
+				this->send("KILL", ":nickname overridden", *this->s.users.find(tmp)->second);
+				this->s.users.find(tmp)->second->to_send.push_back("");
+			}
 		}
 		this->c.set_nick(tmp);
 		if (!this->c.identified && this->c.try_login()) {

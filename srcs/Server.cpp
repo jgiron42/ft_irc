@@ -114,6 +114,11 @@ void server::routine_client(struct pollfd &fd, time_t now)
 			throw syscall_failure(my_strerror((char *) "recv: ", errno));
 	}
 	if (fd.revents & POLLOUT && !current_cli->to_send.empty()) {
+		if (current_cli->to_send.front().empty())
+		{
+			this->disconnect(current_cli->sock);
+			return;
+		}
 		if (send(fd.fd, current_cli->to_send.front().data(), current_cli->to_send.front().length(),
 				 0) == -1)  //syscall
 			throw syscall_failure(my_strerror((char *) "send: ", errno));
