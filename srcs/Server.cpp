@@ -127,7 +127,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 	if (fd.revents & POLLHUP || fd.revents & POLLNVAL ||
 			   fd.revents & POLLERR) {
 		this->disconnect(fd.fd);
-		std::cerr << " error!!!" << std::endl;
+		std::cerr << " error!!!" << std::endl; //TODO
 		return;
 	}
 	fd.revents = 0;
