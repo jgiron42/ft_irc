@@ -284,7 +284,7 @@ void command::send_numeric(const std::string &prefix, int n, client &dst) {
 		else
 			reply += format[i];
 	}
-	this->send(prefix, toStr(n), reply, this->c);
+	this->send(prefix, n, reply, this->c);
 }
 
 void command::send_numeric(int n, client &dst) {
@@ -316,4 +316,22 @@ void command::send(const client &from, const std::string &command, const std::st
 
 void command::send(const std::string &command, const std::string &str, client &dst) {
 	this->send(this->s.hostname, command, str, dst);
+}
+
+void command::send(const client &from, const int command, const std::string &str, client &dst) {
+	std::string prefix = from.nickname;
+	if (!from.username.empty())
+		prefix.append("!" + from.username);
+	if (!from.username.empty())
+		prefix.append("@" + from.hostname);
+	this->send(prefix, command, str, dst);
+}
+
+void command::send(const int command, const std::string &str, client &dst) {
+	this->send(this->s.hostname, command, str, dst);
+}
+
+void command::send(const std::string &prefix, const int command, const std::string &params, client &dst)
+{
+	dst.send(":" + prefix + " " + toStr(command) + " " + dst.nickname + " " + params + CRLF);
 }

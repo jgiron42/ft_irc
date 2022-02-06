@@ -16,7 +16,8 @@ public:
 	};
 	void	parse(message){};
 	void	execute() {
-		this->reply_nbr(ERR_UNKNOWNCOMMAND);
+		if (this->c.identified)
+			this->reply_nbr(ERR_UNKNOWNCOMMAND);
 	}
 };
 

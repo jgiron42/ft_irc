@@ -42,9 +42,22 @@ public:
 		if (!this->c.identified && this->c.try_login()) {
 			if (this->c.identified)
 			{
-				this->args["username"].push_front(this->c.username);
-				this->args["hostname"].push_front(this->c.hostname);
-				this->reply_nbr(RPL_WELCOME);
+//				this->args["username"].push_front(this->c.username);
+//				this->args["hostname"].push_front(this->c.hostname);
+//				this->args["version"].push_front(this->s.info.version);
+//				this->args["date"].push_front(this->s.info.creation_date);
+//				this->args["date"].push_front(this->s.info.creation_date);
+//				this->reply_nbr(RPL_WELCOME);
+				this->args["servername"].push_front(this->s.hostname);
+				this->reply_nbr(RPL_MOTDSTART);
+				this->args["text"].push_front("");
+				std::string &text = this->args["text"].front();
+				for (int i = 0; i < this->s.info.motd.size(); i += 507)
+				{
+					text = this->s.info.motd.substr(i, 507);
+					this->reply_nbr(RPL_MOTD);
+				}
+				this->reply_nbr(RPL_ENDOFMOTD);
 			}
 			else
 				this->reply_nbr(ERR_PASSWDMISMATCH);

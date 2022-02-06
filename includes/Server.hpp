@@ -48,6 +48,9 @@ public:
 	void	disconnect(int fd);
 	bool	check_liveness(client &, time_t);
 	void	send_ping(client &);
+	struct {
+		std::string motd;
+	} info;
 	std::map<std::string, channel> channels;
 	std::map<std::string, client *> users; // map nickname to user
 	std::string password;

@@ -44,7 +44,10 @@ bool glob_include(char * glob, char * str)
 
 bool	is_channel(const std::string &name)
 {
-	return (name[0] == '&' || name[0] == '#');
+	for (int i = 0; i < name.length() ; i++)
+		if (name[i] ==  ' ' || name[i] == 7 || name[i] == ',')
+			return (false);
+	return ((name[0] == '&' || name[0] == '#') && name.length() <= 50);
 }
 
 bool	isspecial(const char c)

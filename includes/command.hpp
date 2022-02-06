@@ -33,6 +33,9 @@ public:
 	void send(const std::string &prefix, const std::string &command, const std::string &str, client &dst);
 	void send(const client &from, const std::string &command, const std::string &str, client &dst);
 	void send(const std::string &command, const std::string &str, client &dst);
+	void send(const client &from, const int command, const std::string &str, client &dst);
+	void send(const std::string &prefix, const int command, const std::string &str, client &dst);
+	void send(const int command, const std::string &str, client &dst);
 	void send_numeric(const std::string &prefix, int n, client &dst);
 	void send_numeric(const client &from, int n, client &dst);
 	void send_numeric(int n, client &dst);

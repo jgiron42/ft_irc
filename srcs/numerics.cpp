@@ -7,11 +7,11 @@
 #include "numerics.hpp"
 
 char replies[512][100] = {
-		[RPL_WELCOME] =	":Welcome to the Internet Relay Network <nickname>!<username>@<hostname>",
-		[RPL_YOURHOST] =	":Your host is <servername>, running version <ver>",
-		[RPL_CREATED] =	":This server was created <date>",
-		[RPL_MYINFO] =	":<servername> <version> <available user modes> <available channel modes>",
-		[RPL_BOUNCE] =	":Try server <server name>, port <port number>",
+//		[RPL_WELCOME] =	":Welcome to the Internet Relay Network <nickname>!<username>@<hostname>",
+//		[RPL_YOURHOST] =	":Your host is <servername>, running version <version>",
+//		[RPL_CREATED] =	":This server was created <date>",
+//		[RPL_MYINFO] =	":<servername> <version> <available user modes> <available channel modes>",
+//		[RPL_BOUNCE] =	":Try server <server name>, port <port number>",
 		[ERR_NOSUCHNICK] = "<nickname> :No such nick/channel",
 		[ERR_NOSUCHSERVER] = "<server name> :No such server",
 		[ERR_NOSUCHCHANNEL] = "<channel name> :No such channel",
@@ -89,7 +89,7 @@ char replies[512][100] = {
 		[RPL_ENDOFBANLIST] = "<channel> :End of channel ban list",
 		[RPL_INFO] = ":<string>",
 		[RPL_ENDOFINFO] = ":End of /INFO list",
-		[RPL_MOTDSTART] = ":- <server> Message of the day - ",
+		[RPL_MOTDSTART] = ":- <servername> Message of the day - ",
 		[RPL_MOTD] = ":- <text>",
 		[RPL_ENDOFMOTD] = ":End of /MOTD command",
 		[RPL_YOUREOPER] = ":You are now an IRC operator",
