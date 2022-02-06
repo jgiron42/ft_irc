@@ -163,6 +163,7 @@ void server::disconnect(int fd) {
 	std::cout << "[" << c.nickname << "](" << c.getIP() << ") " << RED << "DISCONNECTED" << WHITE << std::endl;
 	for (std::map<std::string, channel *>::iterator i = c.channels.begin(); i != c.channels.end(); i++)
 		i->second->members.erase(&c);
+	this->users.erase(c.nickname);
 	this->clients.erase(fd);
 	std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
 	while (tmpit != this->fds.end() && tmpit->fd != fd)

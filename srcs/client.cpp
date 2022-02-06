@@ -1,10 +1,10 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client(server &s) : nickname("anon"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
+client::client(server &s) : nickname("*"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
 	bzero(this->buf, 512);
 }
-client::client(int fd, server &s) : nickname("anon"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
+client::client(int fd, server &s) : nickname("*"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
 	bzero(this->buf, 512);
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	std::cout << "new client" << std::endl;
@@ -17,6 +17,7 @@ client::client(const client &src) : s(src.s){
 client::~client() {}
 
 client &client::operator=(const client &src) {
+	this->nickname = src.nickname;
 	this->sock = src.sock;
 	memcpy(this->buf, src.buf, 512);
 	this->begin = src.begin;
@@ -97,7 +98,7 @@ void client::pong() {
 }
 
 bool client::try_login() {
-	if ((this->password.empty() && !this->s.password.empty()) ||this->nickname.empty() || this->username.empty())
+	if ((this->password.empty() && !this->s.password.empty()) ||this->nickname == "*" || this->username.empty())
 		return (false);
 	else if (this->password == this->s.password)
 	{
