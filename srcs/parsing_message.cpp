@@ -136,7 +136,7 @@ void aff_parse(message *res){
     }
 }
 
-/*(int main()
+/*int main()
 {
     std::string tmp;
     message *m_tmp;

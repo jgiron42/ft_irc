@@ -32,6 +32,15 @@ namespace ft_irc {
 			return ("missing argument");
 		}
 	};
+
+    class conf_file_error :public std::exception {
+    public:
+        conf_file_error() throw() {};
+        virtual ~conf_file_error() throw() {};
+        const char * what() const  throw() {
+            return ("invalid conf file");
+        }
+    };
 }
 
 #endif //FT_IRC_EXCEPTIONS_HPP
