@@ -50,6 +50,7 @@ public:
 	void	disconnect(int fd);
 	bool	check_liveness(client &, time_t);
 	void	send_ping(client &);
+    void    print_info(void);
 	std::map<std::string, channel> channels;
 	std::map<std::string, client *> users; // map nickname to user
 	std::string password;
@@ -69,6 +70,7 @@ public:
 	    std::vector<t_client_authorization> authorization;
 		std::string motd;
 	} info;
+  //  std::string motd;
 };
 
 

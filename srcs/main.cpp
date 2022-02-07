@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include <signal.h>
+#include "parse_conf.hpp"
 
 bool running = true;
 
@@ -9,11 +10,14 @@ void	stop(int)
 	write(1, "\b\b", 2);
 }
 
-int main(int , char **)
+int main(int ac, char **av)
 {
+    (void)ac;
 	try {
 		server s;
-
+        //std::cout << "CONF FILE : " << av[1] << std::endl;
+       // parse_conf(s, av[1]);
+        //s.print_info();
 		signal(SIGTERM, stop);
 		signal(SIGINT,  stop);
 		while(running)

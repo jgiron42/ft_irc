@@ -26,7 +26,7 @@ static void set_server(std::string target, server &serv) {
     //ip
     pos = pos_bis;
     pos_bis = target.find_first_of(target, pos);
-    if (pos_bis == std::string::npos || inet_aton(target.substr(pos, pos_bis).c_str(), &addr) == 0)
+    if (pos_bis == std::string::npos) // || inet_aton(target.substr(pos, pos_bis).c_str(), &addr) == 0)
         throw ft_irc::conf_file_error();
     serv.info.ip = addr.s_addr;
     //location
@@ -45,7 +45,7 @@ static void set_server(std::string target, server &serv) {
     if (port.empty())
         serv.info.port = 6667;
     else
-        serv.info.port = (short)std::stoi(port);
+        serv.info.port = (short)atoi(port.c_str());
     //sid
     pos = pos_bis;
     pos_bis = target.find_first_of(target, pos);
@@ -82,8 +82,8 @@ static void administrative_information(std::string target, server &serv) {
         throw ft_irc::conf_file_error();
     serv.info.network_name = target.substr(pos, pos_bis);
 };
-void    open_socket(long ip, short port);
-void    open_socket(std::string dir , short port);
+//void    open_socket(long ip, short port);
+//void    open_socket(std::string dir , short port);
 
 static void allow_port(std::string target, server &serv) {
     in_addr addr;
@@ -122,7 +122,7 @@ static void allow_port(std::string target, server &serv) {
     if (port_tmp.empty())
         throw ft_irc::conf_file_error();
     else
-        port = (short)std::stoi(port_tmp);
+        port = (short)atoi(port_tmp.c_str());
     //flags
     pos = pos_bis;
     pos_bis = target.find_first_of(target, pos);
@@ -130,12 +130,12 @@ static void allow_port(std::string target, server &serv) {
         throw ft_irc::conf_file_error();
     flags = target.substr(pos, pos_bis);
     //connect
-    if (!ip_directory.empty())
-        throw ft_irc::conf_file_error();
+   // if (!ip_directory.empty())
+     //   throw ft_irc::conf_file_error();
     if (inet_aton(ip_directory.substr(pos, pos_bis).c_str(), &addr) == 0)
-        open_socket(ip_directory, port);
+    {}// serv.open_socket(ip_directory, port);
     else
-        open_socket(addr.s_addr, port);
+        serv.open_socket(addr.s_addr, port);
     (void)stuff1;
     (void)stuff2;
     (void)flags;
@@ -208,7 +208,7 @@ void parse_conf (server &s, const std::string &file){
                 break;
             }
         }
-        if (read[0] != '#' || i == NB_OPT){
+        if (read[0] != '#' && i == NB_OPT){
             throw ft_irc::conf_file_error();
         }
     }

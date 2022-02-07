@@ -115,7 +115,7 @@ void
 }
 
 
-enum scope : bool {_OPT,_REP};
+enum scope {_OPT,_REP};
 
 // advance (char)
 // get_potential_delim

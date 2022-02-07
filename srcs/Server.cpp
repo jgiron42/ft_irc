@@ -188,6 +188,33 @@ bool server::check_liveness(client &c, time_t now) {
 	return (true);
 }
 
+void server::print_info() {
+    std::cout << "IP :" << this->info.ip << std::endl;
+    std::cout << "host_name :" << this->info.host_name << std::endl;
+    std::cout << "location :" << this->info.location << std::endl;
+    std::cout << "port :" << this->info.port << std::endl;
+    std::cout << "sid :" << this->info.sid << std::endl;
+    std::cout << "Name Location :" << this->info.name_location << std::endl;
+    std::cout << "Mail :" << this->info.mail << std::endl;
+    std::cout << "Other Info : " << this->info.other_info << std::endl;
+    std::cout << "Network Name :" << this->info.network_name << std::endl;
+    std::vector<t_client_authorization>::iterator  end(this->info.authorization.end());
+    std::vector<t_client_authorization>::iterator  start(this->info.authorization.begin());
+    int i = 1;
+    while (end != start){
+        std::cout << "AUTHORIZATION " << i << std::endl;
+        std::cout << "Host address :"<< start->host_addr << std::endl;
+        std::cout << "Password :" << start->password << std::endl;
+        std::cout << "Host name :" << start->host_name << std::endl;
+        std::cout << "Port :" << start->port << std::endl;
+        std::cout << "Classes :" << start->classes << std::endl;
+        std::cout << "Host name :" << start->host_name << std::endl;
+        std::cout << "Flags :" << start->flags << std::endl;
+        start++;
+    }
+
+}
+
 void server::send_ping(client &c) {
 	c.send("PING " + this->hostname + "\n"); // multiserver
 	c.ping_send = true;
