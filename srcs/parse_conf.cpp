@@ -3,7 +3,7 @@
 //
 
 #include "Server.hpp"
-#include "string"
+#include <string>
 #include "fstream"
 #include "exceptions.hpp"
 #include <netinet/in.h>
@@ -190,7 +190,7 @@ static void client_authorization(std::string target, server &serv) {
 
 void parse_conf (server &s, const std::string &file){
     std::ifstream ifs;
-    ifs.open(file);
+    ifs.open(file.data());
     std::string read;
 
     typedef struct s_type{char c; void (*f)(std::string target, server &serv);} t_type;

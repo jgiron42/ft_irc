@@ -6,7 +6,8 @@
 #define FT_IRC_PARSE_CONF_HPP
 
 #include "string"
-
+#include "Server.hpp"
+class server;
 typedef struct s_client_authorization {
     std::string host_addr;
     std::string password;
