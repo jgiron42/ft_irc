@@ -123,71 +123,6 @@ static void allow_port(std::string target, server &serv) {
     std::string flags = target.substr(pos_bis + 1);
     inet_aton(ip_directory.c_str(), &addr);
     serv.open_socket(addr.s_addr, port);
-
-
-
-
-
-    /*in_addr addr;
-    size_t pos = 2;
-    if (target[1] != ':') //check si le format est respecte
-        throw ft_irc::conf_file_error();
-    std::string ip_directory;
-    std::string stuff1; //pas utilise
-    std::string stuff2; //pas utilise
-    short port;
-    std::string port_tmp;
-    std::string flags; //pas utilise
-    //ip directory
-    std::cout << "caca" << std::endl;
-    size_t pos_bis = target.find_first_of(":", pos);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    ip_directory = target.substr(pos, pos_bis - pos);
-    //stuff1
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    std::cout << "caca 1" << std::endl;
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    stuff1 = target.substr(pos, pos_bis - pos);
-    //stuff2
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    std::cout << "caca 2" << std::endl;
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    stuff2 = target.substr(pos, pos_bis - pos);
-    //port
-    pos = pos_bis + 1;
-    std::cout << "caca 3" << std::endl;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    port_tmp = target.substr(pos, pos_bis - pos);
-    if (port_tmp.empty())
-        throw ft_irc::conf_file_error();
-    else
-        port = (short)atoi(port_tmp.c_str());
-    //flags
-    pos = pos_bis + 1;
-    std::cout << "caca 3" << std::endl;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis != std::string::npos)
-        throw ft_irc::conf_file_error();
-    flags = target.substr(pos, pos_bis - pos);
-    //connect
-   // if (!ip_directory.empty())
-     //   throw ft_irc::conf_file_error();
-    if (inet_aton(ip_directory.substr(pos, pos_bis - pos).c_str(), &addr) == 0)
-    {}// serv.open_socket(ip_directory, port);
-    else
-        serv.open_socket(addr.s_addr, port);
-    (void)stuff1;
-    (void)stuff2;
-    (void)flags;
-    std::cout << "caca 4" << std::endl;
-    //do some stuff with stuff1, stuff2 and flags*/
 };
 
 static void client_authorization(std::string target, server &serv) {
@@ -218,8 +153,13 @@ static void client_authorization(std::string target, server &serv) {
     pos_bis = target.find_first_of(":", pos + 1);
     if (pos_bis == std::string::npos)
         throw ft_irc::conf_file_error();
+<<<<<<< HEAD
     port = target.substr(pos, pos_bis - pos);
     fill.port = (short)std::stoi(port);
+=======
+    port = target.substr(pos, pos_bis);
+    fill.port = (short)atoi(port.data());
+>>>>>>> 274a2719c23aa828220c1ee1420b7010e2fcad13
     //classes
     pos = pos_bis + 1;
     pos_bis = target.find_first_of(":", pos + 1);

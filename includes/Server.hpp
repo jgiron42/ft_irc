@@ -18,6 +18,7 @@
 #include <exception>
 #include <poll.h>
 #include "parse_conf.hpp"
+#include <stdlib.h>
 
 #define LIVENESS_TIMEOUT	120
 #define PING_TIMEOUT		10
