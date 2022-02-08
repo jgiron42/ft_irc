@@ -171,7 +171,7 @@ static void client_authorization(std::string target, server &serv) {
     if (pos_bis == std::string::npos)
         throw ft_irc::conf_file_error();
     port = target.substr(pos, pos_bis);
-    fill.port = (short)std::stoi(port);
+    fill.port = (short)atoi(port.data());
     //classes
     pos = pos_bis;
     pos_bis = target.find_first_of(target, pos);
