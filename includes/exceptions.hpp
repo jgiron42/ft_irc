@@ -41,6 +41,15 @@ namespace ft_irc {
             return ("invalid conf file");
         }
     };
+
+    class conf_file_name_error :public std::exception {
+    public:
+        conf_file_name_error() throw() {};
+        virtual ~conf_file_name_error() throw() {};
+        const char * what() const  throw() {
+            return ("invalid conf file name");
+        }
+    };
 }
 
 #endif //FT_IRC_EXCEPTIONS_HPP

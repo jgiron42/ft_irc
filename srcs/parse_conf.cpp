@@ -175,6 +175,9 @@ static void client_authorization(std::string target, server &serv) {
 void parse_conf (server &s, const std::string &file){
     std::ifstream ifs;
     ifs.open(file.data());
+    if (!(ifs.is_open()))
+        throw ft_irc::conf_file_name_error();
+
     std::string read;
 
     typedef struct s_type{char c; void (*f)(std::string target, server &serv);} t_type;
@@ -196,4 +199,5 @@ void parse_conf (server &s, const std::string &file){
             throw ft_irc::conf_file_error();
         }
     }
+    ifs.close();
 }
