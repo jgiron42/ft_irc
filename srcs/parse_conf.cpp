@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "parse_conf.hpp"
+#include "stdlib.h"
 
 #define NB_OPT 4
 
@@ -153,13 +154,8 @@ static void client_authorization(std::string target, server &serv) {
     pos_bis = target.find_first_of(":", pos + 1);
     if (pos_bis == std::string::npos)
         throw ft_irc::conf_file_error();
-<<<<<<< HEAD
     port = target.substr(pos, pos_bis - pos);
-    fill.port = (short)std::stoi(port);
-=======
-    port = target.substr(pos, pos_bis);
-    fill.port = (short)atoi(port.data());
->>>>>>> 274a2719c23aa828220c1ee1420b7010e2fcad13
+    fill.port = (short)atoi(port.c_str());
     //classes
     pos = pos_bis + 1;
     pos_bis = target.find_first_of(":", pos + 1);
@@ -192,7 +188,6 @@ void parse_conf (server &s, const std::string &file){
         int i;
         for (i = 0; i < NB_OPT; i++){
             if (read[0] == lst_conf[i].c){
-                std::cout << "Line" << read << std::endl;
                 lst_conf[i].f(read, s);
                 break;
             }
