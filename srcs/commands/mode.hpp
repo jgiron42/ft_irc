@@ -11,7 +11,7 @@ class mode_command : public command {
 public:
 	mode_command(class client &c, class server &s) : command(c, s) {
 		name = "mode";
-		syntax = "<args> { <args> }";
+		syntax = "<args> { <args> ' ' }";
 		generate_token(std::string(syntax));
 	};
 
@@ -58,7 +58,7 @@ public:
             std::cout << "user mode" << std::endl;
         }
         else {
-            this->send_numeric(ERR_NEEDMOREPARAMS);
+            this->reply_nbr(ERR_NEEDMOREPARAMS);
         }
 	}
 };
