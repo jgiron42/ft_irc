@@ -94,49 +94,7 @@ public:
         std::list<std::string>::iterator it = arguments["channel"].begin();
 
         if (this->s.channels.find(*it) != this->s.channels.end()) {
-            for (std::list<std::string>::iterator ite = arguments["flags"].begin(); ite != arguments["flags"].end(); ite++) {
-                if ((*ite).at(0) == '-') {
-                    for (std::string::iterator sit = (*ite).begin()++; sit != (*ite).end(); sit++) {
-                        switch(*sit) {
-                            case 'o':
-                                if (this->s.users.find(arguments["limits"].front()) != this->s.users.end()) {
-                                    client *cli = this->s.users[arguments["limits"].front()];
-                                }
-                                else {
-                                    this->reply_nbr(ERR_NOSUCHNICK);
-                                    return ;
-                                }
-                                break ;
-                            case 'p':
-                                break ;
-                            case 's':
-                                break ;
-                            case 'i':
-                                break ;
-                            case 't':
-                                break ;
-                            case 'n':
-                                break ;
-                            case 'm':
-                                break ;
-                            case 'l':
-                                break ;
-                            case 'b':
-                                break ;
-                            case 'v':
-                                break ;
-                            case 'k':
-                                this->s.channels[*it].password.clear();
-                                break ;
-                            default:
-                                return ;
-                        }
-                    }
-                }
-                else {
-
-                }
-            }
+            std::cout << "channel found" << std::endl;
         }
         else
             this->reply_nbr(ERR_NOSUCHCHANNEL);
