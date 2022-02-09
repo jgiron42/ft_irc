@@ -18,7 +18,7 @@ public:
 		std::string comment;
 		if (!this->c.op)
 			this->reply_nbr(ERR_NOPRIVILEGES);
-		else if (this->args.size() < 2)
+		else if (this->args.size() < 3)
 			this->reply_nbr(ERR_NEEDMOREPARAMS);
 		else
 		{

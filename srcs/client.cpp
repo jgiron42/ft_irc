@@ -120,7 +120,6 @@ void client::set_nick(std::string &str) {
 }
 
 void client::join_chan(channel &chan, bool as_op) {
-	std::cout << "|" << chan.id << "|" << std::endl;
 	this->channels[chan.id] = &chan;
 	chan.members[this] = as_op;
 }

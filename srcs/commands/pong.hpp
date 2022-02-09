@@ -15,7 +15,7 @@ public:
 		generate_token(std::string(syntax));
 	};
 	void execute() { // TODO: masks
-//		if (this->args.size() < 1)
+//		if (this->args.size() < 2)
 //			this->reply_nbr(ERR_NOORIGIN);
 		this->c.pong();
 	}

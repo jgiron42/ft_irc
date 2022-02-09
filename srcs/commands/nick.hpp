@@ -17,7 +17,7 @@ public:
 	};
 	void execute() {
 		std::string tmp;
-		if (this->args.empty())
+		if (this->args.size() <= 1)
 			this->reply_nbr(ERR_NONICKNAMEGIVEN);
 		this->get_arg("nickname", tmp);
 		if (!is_valid_nickname(tmp))

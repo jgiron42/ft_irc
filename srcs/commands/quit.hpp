@@ -17,7 +17,7 @@ public:
 	void execute() {
 		std::string message;
 		if (this->get_arg("quit message", message))
-			;
+			;//what TODO?
 		this->s.disconnect(this->c.sock);
 	}
 };

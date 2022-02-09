@@ -29,23 +29,43 @@ public:
 		for (std::map<client *, bool>::iterator i = chan.members.begin(); i != chan.members.end(); i++)
 			this->send(this->c, "JOIN", chan.id, *i->first);
 		this->send_names(chan);
-		// TODO: notice join
 	}
 
-	void execute() {
+	void execute() { // TODO: join on invite
 		std::string canal;
 		std::string key;
+
 		if (!this->get_arg("canal", canal))
+		{
 			this->reply_nbr(ERR_NEEDMOREPARAMS);
-		if (this->s.channels.find(canal) == this->s.channels.end()) {
-			std::cout << "channel successfully created." << std::endl; //TODO: better logging
-			this->s.channels[canal] = channel(this->c).id = canal;
-			if (!this->get_arg("key", key))
-				this->s.channels[canal].setPass(key);
+			return;
+		}
+		else if (!is_channel(canal))
+		{
+			this->reply_nbr(ERR_NOSUCHCHANNEL);
+			return;
+		}
+		std::map<std::string, channel>::iterator chanit = this->s.channels.find(canal);
+		if (chanit == this->s.channels.end()) {
+			this->s.create_chan(canal, this->c, key);
 			connecting(this->c, this->s, canal, true);
 		}
-		else if (!this->s.channels[canal].getPass().empty() && key.compare(this->s.channels[canal].getPass()))
-			this->reply_nbr(ERR_BADCHANNELKEY);
+		else if (chanit->second.members.size() >= chanit->second.user_limit)
+			this->reply_nbr(ERR_CHANNELISFULL);
+		else if (!chanit->second.invite_only)
+		{
+			if (chanit->second.invites.count(this->c.nickname))
+				connecting(this->c, this->s, canal);
+			else
+				this->reply_nbr(ERR_INVITEONLYCHAN);
+		}
+		else if (!chanit->second.getPass().empty())
+		{
+			if (key.compare(this->s.channels[canal].getPass()))
+				this->reply_nbr(ERR_BADCHANNELKEY);
+			else
+				connecting(this->c, this->s, canal);
+		}
 		else
 			connecting(this->c, this->s, canal);
 	}

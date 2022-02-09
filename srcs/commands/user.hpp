@@ -16,7 +16,7 @@ public:
 		generate_token(std::string(syntax));
 	};
 	void execute() {
-		if (this->args.size() < 4)
+		if (this->args.size() <= 4)
 			this->reply_nbr(ERR_NEEDMOREPARAMS);
 		else if (this->c.identified)
 			this->reply_nbr(ERR_ALREADYREGISTRED);

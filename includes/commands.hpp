@@ -6,6 +6,7 @@
 #define FT_IRC_COMMANDS_HPP
 
 #include "away.hpp"
+#include "invite.hpp"
 #include "kill.hpp"
 #include "command.hpp"
 #include "Server.hpp"
@@ -39,6 +40,7 @@ creator *get_command(std::string name)
 	if (map.empty())
 	{
 		map["AWAY"] = &f<away_command>;
+		map["INVITE"] = &f<invite_command>;
 		map["JOIN"] = &f<join_command>;
 		map["KILL"] = &f<kill_command>;
 		map["NICK"] = &f<nick_command>;

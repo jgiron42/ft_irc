@@ -183,7 +183,7 @@ void parse_conf (server &s, const std::string &file){
         throw ft_irc::conf_file_name_error();
 
     std::string read;
-
+// TODO: ajouter un moyen de specifier un path pour le motd puis parser ce fichier
     typedef struct s_type{char c; void (*f)(std::string target, server &serv);} t_type;
     t_type lst_conf[NB_OPT] = {
             {'M', &set_server},
