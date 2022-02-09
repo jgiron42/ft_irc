@@ -33,6 +33,7 @@ public:
 	bool	try_login();
 	void	join_chan(channel &, bool as_op = false);
 	void	leave_chan(channel &);
+	bool	can_see(channel &);
 //private:
 	server	&s;
 	bool identified;

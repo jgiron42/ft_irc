@@ -11,6 +11,7 @@
 #include "Server.hpp"
 #include "client.hpp"
 #include "user.hpp"
+#include "names.hpp"
 #include "nick.hpp"
 #include "notice.hpp"
 #include "pass.hpp"
@@ -40,6 +41,7 @@ creator *get_command(std::string name)
 		map["JOIN"] = &f<join_command>;
 		map["KILL"] = &f<kill_command>;
 		map["NICK"] = &f<nick_command>;
+		map["NAMES"] = &f<names_command>;
 		map["NOTICE"] = &f<notice_command>;
 		map["PASS"] = &f<pass_command>;
 		map["PONG"] = &f<pong_command>;

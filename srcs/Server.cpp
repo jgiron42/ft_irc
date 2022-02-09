@@ -6,7 +6,7 @@
 message *parse_msg(std::string str);
 
 server::server(void) :  clients(), fds(), history_size(0), hostname(SERVERNAME) { // syscall
-//	this->open_socket(INADDR_ANY, PORT);
+	this->open_socket(INADDR_ANY, PORT);
 //	this->open_socket(INADDR_ANY, PORT + 1);
 	this->info.motd = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ultricies, tortor posuere gravida malesuada, magna augue hendrerit leo, in efficitur urna mi quis orci. Curabitur laoreet, nulla id congue semper, nisi leo tincidunt massa, non condimentum ex sem vestibulum ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum sed nibh sed sapien rhoncus rhoncus. Integer purus augue, sodales vitae pellentesque eu, ultricies non tellus. Suspendisse ipsum justo, molestie in hendrerit elementum, mattis nec diam. Donec vestibulum massa et diam lacinia porttitor. Praesent lobortis, ex id lacinia tempus, metus turpis vestibulum lorem, et imperdiet orci turpis sed risus. Maecenas nec aliquam libero. Fusce commodo cursus tincidunt. Donec vel fringilla justo, ac maximus ligula. Morbi facilisis, eros eu efficitur ornare, enim est pellentesque libero, quis tristique nisl nisl id libero. Pellentesque vel mi congue, sollicitudin arcu vitae, dignissim justo. Sed risus turpis, ornare a rhoncus ac, viverra euismod nibh. Pellentesque consequat placerat orci non maximus.";
 	std::cout << "server created" << std::endl;

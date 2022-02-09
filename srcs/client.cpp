@@ -129,3 +129,7 @@ void client::leave_chan(channel &chan) {
 	this->channels.erase(chan.id);
 	chan.members.erase(this);
 }
+
+bool	client::can_see(channel &chan) {
+	return (((!chan.private_channel && !chan.secret_channel) || chan.members.count(this) || this->op));
+}

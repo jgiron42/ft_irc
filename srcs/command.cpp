@@ -338,25 +338,68 @@ void command::send(const std::string &prefix, const int command, const std::stri
 
 void command::send_names(channel &chan) {
 	std::string user_list;
-	int usable_length = 512 - 1 - this->s.hostname.length() - 1 - 3 -   1 - this->c.nickname.length() - 1 - chan.id.length() - 2;
+	this->args["channel"].push_front(chan.id);
+	int usable_length =
+			512 - 1 - this->s.hostname.length() - 1 - 3 - 1 - this->c.nickname.length() - 1 - chan.id.length() - 2;
 	//						 ':'  <hostname>                 ' ' <NUM> ' '  <nick>                     ' '  <chan_id>         ' :'
 	for (std::map<class client *, bool>::iterator it = chan.members.begin();
-		 it != chan.members.end(); it++)
-	{
-//		user_list += (it->second ? "@" : "") +  it->first->nickname; // 68 + this.s.hostname.length();
-		user_list +=  it->first->nickname; // 68 + this.s.hostname.length();
-		if (user_list.length() + usable_length >= 499)
-		{
+		 it != chan.members.end(); it++) {
+		user_list += (it->second ? "@" : "") +  it->first->nickname; // 68 + this.s.hostname.length();
+//		user_list += it->first->nickname; // 68 + this.s.hostname.length();
+		if (user_list.length() + usable_length >= 499) {
 			this->args["user_list"].push_front(user_list);
 			this->send_numeric(RPL_NAMREPLY, this->c);
-		}
-		else
+			user_list.clear();
+		} else
 			user_list.append(" ");
 	}
-	if (!user_list.empty())
-	{
+	if (!user_list.empty()) {
 		this->args["user_list"].push_front(user_list);
 		this->send_numeric(RPL_NAMREPLY, this->c);
 	}
 	this->send_numeric(RPL_ENDOFNAMES, this->c);
+}
+
+void command::send_names(void) {
+	bool is_visible;
+	std::string user_list;
+	this->args["channel"].push_front("*");
+	int usable_length =
+			512 - 1 - this->s.hostname.length() - 1 - 3 - 1 - this->c.nickname.length() - 1 - 1 - 2;
+	//						 ':'  <hostname>                 ' ' <NUM> ' '  <nick>       ' '  '*' ' :'
+	for (std::map<std::string, client *>::iterator it = s.users.begin(); it != s.users.end(); it++) {
+		if (!it->second->invisible) {
+			is_visible = false;
+			for (std::map<std::string, channel *>::iterator j = it->second->channels.begin(); j != it->second->channels.end(); j++)
+				is_visible |= c.can_see(*j->second);
+			if (is_visible)
+				continue;
+			user_list += it->first; // 68 + this.s.hostname.length();
+			if (user_list.length() + usable_length >= 499) {
+				this->args["user_list"].push_front(user_list);
+				this->send_numeric(RPL_NAMREPLY, this->c);
+				user_list.clear();
+			} else
+				user_list.append(" ");
+		}
+	}
+	if (!user_list.empty()) {
+		this->args["user_list"].push_front(user_list);
+		this->send_numeric(RPL_NAMREPLY, this->c);
+	}
+	this->send_numeric(RPL_ENDOFNAMES, this->c);
+
+}
+
+void command::send_names(const std::string &chan) {
+	std::map<std::string, channel>::iterator i = this->s.channels.find(chan);
+	if (chan == "*")
+		this->send_names();
+	else if (i != this->s.channels.end() && this->c.can_see(i->second))
+		this->send_names(i->second);
+	else
+	{
+		this->args["channel"].push_front(chan);
+		this->send_numeric(RPL_ENDOFNAMES, this->c);
+	}
 }
