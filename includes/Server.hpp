@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/un.h>
 #include <cerrno>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -44,6 +45,7 @@ public:
 	~server();
 	server	&operator=(const server &);
 	void	open_socket(long, short);
+	void 	open_socket(std::string const &path);
 	void	routine();
 	void	routine_sock(struct pollfd fd);
 	void	routine_client(struct pollfd &fd, time_t now);

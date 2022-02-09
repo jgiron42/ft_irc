@@ -7,6 +7,7 @@ message *parse_msg(std::string str);
 
 server::server(void) :  clients(), fds(), history_size(0), hostname(SERVERNAME) { // syscall
 	this->open_socket(INADDR_ANY, PORT);
+	this->open_socket("/tmp/test_unix_socket", PORT);
 //	this->open_socket(INADDR_ANY, PORT + 1);
 	this->info.motd = "On veut plus de jaune dans les œufs\n"
 					  "On veut plus de sauce dans les sandwiches\n"
@@ -45,6 +46,28 @@ void server::open_socket(long ip, short port) {
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
 	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1) // syscall
+		throw syscall_failure(my_strerror((char *)"bind: ", errno));
+	if(listen(sock, MAX_CLIENT) == -1) // syscall
+		throw syscall_failure(my_strerror((char *)"listen: ", errno));
+	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
+	this->sockets.insert(sock);
+	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
+		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+}
+
+void server::open_socket(std::string const &path) {
+	std::cout << "opening socket on " << path << " " << port << std::endl;
+	unlink(path.data());
+	int sock = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (sock == -1)
+		throw syscall_failure(my_strerror((char *)"socket: ", errno));
+	int enable = 1;
+	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1) // syscall
+		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
+	struct sockaddr_un sun = {};
+	memcpy(sun.sun_path, path.data(), path.length() + 1);
+	sun.sun_family = AF_UNIX;
+	if(bind(sock, (sockaddr *) &sun, sizeof sun) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));
 	if(listen(sock, MAX_CLIENT) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
