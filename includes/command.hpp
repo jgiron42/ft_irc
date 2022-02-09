@@ -54,7 +54,7 @@ protected:
 	void add_block(int bt, std::string value);
 	void add_elem(std::string str, std::list<block>::iterator it);
 	void add_elem_str(std::string, std::list<block>::iterator it);
-	void add_list(std::string str, std::list<block>::iterator &it);
+	void add_list(std::string str, std::list<block>::iterator &it, std::vector<std::string> *);
 	void token_displayer(std::list<struct block> token);
 	void generate_token(std::string syntax);
 	void	send_names(channel &chan);
