@@ -14,10 +14,11 @@ int main(int ac, char **av)
 {
     (void)ac;
 	try {
-		server s;
-        //std::cout << "CONF FILE : " << av[1] << std::endl;
-       // parse_conf(s, av[1]);
-        //s.print_info();
+        server s;
+        if (ac == 2) {
+            parse_conf(s, av[1]);
+            s.print_info();
+        }
 		signal(SIGTERM, stop);
 		signal(SIGINT,  stop);
 		while(running)
