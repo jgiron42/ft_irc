@@ -87,7 +87,7 @@ void
         tmp++;
         add_elem_str(str, tmp);
         tmp++;
-        std::cout << block_enum_printer(*tmp) << std::endl;
+//        std::cout << block_enum_printer(*tmp) << std::endl;
         it = tmp;
         return ;
     }
@@ -296,7 +296,7 @@ void command::send_numeric(const client &from, int n, client &dst) {
 	if (!from.username.empty())
 		prefix.append("!" + from.username);
 	if (!from.username.empty())
-		prefix.append("@" + from.hostname);
+		prefix.append("@" + from.getIP());
 	this->send_numeric(prefix, n, dst);
 }
 
@@ -323,7 +323,7 @@ void command::send(const client &from, const int command, const std::string &str
 	if (!from.username.empty())
 		prefix.append("!" + from.username);
 	if (!from.username.empty())
-		prefix.append("@" + from.hostname);
+		prefix.append("@" + from.getIP());
 	this->send(prefix, command, str, dst);
 }
 

@@ -22,9 +22,10 @@ public:
 			this->reply_nbr(ERR_ALREADYREGISTRED);
 		else
 		{
-			//TODO: check if input is valid character
+			//TODO: check if input is valid character and length
 			get_arg("username", this->c.username);
 			get_arg("hostname", this->c.hostname);
+			this->c.hostname = this->c.hostname.substr(0, 9);
 			get_arg("servername", this->c.servername);
 			get_arg("realname", this->c.realname);
 			if (this->c.try_login()) {

@@ -31,6 +31,8 @@ public:
 	void	setIP(const std::string &);
 	void	pong();
 	bool	try_login();
+	void	join_chan(channel &, bool as_op = false);
+	void	leave_chan(channel &);
 //private:
 	server	&s;
 	bool identified;
@@ -38,6 +40,7 @@ public:
 	std::string password;
 	std::string username;
 	std::string nickname;
+	std::string nickname_tmp;
 	std::deque<std::string> nick_history;
 	std::string hostname;
 	std::string servername;

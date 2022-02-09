@@ -16,50 +16,40 @@ public:
 		generate_token(std::string(syntax));
 	};
 
-  void connecting(class client &c, class server &s, std::string &canal) {
-    this->s.channels[canal].addMember(this->c);
-    if (this->args["channel"].empty())
-      this->args["channel"].push_front(std::string(canal));
-    if (!this->s.channels[canal].topic.empty())
-    {
-      if (this->args["topic"].empty())
-        this->args["topic"].push_front(this->s.channels[canal].topic);
-      this->send_numeric(RPL_TOPIC, this->c);
-    }
-    if (this->args["nick"].size() != this->s.channels[canal].members.size()) {
-      this->args["nick"].clear();
-      for (std::set<class client *>::iterator it = this->s.channels[canal].members.begin(); it != this->s.channels[canal].members.end(); it++) {
-          this->args["nick"].push_back((*it)->nickname);
-      }
-    }
-    this->send_numeric(RPL_NAMREPLY, this->c);
-  }
-  
+	void connecting(class client &c, class server &s, std::string &canal, bool as_op = false) {
+		channel &chan = this->s.channels[canal];
+		std::string user_list;
+
+		c.join_chan(chan, as_op);
+		this->args["channel"].push_front(std::string(canal));
+		if (!chan.topic.empty())
+		{
+			this->args["topic"].push_front(chan.topic);
+			this->send_numeric(RPL_TOPIC, this->c);
+		}
+		for (std::map<class client *, bool>::iterator it = chan.members.begin();
+			 it != chan.members.end(); it++)
+			user_list += std::string(" ") + (it->second ? "@" : "+") + it->first->nickname;
+		this->args["user_list"].push_back(user_list);
+		this->send_numeric(RPL_NAMREPLY, this->c);
+	}
+
 	void execute() {
 		std::string canal;
 		std::string key;
-		this->get_arg("canal", canal);
-    if (canal.empty())
-      this->reply_nbr(ERR_NEEDMOREPARAMS);
-		this->get_arg("key", key);
-		if (this->s.channels.find(canal) == this->s.channels.end() ) {
-      std::cout << "channel successfully created." << std::endl;
-      this->s.channels[canal] = channel(this->c);
-      if (key.empty() == 0)
-        this->s.channels[canal].setPass(key);
-      connecting(this->c, this->s, canal);
-    } else {
-      if (this->s.channels[canal].getPass().empty())
-        connecting(this->c, this->s, canal);
-      else {
-        if (key.compare(this->s.channels[canal].getPass()))
-          this->reply_nbr(ERR_BADCHANNELKEY);
-        else
-          connecting(this->c, this->s, canal);
-      }
-    }
-    this->get_arg("canal", canal);
-		
+		if (!this->get_arg("canal", canal))
+			this->reply_nbr(ERR_NEEDMOREPARAMS);
+		if (this->s.channels.find(canal) == this->s.channels.end()) {
+			std::cout << "channel successfully created." << std::endl; //TODO: better logging
+			this->s.channels[canal] = channel(this->c).id = canal;
+			if (!this->get_arg("key", key))
+				this->s.channels[canal].setPass(key);
+			connecting(this->c, this->s, canal, true);
+		}
+		else if (!this->s.channels[canal].getPass().empty() && key.compare(this->s.channels[canal].getPass()))
+			this->reply_nbr(ERR_BADCHANNELKEY);
+		else
+			connecting(this->c, this->s, canal);
 	}
 };
 

@@ -29,12 +29,14 @@ public:
 				{
 					if (this->c.channels.count(*r)) {
 						c = &this->s.channels[*r];
-						for (std::set<client *>::iterator i = c->members.begin(); i != c->members.end(); i++) {
-							if (!(*i)->away)
-								this->send(this->c, "PRIVMSG", ":" + text, **i);
+						for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
+							if (i->first == &this->c)
+								continue;
+							if (!i->first->away)
+								this->send(this->c, "PRIVMSG", *r + " :" + text, *i->first);
 							else {
 								this->args["nickname"].push_front(*r);
-								this->args["message"].push_front((*i)->away_message);
+								this->args["message"].push_front(i->first->away_message);
 								this->reply_nbr(RPL_AWAY);
 								this->replied = false;
 							}
@@ -45,7 +47,7 @@ public:
 				}
 				else if (this->s.users.count(*r)) {
 					if (!this->s.users[*r]->away)
-						this->send(this->c, "PRIVMSG", ":" + text, *this->s.users[*r]);
+						this->send(this->c, "PRIVMSG", *r + " :" + text, *this->s.users[*r]);
 					else {
 						this->args["nickname"].push_front(*r);
 						this->args["message"].push_front(this->s.users[*r]->away_message);

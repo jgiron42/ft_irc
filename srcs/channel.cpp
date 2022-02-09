@@ -2,16 +2,15 @@
 #include "channel.hpp"
 #include <stdlib.h>
 
-channel::channel(void) : id(), members(), chops(){}
+channel::channel(void) : id(), members(){}
 
-channel::channel(std::string id) : id(id), members(), chops(){}
+channel::channel(std::string id) : id(id), members(){}
 
-channel::channel(const channel &src): id(src.id), members(), chops() {
+channel::channel(const channel &src): id(src.id), members() {
 	*this = src;
 }
 
-channel::channel(client creator) : id(), members(), chops(), password(), topic() {
-	this->chops.push_back(creator.nickname);
+channel::channel(client creator) : id(), members(),  password(), topic() {
 	int	user_limit = 25;
 	int ban_mask = 0;
 }
@@ -19,7 +18,6 @@ channel::channel(client creator) : id(), members(), chops(), password(), topic()
 channel::~channel() {}
 
 channel &channel::operator=(const channel &src) {
-	this->chops = src.chops;
 	this->members = src.members;
 	this->id = src.id;
 	return (*this);
@@ -34,5 +32,5 @@ void		channel::setPass(std::string &pass) {
 }
 
 void		channel::addMember(client c) {
-	this->members.insert(&c);
+	this->members[&c];
 }

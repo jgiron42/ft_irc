@@ -38,7 +38,10 @@ public:
 				this->s.users.find(tmp)->second->to_send.push_back("");
 			}
 		}
-		this->c.set_nick(tmp);
+		if (this->c.identified)
+			this->c.set_nick(tmp);
+		else
+			this->c.nickname_tmp = tmp;
 		if (!this->c.identified && this->c.try_login()) {
 			if (this->c.identified)
 			{

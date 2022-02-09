@@ -61,6 +61,9 @@ public:
 	struct info {
 	    long ip;
 	    std::string host_name;
+	    std::string version;
+	    std::string version_comment;
+	    std::string debug_level;
 	    std::string location;
 	    short port;
 	    std::string sid;

@@ -18,6 +18,7 @@ client::~client() {}
 
 client &client::operator=(const client &src) {
 	this->nickname = src.nickname;
+	this->nickname_tmp = src.nickname_tmp;
 	this->sock = src.sock;
 	memcpy(this->buf, src.buf, 512);
 	this->begin = src.begin;
@@ -98,10 +99,11 @@ void client::pong() {
 }
 
 bool client::try_login() {
-	if ((this->password.empty() && !this->s.password.empty()) ||this->nickname == "*" || this->username.empty())
+	if ((this->password.empty() && !this->s.password.empty()) ||this->nickname_tmp.empty() || this->username.empty())
 		return (false);
 	else if (this->password == this->s.password)
 	{
+		this->set_nick(this->nickname_tmp);
 		this->identified = true;
 		return (true);
 	}
@@ -115,4 +117,15 @@ void client::set_nick(std::string &str) {
 	this->s.users[str] = this;
 	if (this->nick_history.size() > this->s.history_size)
 		this->nick_history.pop_back();
+}
+
+void client::join_chan(channel &chan, bool as_op) {
+	std::cout << "|" << chan.id << "|" << std::endl;
+	this->channels[chan.id] = &chan;
+	chan.members[this] = as_op;
+}
+
+void client::leave_chan(channel &chan) {
+	this->channels.erase(chan.id);
+	chan.members.erase(this);
 }

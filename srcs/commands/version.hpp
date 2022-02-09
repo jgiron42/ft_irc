@@ -21,9 +21,10 @@ public:
 		generate_token(std::string(syntax));
 	};
 	void execute() {
-		this->args["version"].push_front(VERSION);\
-		this->args["debug_level"].push_front(SSTR(DEBUG_LVL));
+		this->args["version"].push_front(s.info.version);
+		this->args["debug_level"].push_front(SSTR(s.info.debug_level));
 		this->args["server"].push_back(this->s.hostname);
+		this->args["comments"].push_back(this->s.info.version_comment);
 		this->reply_nbr(RPL_VERSION);
 	}
 };
