@@ -20,6 +20,7 @@
 #include "privmsg.hpp"
 #include "version.hpp"
 #include "time.hpp"
+#include "mode.hpp"
 #include "quit.hpp"
 #include "command_not_found.hpp"
 
@@ -50,6 +51,7 @@ creator *get_command(std::string name)
 		map["TIME"] = &f<time_command>;
 		map["USER"] = &f<user_command>;
 		map["VERSION"] = &f<version_command>;
+		map["MODE"] = &f<mode_command>;
 	}
 	try {
 		return (map.at(name));

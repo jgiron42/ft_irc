@@ -74,7 +74,7 @@ void
 }
 
 void
-    command::add_list(std::string str, std::list<block>::iterator &it)
+    command::add_list(std::string str, std::list<block>::iterator &it, std::vector<std::string> *p)
 {
     it++;
     std::size_t sep_pos;
@@ -84,10 +84,15 @@ void
 
     if ((sep_pos = str.find(sep)) == std::string::npos)
     {
-        tmp++;
+		if (tmp->bloc_type != ELEM)
+			tmp++;
+		else {
+			for (std::vector<std::string>::iterator ite = p->begin(); ite != p->end() ; ite++)
+				add_elem_str(*ite, tmp);
+			return ;
+		}
         add_elem_str(str, tmp);
         tmp++;
-//        std::cout << block_enum_printer(*tmp) << std::endl;
         it = tmp;
         return ;
     }
@@ -156,15 +161,15 @@ void command::parse_recurse(std::string str)
         if (p.empty() && is_opt)
             return ;
         if (is_rep)
-            command::add_list(p.front(), it);
+            command::add_list(p.front(), it, &p);
         if (it->bloc_type == ELEM && !p.empty())
         {
             tmp = it;
             tmp++;
             if (tmp != this->token.end() && tmp->bloc_type == REP)
             {
-                it = tmp;
-                command::add_list(p.front(), tmp);
+				it = tmp;
+                command::add_list(p.front(), tmp, &p);
 				p.erase(p.begin());
 				while (tmp->bloc_type != REPE)
 					tmp++;
