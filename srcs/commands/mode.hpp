@@ -16,43 +16,97 @@ public:
 	};
 
     void sort_args(std::map<std::string, std::list< std::string > > &argument) {
-        std::string temp;
         int         iter = 0;
-        while (this->get_arg("args", temp)) {
-            if (temp.empty())
-                return ; //maybe throw not enough args
+
+        for (std::list<std::string>::iterator it = this->args["args"].begin(); it != this->args["args"].end(); it++) {
+
+            if ((*it).empty()) {
+                if (iter == 0)
+                    this->reply_nbr(ERR_NEEDMOREPARAMS);
+                return ;
+            }
             switch (iter) {
                 case 0:
-                    if (temp[0] == '#' || temp[0] == '&')
-                        argument["channel"].push_back(temp);
+                    if ((*it).at(0) == '#' || (*it).at(0) == '&')
+                        argument["channel"].push_back(*it);
                     else
-                        argument["user"].push_back(temp);
+                        argument["user"].push_back(*it);
                     break ;
                 case 1:
-                    if (temp[0] == '-' || temp[0] == '+') {
-                        argument["flags"].push_back(temp.substr(1, temp.length() - 1));
-                        continue ;
+                    if ((*it).at(0) == '-' || (*it).at(0) == '+') {
+                        argument["flags"].push_back(*it);
+                        iter--;
                     }
                     else
-                        argument["limits"].push_back(temp);
+                        argument["limits"].push_back(*it);
                     break ;
                 case 2:
-                    argument["user"].push_back(temp);
+                    argument["user"].push_back(*it);
                     break ;
                 case 3:
-                    argument["banmask"].push_back(temp);
+                    argument["banmask"].push_back(*it);
                 default:
                     return ;
-            }
+            } 
             iter++;
         }
     }
 
+    void debug_args(std::map<std::string, std::list< std::string> > &arg) {
+        std::cout << "ARGUMENT DEBUGING" << std::endl;
+        if (!arg["channel"].empty())
+        {
+            std::cout << "  channel : " << std::endl;
+            std::cout << "      - " << arg["channel"].front() << std::endl;
+            if (!arg["limits"].empty())
+            {
+                std::cout << "  limits : " << std::endl;
+                std::cout << "      - " << arg["limits"].front() << std::endl;
+            }
+            if (!arg["user"].empty())
+            {
+                std::cout << "  user : " << std::endl;
+                std::cout << "      - " << arg["user"].front() << std::endl;
+            }
+            if (!arg["banmask"].empty())
+            {
+                std::cout << "  banmask : " << std::endl;
+                std::cout << "      - " << arg["banmask"].front() << std::endl;
+            }
+        }
+        else {
+            if (!arg["user"].empty())
+            {
+                std::cout << "  user : " << std::endl;
+                std::cout << "      - " << arg["user"].front() << std::endl;
+            }
+        }
+        if (!arg["flags"].empty())
+        {
+            std::cout << "  flags : " << std::endl;
+            for (std::list< std::string>::iterator it = arg["flags"].begin(); it != arg["flags"].end(); it++) {
+                std::cout << "      - " << *it << std::endl;
+            }
+        };
+    }
+
+    void channel_mode(std::map<std::string, std::list<std::string> > &arguments) {
+        std::list<std::string>::iterator it = arguments["channel"].begin();
+
+        if (this->s.channels.find(*it) != this->s.channels.end()) {
+            std::cout << "channel found" << std::endl;
+        }
+        else
+            this->reply_nbr(ERR_NOSUCHCHANNEL);
+    }
+
 	void execute() {
         std::map<std::string, std::list< std::string > > arguments;
+
+        arguments.clear();
         sort_args(arguments);
         if (!arguments["channel"].empty()) {
-            std::cout << "channel mode " << std::endl;
+            channel_mode(arguments);
         }
         else if (!arguments["user"].empty()) {
             std::cout << "user mode" << std::endl;
