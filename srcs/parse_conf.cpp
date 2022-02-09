@@ -122,7 +122,10 @@ static void allow_port(std::string target, server &serv) {
     port_tmp = target.substr(pos, pos_bis - pos);
     port = (short)atoi(port_tmp.c_str());
     std::string flags = target.substr(pos_bis + 1);
-    inet_aton(ip_directory.c_str(), &addr);
+	if (ip_directory.empty())
+		addr.s_addr = INADDR_ANY;
+	else
+		inet_aton(ip_directory.c_str(), &addr);
     serv.open_socket(addr.s_addr, port);
 };
 
@@ -175,7 +178,8 @@ static void client_authorization(std::string target, server &serv) {
 void parse_conf (server &s, const std::string &file){
     std::ifstream ifs;
     ifs.open(file.data());
-    if (!(ifs.is_open()))
+
+	if (!(ifs.is_open()))
         throw ft_irc::conf_file_name_error();
 
     std::string read;
@@ -191,6 +195,7 @@ void parse_conf (server &s, const std::string &file){
         int i;
         for (i = 0; i < NB_OPT; i++){
             if (read[0] == lst_conf[i].c){
+				std::cout << read << std::endl;
                 lst_conf[i].f(read, s);
                 break;
             }

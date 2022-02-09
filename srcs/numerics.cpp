@@ -81,7 +81,7 @@ char replies[512][100] = {
 		[RPL_VERSION] = "<version>.<debuglevel> <server> :<comments>",
 		[RPL_WHOREPLY] = "<channel> <username> <host> <server> <nickname>  <H|G>[*][@|+] :<hopcount> <real name>",
 		[RPL_ENDOFWHO] = "<name> :End of /WHO list",
-		[RPL_NAMREPLY] = "<channel> :<user_list>",
+		[RPL_NAMREPLY] = "= <channel> :<user_list>",
 		[RPL_ENDOFNAMES] = "<channel> :End of /NAMES list",
 		[RPL_LINKS] = "<mask> <server> :<hopcount> <server info>",
 		[RPL_ENDOFLINKS] = "<mask> :End of /LINKS list",

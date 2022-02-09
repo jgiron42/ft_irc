@@ -5,7 +5,8 @@
 #ifndef FT_IRC_UTILS_HPP
 #define FT_IRC_UTILS_HPP
 #include <string>
-
+#define CHAN_MAX_L 200
+#define NICK_MAX_L 9
 bool glob_include(char * glob, char * str);
 const char *my_strerror(char *s1, int err);
 bool	is_channel(const std::string &);

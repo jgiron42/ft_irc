@@ -57,6 +57,7 @@ protected:
 	void add_list(std::string str, std::list<block>::iterator &it);
 	void token_displayer(std::list<struct block> token);
 	void generate_token(std::string syntax);
+	void	send_names(channel &chan);
 
 };
 

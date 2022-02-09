@@ -3,6 +3,7 @@
 #include <cstring>
 #include <string>
 #include <cstring>
+#include "utils.hpp"
 
 const char *my_strerror(char *s1, int err)
 {
@@ -47,7 +48,7 @@ bool	is_channel(const std::string &name)
 	for (int i = 0; i < name.length() ; i++)
 		if (name[i] ==  ' ' || name[i] == 7 || name[i] == ',')
 			return (false);
-	return ((name[0] == '&' || name[0] == '#') && name.length() <= 50);
+	return ((name[0] == '&' || name[0] == '#') && name.length() <= CHAN_MAX_L);
 }
 
 bool	isspecial(const char c)
@@ -57,7 +58,7 @@ bool	isspecial(const char c)
 
 bool	is_valid_nickname(const std::string &nick)
 {
-	if (!isalpha(nick[0]) || nick.size() > 9)
+	if (!isalpha(nick[0]) || nick.size() > NICK_MAX_L)
 		return (false);
 	for (int i = 0; i < nick.length(); i++)
 		if (!isalnum(nick[i]) && !isspecial(nick[i]))

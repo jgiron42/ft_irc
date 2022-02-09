@@ -33,7 +33,7 @@ public:
 							if (i->first == &this->c)
 								continue;
 							if (!i->first->away)
-								this->send(this->c, "PRIVMSG", *r + " :" + text, *i->first);
+								this->send(this->c, this->name, *r + " :" + text, *i->first);
 							else {
 								this->args["nickname"].push_front(*r);
 								this->args["message"].push_front(i->first->away_message);
@@ -47,7 +47,7 @@ public:
 				}
 				else if (this->s.users.count(*r)) {
 					if (!this->s.users[*r]->away)
-						this->send(this->c, "PRIVMSG", *r + " :" + text, *this->s.users[*r]);
+						this->send(this->c, this->name, *r + " :" + text, *this->s.users[*r]);
 					else {
 						this->args["nickname"].push_front(*r);
 						this->args["message"].push_front(this->s.users[*r]->away_message);

@@ -3,7 +3,7 @@
 #include "parse_conf.hpp"
 
 bool running = true;
-
+// TODO: c++98
 void	stop(int)
 {
 	running = false;

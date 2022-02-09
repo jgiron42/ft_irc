@@ -18,7 +18,6 @@ public:
 
 	void connecting(class client &c, class server &s, std::string &canal, bool as_op = false) {
 		channel &chan = this->s.channels[canal];
-		std::string user_list;
 
 		c.join_chan(chan, as_op);
 		this->args["channel"].push_front(std::string(canal));
@@ -27,11 +26,10 @@ public:
 			this->args["topic"].push_front(chan.topic);
 			this->send_numeric(RPL_TOPIC, this->c);
 		}
-		for (std::map<class client *, bool>::iterator it = chan.members.begin();
-			 it != chan.members.end(); it++)
-			user_list += std::string(" ") + (it->second ? "@" : "+") + it->first->nickname;
-		this->args["user_list"].push_back(user_list);
-		this->send_numeric(RPL_NAMREPLY, this->c);
+		for (std::map<client *, bool>::iterator i = chan.members.begin(); i != chan.members.end(); i++)
+			this->send(this->c, "JOIN", chan.id, *i->first);
+		this->send_names(chan);
+		// TODO: notice join
 	}
 
 	void execute() {
