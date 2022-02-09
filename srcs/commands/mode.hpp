@@ -14,7 +14,52 @@ public:
 		syntax = "<args> { <args> }";
 		generate_token(std::string(syntax));
 	};
+
+    void sort_args(std::map<std::string, std::list< std::string > > &argument) {
+        std::string temp;
+        int         iter = 0;
+        while (this->get_arg("args", temp)) {
+            if (temp.empty())
+                return ; //maybe throw not enough args
+            switch (iter) {
+                case 0:
+                    if (temp[0] == '#' || temp[0] == '&')
+                        argument["channel"].push_back(temp);
+                    else
+                        argument["user"].push_back(temp);
+                    break ;
+                case 1:
+                    if (temp[0] == '-' || temp[0] == '+') {
+                        argument["flags"].push_back(temp.substr(1, temp.length() - 1));
+                        continue ;
+                    }
+                    else
+                        argument["limits"].push_back(temp);
+                    break ;
+                case 2:
+                    argument["user"].push_back(temp);
+                    break ;
+                case 3:
+                    argument["banmask"].push_back(temp);
+                default:
+                    return ;
+            }
+            iter++;
+        }
+    }
+
 	void execute() {
+        std::map<std::string, std::list< std::string > > arguments;
+        sort_args(arguments);
+        if (!arguments["channel"].empty()) {
+            std::cout << "channel mode " << std::endl;
+        }
+        else if (!arguments["user"].empty()) {
+            std::cout << "user mode" << std::endl;
+        }
+        else {
+            this->send_numeric(ERR_NEEDMOREPARAMS);
+        }
 	}
 };
 
