@@ -6,6 +6,7 @@
 #define FT_IRC_MODE_HPP
 
 #include "command.hpp"
+#include "channel.hpp"
 
 class mode_command : public command {
 public:
@@ -90,11 +91,55 @@ public:
         };
     }
 
+    bool is_member_channel(std::string &name, std::string &channel) {
+        if (this->s.users[name]) {
+            client *to_find = this->s.users[name];
+            if (this->s.channels[channel].members.find(to_find) != this->s.channels[channel].members.end())
+                return true;
+        }
+        return false;
+    }
+
+    bool is_member(std::string &name) {
+        if (this->s.users[name]) {
+            return true;
+        }
+        return false;
+    }
+
+    void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
+        std::cout << "gotten " << flags << std::endl;
+        switch (flags.at(0)) {
+            case 'o':
+                if (!arg["limits"].empty())
+                {
+                    if (is_member_channel(arg["limits"].front(), arg["channel"].front())) {
+                        if (op) {
+                            std::cout << "adding op to " << arg["limits"].front();
+                        }
+                        else
+                            std::cout << "removing op to " << arg["limits"].front();
+                    }
+                    else
+                        this->reply_nbr(ERR_NOSUCHNICK);
+                }
+                break ;
+            default:
+                break ;
+        }
+    }
+
     void channel_mode(std::map<std::string, std::list<std::string> > &arguments) {
         std::list<std::string>::iterator it = arguments["channel"].begin();
 
         if (this->s.channels.find(*it) != this->s.channels.end()) {
             std::cout << "channel found" << std::endl;
+            for (std::list<std::string>::iterator it = arguments["flags"].begin(); it != arguments["flags"].end(); it++) {
+                if ((*it).c_str()[0] == '+')
+                    handle_flags(true, std::string(&((*it).c_str()[1])), false, arguments);
+                else
+                    handle_flags(false, std::string(&((*it).c_str()[1])), false, arguments);
+            }
         }
         else
             this->reply_nbr(ERR_NOSUCHCHANNEL);
@@ -105,11 +150,15 @@ public:
 
         arguments.clear();
         sort_args(arguments);
+        debug_args(arguments);
         if (!arguments["channel"].empty()) {
             channel_mode(arguments);
+            if (!arguments["limits"].empty())
+                std::cout << "is_user : " << is_member_channel(arguments["limits"].front(), arguments["channel"].front()) << std::endl;
         }
         else if (!arguments["user"].empty()) {
             std::cout << "user mode" << std::endl;
+            std::cout << "is_user : " << is_member(arguments["user"].front()) << std::endl;
         }
         else {
             this->reply_nbr(ERR_NEEDMOREPARAMS);
