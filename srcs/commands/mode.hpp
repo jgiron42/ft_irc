@@ -107,25 +107,92 @@ public:
         return false;
     }
 
+    client *get_client(std::string &name) {
+        return this->s.users[name];
+    }
+
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
-        std::cout << "gotten " << flags << std::endl;
-        switch (flags.at(0)) {
-            case 'o':
-                if (!arg["limits"].empty())
-                {
-                    if (is_member_channel(arg["limits"].front(), arg["channel"].front())) {
-                        if (op) {
-                            std::cout << "adding op to " << arg["limits"].front();
+        for (int i = 0; i < flags.length(); i++)
+        {
+            switch (flags.at(i)) {
+                case 'o':
+                    if (!arg["limits"].empty())
+                    {
+                        if (is_member_channel(arg["limits"].front(), arg["channel"].front())) {
+                            if (op)
+                                this->s.channels[arg["channel"].front()].members[get_client(arg["limits"].front())] = true;
+                            else
+                                this->s.channels[arg["channel"].front()].members[get_client(arg["limits"].front())] = false;
                         }
                         else
-                            std::cout << "removing op to " << arg["limits"].front();
+                            this->reply_nbr(ERR_NOSUCHNICK);
+                    }
+                    break ;
+                case 'p':
+                    if (op)
+                        this->s.channels[arg["channel"].front()].private_channel = true;
+                    else
+                        this->s.channels[arg["channel"].front()].private_channel = false;
+                    break ;
+                case 's':
+                    if (op)
+                        this->s.channels[arg["channel"].front()].secret_channel = true;
+                    else
+                        this->s.channels[args["channel"].front()].secret_channel = false;
+                    break ;
+                case 'i':
+                    if (op)
+                        this->s.channels[args["channel"].front()].invite_only = true;
+                    else
+                        this->s.channels[args["channel"].front()].invite_only = false;
+                    break ;
+                case 't':
+                    if (op) {
+                        this->s.channels[args["channel"].front()].topic_only_operator = 0;
+                        this->s.channels[args["channel"].front()].topic = args["limits"].front();
                     }
                     else
-                        this->reply_nbr(ERR_NOSUCHNICK);
-                }
-                break ;
-            default:
-                break ;
+                        this->s.channels[args["channel"].front()].topic_only_operator = 1;
+                    break ;
+                case 'n':
+                    if (op)
+                        this->s.channels[args["channel"].front()].server_clients_only = true;
+                    else
+                        this->s.channels[args["channel"].front()].server_clients_only = false;
+                    break ;
+                case 'm':
+                    if (op)
+                        this->s.channels[args["channel"].front()].moderated = true;
+                    else
+                        this->s.channels[args["channel"].front()].moderated = false;
+                    break ;
+                case 'l':
+                    if (op)
+                        this->s.channels[args["channel"].front()].user_limit = std::atoi(args["limits"].front().c_str());
+                    else
+                        this->s.channels[args["channel"].front()].user_limit = 15;
+                    break ;
+                case 'b':
+                    if (op)
+                        this->s.channels[args["channel"].front()].ban_mask = std::atoi(args["limits"].front().c_str());
+                    else
+                        this->s.channels[args["channel"].front()].moderated = -1;
+                    break ;
+                case 'v':
+                    // need to talk about it
+                    break ;
+                case 'k':
+                    if (op){
+                        if (!args["limits"].empty()) {
+                            this->s.channels[args["channel"].front()].password = args["limits"].front();
+                            break ;
+                        }
+                    }
+                    this->s.channels[args["channel"].front()].password = "";
+                    break ;
+                default:
+                    break ;
+            }
         }
     }
 
@@ -271,7 +338,7 @@ MODE &oulu +b *!*@*.edu         ; prevent any user from a hostname
 :MODE WiZ -w                    ; turns reception of WALLOPS messages
                                 off for WiZ.
 
-:Angel MODE Angel +i            ; Message from Angel to make themselves
+:MODE Angel +i            ; Message from Angel to make themselves
                                 invisible.
 
 MODE WiZ -o                     ; WiZ 'deopping' (removing operator
