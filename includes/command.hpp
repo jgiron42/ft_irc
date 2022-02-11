@@ -48,19 +48,21 @@ protected:
 	std::string syntax;
 	client &c;
 	server &s;
-	bool		get_arg(const std::string &key, std::string &dst);
-	bool		get_arg(const std::string &key, std::list<std::string> &dst);
-	void parse_recurse (std::string str);
-	void add_block(int bt, std::string value);
-	void add_elem(std::string str, std::list<block>::iterator it);
-	void add_elem_str(std::string, std::list<block>::iterator it);
-	void add_list(std::string str, std::list<block>::iterator &it, std::vector<std::string> *);
-	void token_displayer(std::list<struct block> token);
-	void generate_token(std::string syntax);
+	bool	get_arg(const std::string &key, std::string &dst);
+	bool	get_arg(const std::string &key, std::list<std::string> &dst);
+	void	parse_recurse (std::string str);
+	void	add_block(int bt, std::string value);
+	void	add_elem(std::string str, std::list<block>::iterator it);
+	void	add_elem_str(std::string, std::list<block>::iterator it);
+	void	add_list(std::string str, std::list<block>::iterator &it, std::vector<std::string> *);
+	void	token_displayer(std::list<struct block> token);
+	void	generate_token(std::string syntax);
 	void	send_names(const std::string &chan);
 	void	send_names(channel &chan);
 	void	send_names(void);
-
+	bool	is_member_channel(std::string &, std::string &);
+	bool	is_member(std::string &);
+	client	*get_client(std::string &);
 };
 
 #include <map>

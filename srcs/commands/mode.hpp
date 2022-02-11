@@ -91,26 +91,6 @@ public:
         };
     }
 
-    bool is_member_channel(std::string &name, std::string &channel) {
-        if (this->s.users[name]) {
-            client *to_find = this->s.users[name];
-            if (this->s.channels[channel].members.find(to_find) != this->s.channels[channel].members.end())
-                return true;
-        }
-        return false;
-    }
-
-    bool is_member(std::string &name) {
-        if (this->s.users[name]) {
-            return true;
-        }
-        return false;
-    }
-
-    client *get_client(std::string &name) {
-        return this->s.users[name];
-    }
-
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
         for (int i = 0; i < flags.length(); i++)
         {
@@ -217,9 +197,9 @@ public:
                             this->s.users[args["user"].front()]->notices = false;
                     case 'w':
                         if (op)
-                            this->s.users[args["user"].front()]->can_see = true;
+                            this->s.users[args["user"].front()]->wallops = true;
                         else
-                            this->s.users[args["user"].front()]->can_see = false;
+                            this->s.users[args["user"].front()]->wallops = false;
                     case 'o':
                         if (op)
                             this->s.users[args["user"].front()]->op = true;

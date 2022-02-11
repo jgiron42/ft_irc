@@ -19,6 +19,7 @@
 #include "join.hpp"
 #include "pong.hpp"
 #include "privmsg.hpp"
+#include "kick.hpp"
 #include "version.hpp"
 #include "time.hpp"
 #include "mode.hpp"
@@ -54,6 +55,7 @@ creator *get_command(std::string name)
 		map["USER"] = &f<user_command>;
 		map["VERSION"] = &f<version_command>;
 		map["MODE"] = &f<mode_command>;
+		map["KICK"] = &f<kick_command>;
 	}
 	try {
 		return (map.at(name));

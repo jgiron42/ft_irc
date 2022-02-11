@@ -408,3 +408,24 @@ void command::send_names(const std::string &chan) {
 		this->send_numeric(RPL_ENDOFNAMES, this->c);
 	}
 }
+
+
+bool command::is_member_channel(std::string &name, std::string &channel) {
+    if (this->s.users[name]) {
+        client *to_find = this->s.users[name];
+        if (this->s.channels[channel].members.find(to_find) != this->s.channels[channel].members.end())
+            return true;
+    }
+    return false;
+}
+
+bool command::is_member(std::string &name) {
+    if (this->s.users[name]) {
+        return true;
+    }
+    return false;
+}
+
+client *command::get_client(std::string &name) {
+    return this->s.users[name];
+}
