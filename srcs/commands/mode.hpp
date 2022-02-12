@@ -26,9 +26,9 @@ public:
                     this->reply_nbr(ERR_NEEDMOREPARAMS);
                 return ;
             }
-            switch (iter) {
+            switch (iter) { // TODO: un enum serait le bienvenue
                 case 0:
-                    if ((*it).at(0) == '#' || (*it).at(0) == '&')
+                    if ((*it).at(0) == '#' || (*it).at(0) == '&') // TODO: faux, utilise la fonction is_channel()
                         argument["channel"].push_back(*it);
                     else
                         argument["user"].push_back(*it);
@@ -92,7 +92,7 @@ public:
     }
 
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
-        for (int i = 0; i < flags.length(); i++)
+        for (int i = 0; i < flags.length(); i++) // TODO: pas beau
         {
             if (!user) {
                 switch (flags.at(i)) {
@@ -115,6 +115,8 @@ public:
                                 return ;
                             }
                         }
+						else
+							; //TODO: ERR_NEEDMOREPARAMS
                         break ;
                     case 'p':
                         if (op)
@@ -137,7 +139,7 @@ public:
                     case 't':
                         if (op) {
                             this->s.channels[args["channel"].front()].topic_only_operator = 0;
-                            this->s.channels[args["channel"].front()].topic = args["limits"].front();
+                            this->s.channels[args["channel"].front()].topic = args["limits"].front(); // ?
                         }
                         else
                             this->s.channels[args["channel"].front()].topic_only_operator = 1;
@@ -216,7 +218,8 @@ public:
     void channel_mode(std::map<std::string, std::list<std::string> > &arguments) {
         std::list<std::string>::iterator it = arguments["channel"].begin();
 
-        if (this->s.channels.find(*it) != this->s.channels.end()) {
+		// TODO: verifier que l'utilisateur est present sur le channel ET qu'il est operateur!!!
+		if (this->s.channels.find(*it) != this->s.channels.end()) {
             for (std::list<std::string>::iterator it = arguments["flags"].begin(); it != arguments["flags"].end(); it++) {
                 if ((*it).c_str()[0] == '+')
                     handle_flags(true, std::string(&((*it).c_str()[1])), false, arguments);
@@ -231,7 +234,8 @@ public:
     void user_mode(std::map<std::string, std::list<std::string> > &arguments) {
         std::list<std::string>::iterator it = arguments["user"].begin();
 
-        if (this->s.users.find(*it) != this->s.users.end()) {
+		// TODO: "A user MODE command may only be accepted if both the sender of the message and the nickname given as a parameter are both the same."
+        if (this->s.users.find(*it) != this->s.users.end()) { // TODO: c'est mieux d'utiliser map::count
             for (std::list<std::string>::iterator it = arguments["flags"].begin(); it != arguments["flags"].end(); it++) {
                 if ((*it).c_str()[0] == '+')
                     handle_flags(true, std::string(&((*it).c_str()[1])), true, arguments);
@@ -326,13 +330,13 @@ public:
    however, on anyone `deopping' themselves (using "-o").  Numeric
    Replies:
 
-           ERR_NEEDMOREPARAMS              RPL_CHANNELMODEIS
+           ERR_NEEDMOREPARAMS              TODO: RPL_CHANNELMODEIS
            ERR_CHANOPRIVSNEEDED            ERR_NOSUCHNICK
-           ERR_NOTONCHANNEL                ERR_KEYSET
-           RPL_BANLIST                     RPL_ENDOFBANLIST
+           ERR_NOTONCHANNEL                TODO: ERR_KEYSET
+           TODO: RPL_BANLIST                     RPL_ENDOFBANLIST
            ERR_UNKNOWNMODE                 ERR_NOSUCHCHANNEL
 
-           ERR_USERSDONTMATCH              RPL_UMODEIS
+           TODO: ERR_USERSDONTMATCH              TODO: RPL_UMODEIS
            ERR_UMODEUNKNOWNFLAG
 
    Examples:
