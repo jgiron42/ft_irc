@@ -28,7 +28,7 @@ public:
             }
             switch (iter) { // TODO: un enum serait le bienvenue
                 case 0:
-                    if ((*it).at(0) == '#' || (*it).at(0) == '&') // TODO: faux, utilise la fonction is_channel()
+                    if (is_channel(*it))
                         argument["channel"].push_back(*it);
                     else
                         argument["user"].push_back(*it);
@@ -218,8 +218,15 @@ public:
     void channel_mode(std::map<std::string, std::list<std::string> > &arguments) {
         std::list<std::string>::iterator it = arguments["channel"].begin();
 
-		// TODO: verifier que l'utilisateur est present sur le channel ET qu'il est operateur!!!
 		if (this->s.channels.find(*it) != this->s.channels.end()) {
+            if (this->s.channels[*it].members.find(this->c) == this->s.channels[*it].members.end()){
+                this->reply_nbr(ERR_NOTONCHANNEL);
+                return ;
+            }
+            if (this->s.channels[*it].members[this->c] == false) {
+                this->reply_nbr(RPL_UMODEIS);
+                return ;
+            }
             for (std::list<std::string>::iterator it = arguments["flags"].begin(); it != arguments["flags"].end(); it++) {
                 if ((*it).c_str()[0] == '+')
                     handle_flags(true, std::string(&((*it).c_str()[1])), false, arguments);
@@ -233,9 +240,11 @@ public:
 
     void user_mode(std::map<std::string, std::list<std::string> > &arguments) {
         std::list<std::string>::iterator it = arguments["user"].begin();
-
-		// TODO: "A user MODE command may only be accepted if both the sender of the message and the nickname given as a parameter are both the same."
         if (this->s.users.find(*it) != this->s.users.end()) { // TODO: c'est mieux d'utiliser map::count
+            if (this->c.nickname.compare(arguments["user"].front()) != 0) {
+                this->reply_nbr(ERR_USERSDONTMATCH);
+                return ;
+            }
             for (std::list<std::string>::iterator it = arguments["flags"].begin(); it != arguments["flags"].end(); it++) {
                 if ((*it).c_str()[0] == '+')
                     handle_flags(true, std::string(&((*it).c_str()[1])), true, arguments);
@@ -336,7 +345,7 @@ public:
            TODO: RPL_BANLIST                     RPL_ENDOFBANLIST
            ERR_UNKNOWNMODE                 ERR_NOSUCHCHANNEL
 
-           TODO: ERR_USERSDONTMATCH              TODO: RPL_UMODEIS
+           ERR_USERSDONTMATCH              RPL_UMODEIS
            ERR_UMODEUNKNOWNFLAG
 
    Examples:
