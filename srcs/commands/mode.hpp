@@ -103,38 +103,26 @@ public:
                                 this->reply_nbr(ERR_NOSUCHNICK);
                                 return ;
                             }
-
-                            if (is_member_channel(arg["limits"].front(), arg["channel"].front())) {
-                                if (op)
-                                    this->s.channels[arg["channel"].front()].members[get_client(arg["limits"].front())] = true;
-                                else
-                                    this->s.channels[arg["channel"].front()].members[get_client(arg["limits"].front())] = false;
-                            }
+                            if (is_member_channel(arg["limits"].front(), arg["channel"].front()))
+                                this->s.channels[arg["channel"].front()].members[get_client(arg["limits"].front())] = op;
                             else{
                                 this->reply_nbr(ERR_NOTONCHANNEL);
                                 return ;
                             }
                         }
-						else
-							; //TODO: ERR_NEEDMOREPARAMS
+						else {
+                           this->reply_nbr(ERR_NEEDMOREPARAMS); 
+                           return ;
+                        }
                         break ;
                     case 'p':
-                        if (op)
-                            this->s.channels[arg["channel"].front()].private_channel = true;
-                        else
-                            this->s.channels[arg["channel"].front()].private_channel = false;
+                        this->s.channels[arg["channel"].front()].private_channel = op;
                         break ;
                     case 's':
-                        if (op)
-                            this->s.channels[arg["channel"].front()].secret_channel = true;
-                        else
-                            this->s.channels[args["channel"].front()].secret_channel = false;
+                        this->s.channels[arg["channel"].front()].secret_channel = op;
                         break ;
                     case 'i':
-                        if (op)
-                            this->s.channels[args["channel"].front()].invite_only = true;
-                        else
-                            this->s.channels[args["channel"].front()].invite_only = false;
+                        this->s.channels[args["channel"].front()].invite_only = op;
                         break ;
                     case 't':
                         if (op) {
@@ -145,16 +133,10 @@ public:
                             this->s.channels[args["channel"].front()].topic_only_operator = 1;
                         break ;
                     case 'n':
-                        if (op)
-                            this->s.channels[args["channel"].front()].server_clients_only = true;
-                        else
-                            this->s.channels[args["channel"].front()].server_clients_only = false;
+                        this->s.channels[args["channel"].front()].server_clients_only = op;
                         break ;
                     case 'm':
-                        if (op)
-                            this->s.channels[args["channel"].front()].moderated = true;
-                        else
-                            this->s.channels[args["channel"].front()].moderated = false;
+                        this->s.channels[args["channel"].front()].moderated = op;
                         break ;
                     case 'l':
                         if (op)
@@ -187,26 +169,17 @@ public:
             } else {
                 switch (flags.at(i)) {
                     case 'i':
-                        if (op)
-                            this->s.users[args["user"].front()]->invisible = true;
-                        else
-                            this->s.users[args["user"].front()]->invisible = false;
+                        this->s.users[args["user"].front()]->invisible = op;
                         break ;
                     case 's':
-                        if (op)
-                            this->s.users[args["user"].front()]->notices = true;
-                        else
-                            this->s.users[args["user"].front()]->notices = false;
+                        this->s.users[args["user"].front()]->notices = op;
+                        break ;
                     case 'w':
-                        if (op)
-                            this->s.users[args["user"].front()]->wallops = true;
-                        else
-                            this->s.users[args["user"].front()]->wallops = false;
+                        this->s.users[args["user"].front()]->wallops = op;
+                        break ;
                     case 'o':
-                        if (op)
-                            this->s.users[args["user"].front()]->op = true;
-                        else
-                            this->s.users[args["user"].front()]->op = false;
+                        this->s.users[args["user"].front()]->op = op;
+                        break ;
                     default:
                         this->reply_nbr(ERR_UMODEUNKNOWNFLAG);
                         return ;
@@ -219,11 +192,11 @@ public:
         std::list<std::string>::iterator it = arguments["channel"].begin();
 
 		if (this->s.channels.find(*it) != this->s.channels.end()) {
-            if (this->s.channels[*it].members.find(this->c) == this->s.channels[*it].members.end()){
+            if (this->s.channels[*it].members.find(get_client(this->c.nickname)) == this->s.channels[*it].members.end()){
                 this->reply_nbr(ERR_NOTONCHANNEL);
                 return ;
             }
-            if (this->s.channels[*it].members[this->c] == false) {
+            if (this->s.channels[*it].members[get_client(this->c.nickname)] == false) {
                 this->reply_nbr(RPL_UMODEIS);
                 return ;
             }
