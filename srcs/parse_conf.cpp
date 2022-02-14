@@ -11,196 +11,104 @@
 #include "parse_conf.hpp"
 #include "stdlib.h"
 
-#define NB_OPT 4
+#define NB_OPT 5
 
+std::string get_value(size_t target, std::string to_parse) {
+    std::string res;
+    size_t i = 0;
+    size_t j = 0;
+    while (to_parse[i]) {
+        if (to_parse[i] == ':') {
+            j++;
+            if (j == target) {
+                res = to_parse.substr(i + 1, to_parse.find_first_of(":", i + 1) - (i + 1));
+                return (res);
+            }
+        }
+        i++;
+    }
+    throw ft_irc::conf_file_error();
+}
 
 static void set_server(std::string target, server &serv) {
     in_addr addr;
-    size_t pos = 2;
-    if (target[1] != ':') //check si le format est respecte
-        throw ft_irc::conf_file_error();
-    //host_name
-    size_t pos_bis = target.find_first_of(":", pos);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    serv.info.host_name = target.substr(pos, pos_bis - pos);
-    //ip
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos) // || inet_aton(target.substr(pos, pos_bis - pos).c_str(), &addr) == 0)
-        throw ft_irc::conf_file_error();
-    inet_aton(target.substr(pos, pos_bis - pos).c_str(), &addr);
+
+    serv.info.host_name = get_value(1, target);
+    inet_aton(get_value(2, target).c_str(), &addr);
     serv.info.ip = addr.s_addr;
-    //location
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    serv.info.location = target.substr(pos, pos_bis - pos);
-    std::string port;
-    //port
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos+ 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    port = target.substr(pos, pos_bis - pos);
-    if (port.empty())
+    serv.info.location = get_value(3, target);
+    std:: string port_str = get_value(4, target);
+    if (port_str.empty())
         serv.info.port = 6667;
     else
-        serv.info.port = (short)atoi(port.c_str());
-    //sid
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    serv.info.sid = target.substr(pos, pos_bis - pos);
+        serv.info.port = (short) atoi(port_str.c_str());
+    serv.info.sid = get_value(5, target);
 };
 
 static void administrative_information(std::string target, server &serv) {
-    size_t pos = 2;
-    if (target[1] != ':') //check si le format est respecte
-        throw ft_irc::conf_file_error();
-    //name_location
-    size_t pos_bis = target.find_first_of(":", pos);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    serv.info.name_location = target.substr(pos, pos_bis - pos);
-    //mail
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    serv.info.mail = target.substr(pos, pos_bis - pos);
-    //other info
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    serv.info.other_info = target.substr(pos, pos_bis - pos);
-    //network name
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    serv.info.network_name = target.substr(pos, pos_bis - pos);
+    serv.info.name_location = get_value(1, target);
+    serv.info.mail = get_value(2, target);
+    serv.info.other_info = get_value(3, target);
+    serv.info.network_name = get_value(4, target);
 };
 //void    open_socket(long ip, short port);
 //void    open_socket(std::string dir , short port);
 
+
+
 static void allow_port(std::string target, server &serv) {
-
     in_addr addr;
-    std::string ip_directory;
-    std::string stuff1;
-    std::string port_tmp;
-    std::string stuff2;
-    size_t pos = 2;
-    if (target[1] != ':') //check si le format est respecte
-        throw ft_irc::conf_file_error();
-    size_t pos_bis = target.find_first_of(":", pos);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    ip_directory = target.substr(pos, pos_bis - pos);
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    stuff1 = target.substr(pos, pos_bis - pos);
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    stuff2 = target.substr(pos, pos_bis - pos);
-    (void)stuff1;
-    (void)stuff2;
-
-    pos = pos_bis + 1;
-    short port;
-    pos_bis = target.find_first_of(":", pos+ 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    port_tmp = target.substr(pos, pos_bis - pos);
-    port = (short)atoi(port_tmp.c_str());
-    std::string flags = target.substr(pos_bis + 1);
-	if (ip_directory.empty())
-		addr.s_addr = INADDR_ANY;
-	else
-		inet_aton(ip_directory.c_str(), &addr);
-    serv.open_socket(addr.s_addr, port);
+    std::string ip = get_value(1, target);
+    std::string port = get_value(4, target);
+    if (inet_aton(ip.c_str(), &addr))
+        serv.open_socket(addr.s_addr, (short) atoi(port.c_str()));
+    else
+        serv.open_socket(ip);
 };
 
 static void client_authorization(std::string target, server &serv) {
     t_client_authorization fill;
-    size_t pos = 2;
-    if (target[1] != ':') //check si le format est respecte
-        throw ft_irc::conf_file_error();
-    //host_addr
-    size_t pos_bis = target.find_first_of(":", pos);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    fill.host_addr = target.substr(pos, pos_bis - pos);
-    //password
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    fill.password = target.substr(pos, pos_bis - pos);
-    //host name
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    fill.host_name = target.substr(pos, pos_bis - pos);
-    //port
-    std::string port;
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    port = target.substr(pos, pos_bis - pos);
-    fill.port = (short)atoi(port.c_str());
-    //classes
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    fill.classes = target.substr(pos, pos_bis - pos);
-    //flags
-    pos = pos_bis + 1;
-    pos_bis = target.find_first_of(":", pos + 1);
-    if (pos_bis == std::string::npos)
-        throw ft_irc::conf_file_error();
-    fill.flags = target.substr(pos, pos_bis - pos);
+
+    fill.host_addr = get_value(1, target);
+    fill.password = get_value(2, target);
+    fill.host_name = get_value(3, target);
+    std:: string port_str = get_value(4, target);
+    fill.port = (short)atoi(port_str.c_str());
+    fill.classes = get_value(5, target);
+    fill.flags = get_value(6, target);
     serv.info.authorization.push_back(fill);
 };
 
+static void special(std::string target, server &serv){
+    serv.info.motd = get_value(1, target);
+}
 
 void parse_conf (server &s, const std::string &file){
     std::ifstream ifs;
     ifs.open(file.data());
 
-	if (!(ifs.is_open()))
+    if (!(ifs.is_open()))
         throw ft_irc::conf_file_name_error();
 
     std::string read;
-// TODO: ajouter un moyen de specifier un path pour le motd puis parser ce fichier
+    // TODO: ajouter un moyen de specifier un path pour le motd puis parser ce fichier -> le path est maitenant ranger dans la variable X, comment parser le fichier?
     typedef struct s_type{char c; void (*f)(std::string target, server &serv);} t_type;
     t_type lst_conf[NB_OPT] = {
             {'M', &set_server},
             {'A', &administrative_information},
             {'P', &allow_port},
-            {'I', &client_authorization}
+            {'I', &client_authorization},
+            {'x', &special}
     };
+    int i;
     while (getline(ifs, read)){
-        int i;
         for (i = 0; i < NB_OPT; i++){
             if (read[0] == lst_conf[i].c){
-				std::cout << read << std::endl;
                 lst_conf[i].f(read, s);
                 break;
             }
         }
-        if (read[0] != '#' && i == NB_OPT){
+        if (read[0] != '#' && i == NB_OPT - 1 && read.length() != 0){
             throw ft_irc::conf_file_error();
         }
     }
