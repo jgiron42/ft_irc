@@ -21,6 +21,7 @@
 #include "privmsg.hpp"
 #include "kick.hpp"
 #include "version.hpp"
+#include "part.hpp"
 #include "time.hpp"
 #include "mode.hpp"
 #include "quit.hpp"
@@ -56,6 +57,7 @@ creator *get_command(std::string name)
 		map["VERSION"] = &f<version_command>;
 		map["MODE"] = &f<mode_command>;
 		map["KICK"] = &f<kick_command>;
+		map["PART"] = &f<part_command>;
 	}
 	try {
 		return (map.at(name));
