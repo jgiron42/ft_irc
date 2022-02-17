@@ -91,29 +91,70 @@ public:
         };
     }
 
+    int is_allready_set(char c, bool op, std::string &channel, bool user) {
+        if (user)
+            return 0;
+        switch(c) {
+            case 'p':
+                if (this->s.channels[channel].private_channel == op) {
+                    this->args["channel"].push_back(channel);
+                    this->reply_nbr(ERR_KEYSET);
+                    return 1;
+                }
+                break ;
+            case 's':
+                if (this->s.channels[channel].secret_channel == op) {
+                    this->args["channel"].push_back(channel);
+                    this->reply_nbr(ERR_KEYSET);
+                    return 1;
+                }
+                break ;
+            case 'i':
+                if (this->s.channels[channel].invite_only == op) {
+                    this->args["channel"].push_back(channel);
+                    this->reply_nbr(ERR_KEYSET);
+                    return 1;
+                }
+                break ;
+            case 'n':
+                if (this->s.channels[channel].server_clients_only == op) {
+                    this->args["channel"].push_back(channel);
+                    this->reply_nbr(ERR_KEYSET);
+                    return 1;
+                }
+                break ;
+            case 'm':
+                if (this->s.channels[channel].moderated == op) {
+                    this->args["channel"].push_back(channel);
+                    this->reply_nbr(ERR_KEYSET);
+                    return 1;
+                }
+                break ;
+            default:
+                break ;
+        }
+        return 0;
+    }
+
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
         for (int i = 0; i < flags.length(); i++) // TODO: pas beau
         {
             if (!user) {
+                if (is_allready_set(flags.at(i), op, arg["channel"].front(), user))
+                    continue ;
                 switch (flags.at(i)) {
                     case 'o':
                         if (!arg["limits"].empty())
                         {
-                            if (!is_member(arg["limits"].front())) {
+                            if (!is_member(arg["limits"].front()))
                                 this->reply_nbr(ERR_NOSUCHNICK);
-                                return ;
-                            }
                             if (is_member_channel(arg["limits"].front(), arg["channel"].front()))
                                 this->s.channels[arg["channel"].front()].members[get_client(arg["limits"].front())] = op;
-                            else{
+                            else
                                 this->reply_nbr(ERR_NOTONCHANNEL);
-                                return ;
-                            }
                         }
-						else {
-                           this->reply_nbr(ERR_NEEDMOREPARAMS); 
-                           return ;
-                        }
+						else
+                           this->reply_nbr(ERR_NEEDMOREPARAMS);
                         break ;
                     case 'p':
                         this->s.channels[arg["channel"].front()].private_channel = op;
