@@ -137,11 +137,15 @@ public:
     }
 
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
+        if (!user) {
+            for(int i = 0; i < flags.length(); i++) {
+                if (is_allready_set(flags.at(i), op, arg["channel"].front(), user))
+                    continue ;
+            }
+        }
         for (int i = 0; i < flags.length(); i++) // TODO: pas beau
         {
             if (!user) {
-                if (is_allready_set(flags.at(i), op, arg["channel"].front(), user))
-                    continue ;
                 switch (flags.at(i)) {
                     case 'o':
                         if (!arg["limits"].empty())
