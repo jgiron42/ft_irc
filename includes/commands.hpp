@@ -25,6 +25,7 @@
 #include "time.hpp"
 #include "mode.hpp"
 #include "quit.hpp"
+#include "topic.hpp"
 #include "command_not_found.hpp"
 
 typedef command *creator(client &, server &);
@@ -58,6 +59,7 @@ creator *get_command(std::string name)
 		map["MODE"] = &f<mode_command>;
 		map["KICK"] = &f<kick_command>;
 		map["PART"] = &f<part_command>;
+		map["TOPIC"] = &f<topic_command>;
 	}
 	try {
 		return (map.at(name));
