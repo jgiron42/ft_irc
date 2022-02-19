@@ -274,12 +274,34 @@ public:
             this->reply_nbr(ERR_NOSUCHNICK);
     }
 
+    std::string get_modes(std::string &channel) {
+        std::string ret = "+";
+        if (this->s.channels[channel].private_channel)
+            ret.append("p");
+        if (this->s.channels[channel].secret_channel)
+            ret.append("s");
+        if (this->s.channels[channel].topic_only_operator)
+            ret.append("t");
+        if (this->s.channels[channel].server_clients_only)
+            ret.append("n");
+        if (this->s.channels[channel].invite_only)
+            ret.append("i");
+        if (this->s.channels[channel].moderated)
+            ret.append("m");
+        return ret;
+    }
+
 	void execute() {
         std::map<std::string, std::list< std::string > > arguments;
 
         arguments.clear();
         sort_args(arguments);
         debug_args(arguments);
+        if (!arguments["channel"].empty() && arguments["flags"].empty()) {
+            this->args["ustring"].push_back(get_modes(arguments["channel"].front()));
+            this->reply_nbr(RPL_UMODEIS);
+            return ;
+        }
         if (!arguments["channel"].empty())
             channel_mode(arguments);
         else if (!arguments["user"].empty()) {
