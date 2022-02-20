@@ -22,6 +22,7 @@
 #include "kick.hpp"
 #include "version.hpp"
 #include "part.hpp"
+#include "list.hpp"
 #include "time.hpp"
 #include "mode.hpp"
 #include "quit.hpp"
@@ -60,6 +61,7 @@ creator *get_command(std::string name)
 		map["KICK"] = &f<kick_command>;
 		map["PART"] = &f<part_command>;
 		map["TOPIC"] = &f<topic_command>;
+		map["LIST"] = &f<list_command>;
 	}
 	try {
 		return (map.at(name));
