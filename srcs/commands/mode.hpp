@@ -196,7 +196,7 @@ public:
                             this->s.channels[args["channel"].front()].moderated = -1;
                         break ;
                     case 'v':
-                        // need to talk about it
+                        // need to talk about it FIX
                         break ;
                     case 'k':
                         if (op){
