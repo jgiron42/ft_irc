@@ -124,8 +124,8 @@ void parse_conf (server &s, const std::string &file){
         }
     }
     catch (std::exception &a) {
-        std::cout << "line " << line << " : " << a.what() << std::endl;
-        exit(0);
+        std::cout << "line " << line << " : invalid conf file" << std::endl;
+        throw;
     }
 
     ifs.close();

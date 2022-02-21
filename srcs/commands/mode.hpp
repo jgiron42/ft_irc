@@ -167,33 +167,33 @@ public:
                         this->s.channels[arg["channel"].front()].secret_channel = op;
                         break ;
                     case 'i':
-                        this->s.channels[args["channel"].front()].invite_only = op;
+                        this->s.channels[arg["channel"].front()].invite_only = op;
                         break ;
                     case 't':
                         if (op) {
-                            this->s.channels[args["channel"].front()].topic_only_operator = 0;
-                            this->s.channels[args["channel"].front()].topic = args["limits"].front(); // ?
+                            this->s.channels[arg["channel"].front()].topic_only_operator = 0;
+                            this->s.channels[arg["channel"].front()].topic = args["limits"].front(); // ?
                         }
                         else
-                            this->s.channels[args["channel"].front()].topic_only_operator = 1;
+                            this->s.channels[arg["channel"].front()].topic_only_operator = 1;
                         break ;
                     case 'n':
-                        this->s.channels[args["channel"].front()].server_clients_only = op;
+                        this->s.channels[arg["channel"].front()].server_clients_only = op;
                         break ;
                     case 'm':
-                        this->s.channels[args["channel"].front()].moderated = op;
+                        this->s.channels[arg["channel"].front()].moderated = op;
                         break ;
                     case 'l':
                         if (op)
-                            this->s.channels[args["channel"].front()].user_limit = std::atoi(args["limits"].front().c_str());
+                            this->s.channels[arg["channel"].front()].user_limit = std::atoi(args["limits"].front().c_str());
                         else
-                            this->s.channels[args["channel"].front()].user_limit = 15;
+                            this->s.channels[arg["channel"].front()].user_limit = 15;
                         break ;
                     case 'b':
                         if (op)
-                            this->s.channels[args["channel"].front()].ban_mask = std::atoi(args["limits"].front().c_str());
+                            this->s.channels[arg["channel"].front()].ban_mask = std::atoi(args["limits"].front().c_str());
                         else
-                            this->s.channels[args["channel"].front()].moderated = -1;
+                            this->s.channels[arg["channel"].front()].moderated = -1;
                         break ;
                     case 'v':
                         // need to talk about it FIX
@@ -201,11 +201,11 @@ public:
                     case 'k':
                         if (op){
                             if (!args["limits"].empty()) {
-                                this->s.channels[args["channel"].front()].password = args["limits"].front();
+                                this->s.channels[arg["channel"].front()].password = args["limits"].front();
                                 break ;
                             }
                         }
-                        this->s.channels[args["channel"].front()].password = "";
+                        this->s.channels[arg["channel"].front()].password = "";
                         break ;
                     default:
                         this->reply_nbr(ERR_UMODEUNKNOWNFLAG);
@@ -214,16 +214,16 @@ public:
             } else {
                 switch (flags.at(i)) {
                     case 'i':
-                        this->s.users[args["user"].front()]->invisible = op;
+                        this->s.users[arg["user"].front()]->invisible = op;
                         break ;
                     case 's':
-                        this->s.users[args["user"].front()]->notices = op;
+                        this->s.users[arg["user"].front()]->notices = op;
                         break ;
                     case 'w':
-                        this->s.users[args["user"].front()]->wallops = op;
+                        this->s.users[arg["user"].front()]->wallops = op;
                         break ;
                     case 'o':
-                        this->s.users[args["user"].front()]->op = op;
+                        this->s.users[arg["user"].front()]->op = op;
                         break ;
                     default:
                         this->reply_nbr(ERR_UMODEUNKNOWNFLAG);
