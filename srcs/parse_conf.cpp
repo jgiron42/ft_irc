@@ -43,14 +43,14 @@ static void set_server(std::string target, server &serv) {
     else
         serv.info.port = (short) atoi(port_str.c_str());
     serv.info.sid = get_value(5, target);
-};
+}
 
 static void administrative_information(std::string target, server &serv) {
     serv.info.name_location = get_value(1, target);
     serv.info.mail = get_value(2, target);
     serv.info.other_info = get_value(3, target);
     serv.info.network_name = get_value(4, target);
-};
+}
 //void    open_socket(long ip, short port);
 //void    open_socket(std::string dir , short port);
 
@@ -64,7 +64,7 @@ static void allow_port(std::string target, server &serv) {
         serv.open_socket(addr.s_addr, (short) atoi(port.c_str()));
     else
         serv.open_socket(ip);
-};
+}
 
 static void client_authorization(std::string target, server &serv) {
     t_client_authorization fill;
@@ -77,10 +77,17 @@ static void client_authorization(std::string target, server &serv) {
     fill.classes = get_value(5, target);
     fill.flags = get_value(6, target);
     serv.info.authorization.push_back(fill);
-};
+}
 
 static void special(std::string target, server &serv){
-    serv.info.motd = get_value(1, target);
+    std::ifstream ifs;
+    std::string read;
+    ifs.open(get_value(1, target).data());
+    while (getline(ifs, read)){
+        serv.info.motd += read;
+        serv.info.motd += "\n";
+    }
+    ifs.close();
 }
 
 void parse_conf (server &s, const std::string &file){
@@ -101,16 +108,25 @@ void parse_conf (server &s, const std::string &file){
             {'x', &special}
     };
     int i;
-    while (getline(ifs, read)){
-        for (i = 0; i < NB_OPT; i++){
-            if (read[0] == lst_conf[i].c){
-                lst_conf[i].f(read, s);
-                break;
+    int line = 0;
+    try {
+        while (getline(ifs, read)) {
+            line++;
+            for (i = 0; i < NB_OPT; i++) {
+                if (read[0] == lst_conf[i].c) {
+                    lst_conf[i].f(read, s);
+                    break;
+                }
+            }
+            if (read[0] != '#' && i == NB_OPT - 1 && read.length() != 0) {
+                throw ft_irc::conf_file_error();
             }
         }
-        if (read[0] != '#' && i == NB_OPT - 1 && read.length() != 0){
-            throw ft_irc::conf_file_error();
-        }
     }
+    catch (std::exception &a) {
+        std::cout << "line " << line << " : " << a.what() << std::endl;
+        exit(0);
+    }
+
     ifs.close();
 }

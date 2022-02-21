@@ -28,6 +28,7 @@
 #include "quit.hpp"
 #include "topic.hpp"
 #include "command_not_found.hpp"
+#include "info.hpp"
 
 typedef command *creator(client &, server &);
 
@@ -62,6 +63,7 @@ creator *get_command(std::string name)
 		map["PART"] = &f<part_command>;
 		map["TOPIC"] = &f<topic_command>;
 		map["LIST"] = &f<list_command>;
+        map["INFO"] = &f<info_command>;
 	}
 	try {
 		return (map.at(name));
