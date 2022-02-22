@@ -296,7 +296,7 @@ public:
 
         arguments.clear();
         sort_args(arguments);
-        debug_args(arguments);
+//        debug_args(arguments);
         if (!arguments["channel"].empty() && arguments["flags"].empty()) {
             this->args["ustring"].push_back(get_modes(arguments["channel"].front()));
             this->reply_nbr(RPL_UMODEIS);
