@@ -10,6 +10,7 @@
 #include "channel.hpp"
 #include "shell_colors.hpp"
 #include "Server.hpp"
+#include "utils.hpp"
 #define ABS(n) ((n) > 0 ? (n) : -(n))
 
 class channel;
@@ -34,7 +35,8 @@ public:
 	void	join_chan(channel &, bool as_op = false);
 	void	leave_chan(channel &);
 	bool	can_see(channel &);
-//private:
+	void	log(const std::string &);
+	//private:
 	server	&s;
 	bool identified;
 	std::map<std::string, channel *> channels;

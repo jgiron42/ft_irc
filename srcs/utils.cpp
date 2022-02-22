@@ -65,3 +65,8 @@ bool	is_valid_nickname(const std::string &nick)
 			return (false);
 	return (true);
 }
+
+void	log(const std::string &prefix, const std::string &str, log_type type)
+{
+	std::cout << prefix << log_color[type] << str << WHITE << std::endl;
+}

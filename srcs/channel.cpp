@@ -4,7 +4,9 @@
 
 channel::channel(void) : id(), members(){}
 
-channel::channel(std::string id) : id(id), members(){}
+channel::channel(std::string id) : id(id), members(){
+	this->log("created");
+}
 
 channel::channel(const channel &src): id(src.id), members() {
 	*this = src;
@@ -15,7 +17,9 @@ channel::channel(client creator) : id(), members(),  password(), topic() {
 	int ban_mask = 0;
 }
 
-channel::~channel() {}
+channel::~channel() {
+	this->log("destroyed");
+}
 
 channel &channel::operator=(const channel &src) {
 	this->members = src.members;
@@ -33,4 +37,8 @@ void		channel::setPass(std::string &pass) {
 
 void		channel::addMember(client c) {
 	this->members[&c];
+}
+
+void channel::log(const std::string &str) {
+	::log("[" + this->id + "] ", str, CHAN_EVENT);
 }

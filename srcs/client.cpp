@@ -7,7 +7,7 @@ client::client(server &s) : nickname("*"), sock(-1), end(0), begin(0), channels(
 client::client(int fd, server &s) : nickname("*"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
 	bzero(this->buf, 512);
 	fcntl(fd, F_SETFL, O_NONBLOCK);
-	std::cout << "new client" << std::endl;
+	this->log("new client");
 }
 
 client::client(const client &src) : s(src.s){
@@ -81,7 +81,7 @@ std::string client::popLine() {
 }
 
 void client::send(const std::string &str) {
-	std::cout << "[" << this->nickname << "](" << this->getIP() << ") => " << GREEN << str << WHITE;
+	::log("[" + this->nickname + "](" + this->getIP() + ") => ", str, MSG_OUT);
 	this->to_send.push_back(str);
 }
 
@@ -131,4 +131,8 @@ void client::leave_chan(channel &chan) {
 
 bool	client::can_see(channel &chan) {
 	return (((!chan.private_channel && !chan.secret_channel) || chan.members.count(this) || this->op));
+}
+
+void client::log(const std::string &str) {
+	::log("[" + this->nickname + "@" + this->hostname + "] ", str, USER_EVENT);
 }

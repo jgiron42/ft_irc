@@ -54,6 +54,7 @@ public:
 	bool	check_liveness(client &, time_t);
 	void	send_ping(client &);
     void    print_info(void);
+	void	log(const std::string &);
 	channel	&create_chan(const std::string &name, client &creator, std::string key);
 	std::map<std::string, channel> channels;
 	std::map<std::string, client *> users; // map nickname to user

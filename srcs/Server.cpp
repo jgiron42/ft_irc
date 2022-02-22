@@ -30,11 +30,11 @@ server::server(void) :  clients(), fds(), history_size(0), hostname(SERVERNAME) 
 					  "Ni de champignons dans les forêts\n"
 					  "Et pourtant toutes ces choses nous procurent du plaisir\n"
 					  "Et c’est pour cela qu’on en veut plus";
-	std::cout << "server created" << std::endl;
+	this->log("server created");
 }
 
 void server::open_socket(long ip, short port) {
-	std::cout << "opening socket on " << ip << " " << port << std::endl;
+	this->log(SSTR("opening socket on " << ip << " " << port));
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 		throw syscall_failure(my_strerror((char *)"socket: ", errno));
@@ -56,7 +56,7 @@ void server::open_socket(long ip, short port) {
 }
 
 void server::open_socket(std::string const &path) {
-	std::cout << "opening unix socket on " << path << std::endl;
+	this->log("opening unix socket on " + path);
 	unlink(path.data());
 	int sock = socket(AF_UNIX, SOCK_STREAM, 0);
 	if (sock == -1)
@@ -82,7 +82,7 @@ server::server(const server &src) : clients(src.clients), fds(src.fds),password(
 server::~server() {
 	for (std::vector<struct pollfd>::iterator i = this->fds.begin(); i != this->fds.end(); i++)
 		close(i->fd);
-	std::cout << "server destroyed" << std::endl;
+	this->log("server destroyed");
 }
 
 server &server::operator=(const server &src) {
@@ -95,7 +95,6 @@ server &server::operator=(const server &src) {
 void server::routine() {
 	int ret;
 	time_t now = time(NULL);
-
 
 	ret = poll(this->fds.begin().operator->(), this->fds.size(), 100); // syscall
 	if (ret == -1 && errno != EINTR)
@@ -120,7 +119,7 @@ void server::routine_sock(struct pollfd fd)
 		{
 			if (this->fds.size() - this->sockets.size() > MAX_CLIENT)
 			{
-				std::cout << "client maximum reached!!!" << std::endl;
+				this->log("client maximum reached!!!");
 				close(tmp);
 			}
 			else {
@@ -184,7 +183,7 @@ void server::dispatch(client &c) {
 
 	while ((str = c.popLine()) != "\n" && !str.empty())
 	{
-		std::cout << "[" << c.nickname << "](" << c.getIP() << ") <= " << BLUE << str << WHITE << std::endl;
+		::log("[" + c.nickname + "](" + c.getIP() + ") <= ", str, MSG_IN);
 		message *parse = parse_msg(str);
 #ifdef DEBUGPARSER
 		std::cout << "command: |" << parse->command_str << "|" << std::endl;
@@ -204,7 +203,7 @@ void server::dispatch(client &c) {
 
 void server::disconnect(int fd) {
 	client &c = this->clients.find(fd)->second;
-	std::cout << "[" << c.nickname << "](" << c.getIP() << ") " << RED << "DISCONNECTED" << WHITE << std::endl;
+	c.log("disconnected");
 	for (std::map<std::string, channel *>::iterator i = c.channels.begin(); i != c.channels.end(); i++)
 		i->second->members.erase(&c);
 	this->users.erase(c.nickname);
@@ -261,7 +260,6 @@ void server::print_info() {
 }
 
 channel	&server::create_chan(const std::string &name, client &creator, std::string key = "") {
-	// TODO: pretty logging
 	channel &chan = this->channels[name] = channel(creator);
 	chan.id = name;
 	if (!key.empty())
@@ -271,6 +269,10 @@ channel	&server::create_chan(const std::string &name, client &creator, std::stri
 }
 
 void server::send_ping(client &c) {
-	c.send("PING " + this->hostname + "\n"); // multiserver
+	c.send("PING " + this->hostname + "\n");
 	c.ping_send = true;
+}
+
+void server::log(const std::string &str) {
+	::log("[" + this->hostname + "] ", str, SRV_EVENT);
 }

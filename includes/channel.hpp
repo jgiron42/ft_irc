@@ -5,6 +5,7 @@
 #include <set>
 #include <map>
 #include "client.hpp"
+#include "utils.hpp"
 
 class client;
 class server;
@@ -19,10 +20,12 @@ public:
 	std::string	&getPass();
 	void		setPass(std::string	&);
 	void		addMember(client);
+	void	log(const std::string &);
 	std::string			id;
 	std::string			topic;
 	std::map<client *, bool>	members; // the bool indicate if the member is a chop
 	std::set<std::string> invites;
+	std::set<std::string> speakers;
 	bool 				private_channel : 1;
 	bool 				secret_channel : 1;
 	bool 				invite_only : 1;
