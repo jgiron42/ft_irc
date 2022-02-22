@@ -298,8 +298,10 @@ public:
         sort_args(arguments);
 //        debug_args(arguments);
         if (!arguments["channel"].empty() && arguments["flags"].empty()) {
-            this->args["ustring"].push_back(get_modes(arguments["channel"].front()));
-            this->reply_nbr(RPL_UMODEIS);
+            this->args["channel"].push_back(arguments["channel"].front());
+            this->args["mode"].push_back(get_modes(arguments["channel"].front()));
+            this->args["mode params"].push_back(arguments["limits"].front());
+            this->reply_nbr(RPL_CHANNELMODEIS);
             return ;
         }
         if (!arguments["channel"].empty())
