@@ -27,19 +27,21 @@ public:
 			{
 				if (is_channel(*r))
 				{
-					if (this->c.channels.count(*r)) {
+					if (this->c.channels.count(*r) && !(c->moderated && !c->speakers.count(this->c.nickname))) {
 						c = &this->s.channels[*r];
 						for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
 							if (i->first == &this->c)
 								continue;
-							if (!i->first->away)
-								this->send(this->c, this->name, *r + " :" + text, *i->first);
-							else {
+							if (c->moderated && !c->speakers.count(i->first->nickname))
+								this->reply_nbr(ERR_CANNOTSENDTOCHAN);
+							else if (i->first->away){
 								this->args["nickname"].push_front(*r);
 								this->args["message"].push_front(i->first->away_message);
 								this->reply_nbr(RPL_AWAY);
 								this->replied = false;
 							}
+							else
+								this->send(this->c, this->name, *r + " :" + text, *i->first);
 						}
 					}
 					else
@@ -59,10 +61,8 @@ public:
 				{
 					this->args["nickname"].push_front(*r);
 					this->reply_nbr(ERR_NOSUCHNICK);
-				}
+				} // TODO: masks
 				// user@host
-				// channel
-				// nick
 				// #mask
 				// $mask
 			}

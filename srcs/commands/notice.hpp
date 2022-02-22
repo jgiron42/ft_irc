@@ -25,7 +25,7 @@ public:
 		else
 			for (std::list<std::string>::iterator r = receivers.begin(); r != receivers.end(); r++)
 			{
-				if (is_channel(*r))
+				if (is_channel(*r) && !(c->moderated && !c->speakers.count(this->c.nickname)))
 				{
 					if (this->c.channels.count(*r)) {
 						c = &this->s.channels[*r];
