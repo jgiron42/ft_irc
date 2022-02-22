@@ -343,14 +343,20 @@ void command::send(const std::string &prefix, const int command, const std::stri
 
 void command::send_names(channel &chan) {
 	std::string user_list;
+	char flag;
 	this->args["channel"].push_front(chan.id);
 	int usable_length =
 			512 - 1 - this->s.hostname.length() - 1 - 3 - 1 - this->c.nickname.length() - 1 - chan.id.length() - 2;
 	//						 ':'  <hostname>                 ' ' <NUM> ' '  <nick>                     ' '  <chan_id>         ' :'
 	for (std::map<class client *, bool>::iterator it = chan.members.begin();
 		 it != chan.members.end(); it++) {
-		user_list += (it->second ? "@" : "") +  it->first->nickname; // 68 + this.s.hostname.length();
-//		user_list += it->first->nickname; // 68 + this.s.hostname.length();
+		if (it->second)
+			flag = '@';
+		else if (chan.moderated && chan.speakers.count(it->first->nickname))
+			flag = '+';
+		else
+			flag = ' ';
+		user_list += flag +  it->first->nickname; // 68 + this.s.hostname.length();
 		if (user_list.length() + usable_length >= 499) {
 			this->args["user_list"].push_front(user_list);
 			this->send_numeric(RPL_NAMREPLY, this->c);
