@@ -6,7 +6,7 @@
 #include <map>
 #include "client.hpp"
 #include "utils.hpp"
-
+#define USER_PER_CHANNEL 25
 class client;
 class server;
 class channel {
