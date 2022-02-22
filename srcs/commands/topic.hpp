@@ -30,16 +30,27 @@ public:
             this->reply_nbr(ERR_NEEDMOREPARAMS);
             return ;
         }
-        if (topic.empty()) {
+        else {
+            if (this->s.channels.find(channel) == this->s.channels.end()) {
+                this->reply_nbr(ERR_NOSUCHCHANNEL);
+                return ;
+            }
+        }
+        if (this->s.channels[channel].members.find(&this->c) == this->s.channels[channel].members.end())
+            this->reply_nbr(ERR_NOTONCHANNEL);
+        else if (!this->s.channels[channel].members[&this->c])
+            this->reply_nbr(ERR_CHANOPRIVSNEEDED);
+        else if (topic.empty()) {
             if (this->s.channels[channel].topic.empty()) {
                 this->reply_nbr(RPL_NOTOPIC);
-                return ;
+                return;
             }
             this->args[topic].push_back(this->s.channels[channel].topic);
             this->reply_nbr(RPL_TOPIC);
-        }
-        else {
+        } else {
             this->s.channels[channel].topic = topic;
+            this->args[topic].push_back(this->s.channels[channel].topic);
+            this->reply_nbr(RPL_TOPIC);
         }
 	}
 };

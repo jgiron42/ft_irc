@@ -181,6 +181,8 @@ void server::routine_client(struct pollfd &fd, time_t now)
 void server::dispatch(client &c) {
 	std::string str;
 
+    //if (this->users.find(c.nickname) == this->users.end())  //  Ajout de ces deux lignes pour eviter l'abort lors d'un /quit
+    //    return ;                                            //
 	while ((str = c.popLine()) != "\n" && !str.empty())
 	{
 		::log("[" + c.nickname + "](" + c.getIP() + ") <= ", str, MSG_IN);

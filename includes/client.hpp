@@ -43,6 +43,8 @@ public:
 	std::string password;
 	std::string username;
 	std::string nickname;
+
+
 	std::string nickname_tmp;
 	std::deque<std::string> nick_history;
 	std::string hostname;
