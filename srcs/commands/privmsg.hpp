@@ -27,13 +27,11 @@ public:
 			{
 				if (is_channel(*r))
 				{
-					if (this->c.channels.count(*r) && !(c->moderated && !c->speakers.count(this->c.nickname))) {
+					if (this->c.channels.count(*r) && !c->moderated || c->speakers.count(this->c.nickname)) {
 						c = &this->s.channels[*r];
 						for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
 							if (i->first == &this->c)
 								continue;
-							if (!c->moderated && !c->speakers.count(i->first->nickname))
-								this->reply_nbr(ERR_CANNOTSENDTOCHAN);
 							else if (i->first->away){
 								this->args["nickname"].push_front(*r);
 								this->args["message"].push_front(i->first->away_message);
