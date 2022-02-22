@@ -33,7 +33,7 @@ std::string get_value(size_t target, std::string to_parse) {
 static void set_server(std::string target, server &serv) {
     in_addr addr;
 
-    serv.info.host_name = get_value(1, target);
+    serv.hostname = get_value(1, target);
     inet_aton(get_value(2, target).c_str(), &addr);
     serv.info.ip = addr.s_addr;
     serv.info.location = get_value(3, target);
@@ -60,8 +60,9 @@ static void allow_port(std::string target, server &serv) {
     in_addr addr;
     std::string ip = get_value(1, target);
     std::string port = get_value(4, target);
+    std::cout << "IP = " << ip << std::endl << "Port = " << port << std::endl;
     if (inet_aton(ip.c_str(), &addr))
-        serv.open_socket(addr.s_addr, (short) atoi(port.c_str()));
+        serv.open_socket(addr.s_addr, (short)atoi(port.c_str()));
     else
         serv.open_socket(ip);
 }
@@ -83,6 +84,8 @@ static void special(std::string target, server &serv){
     std::ifstream ifs;
     std::string read;
     ifs.open(get_value(1, target).data());
+    if (!(ifs.is_open()))
+        throw ft_irc::conf_file_name_error();
     while (getline(ifs, read)){
         serv.info.motd += read;
         serv.info.motd += "\n";
@@ -105,7 +108,7 @@ void parse_conf (server &s, const std::string &file){
             {'A', &administrative_information},
             {'P', &allow_port},
             {'I', &client_authorization},
-            {'x', &special}
+            {'X', &special}
     };
     int i;
     int line = 0;
@@ -118,13 +121,14 @@ void parse_conf (server &s, const std::string &file){
                     break;
                 }
             }
-            if (read[0] != '#' && i == NB_OPT - 1 && read.length() != 0) {
+            if (read[0] != '#' && i == NB_OPT && read.length() != 0) {
                 throw ft_irc::conf_file_error();
             }
         }
     }
     catch (std::exception &a) {
-        std::cout << "line " << line << " : invalid conf file" << std::endl;
+        if ((std::string)a.what() == "invalid conf file")
+            std::cout << "line " << line << " : invalid conf file" << std::endl;
         throw;
     }
 

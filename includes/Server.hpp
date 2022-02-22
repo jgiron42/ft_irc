@@ -64,7 +64,7 @@ public:
 	typedef std::runtime_error syscall_failure;
 	struct info {
 	    long ip;
-	    std::string host_name;
+	  //  std::string host_name;
 	    std::string version;
 	    std::string version_comment;
 	    std::string debug_level;
