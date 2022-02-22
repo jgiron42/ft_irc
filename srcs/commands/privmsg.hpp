@@ -14,6 +14,49 @@ public:
 		syntax = "<receiver> { ',' <receiver> } <text to be sent>";
 		this->generate_token(this->syntax);
 	};
+
+	void send_channel(const std::string &name, const std::string &text)
+	{
+		channel *c;
+		if (!this->c.channels.count(name))
+		{
+			this->reply_nbr(ERR_CANNOTSENDTOCHAN);
+			return;
+		}
+		c = &this->s.channels[name];
+		if (c->moderated && !c->speakers.count(this->c.nickname))
+		{
+			this->reply_nbr(ERR_CANNOTSENDTOCHAN);
+			return;
+		}
+		for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
+			if (i->first == &this->c)
+				continue;
+			else if (i->first->away){
+				this->args["nickname"].push_front(name);
+				this->args["message"].push_front(i->first->away_message);
+				this->reply_nbr(RPL_AWAY);
+				this->replied = false;
+			}
+			else
+				this->send(this->c, this->name, name + " :" + text, *i->first);
+		}
+
+	}
+
+	void	send_user(const std::string &name, const std::string &text)
+	{
+		if (!this->s.users[name]->away)
+			this->send(this->c, this->name, name + " :" + text, *this->s.users[name]);
+		else {
+			this->args["nickname"].push_front(name);
+			this->args["message"].push_front(this->s.users[name]->away_message);
+			this->reply_nbr(RPL_AWAY);
+			this->replied = false;
+		}
+
+	}
+
 	void execute() {
 		channel *c;
 		std::list<std::string> receivers;
@@ -26,35 +69,9 @@ public:
 			for (std::list<std::string>::iterator r = receivers.begin(); r != receivers.end(); r++)
 			{
 				if (is_channel(*r))
-				{
-					if (this->c.channels.count(*r) && !c->moderated || c->speakers.count(this->c.nickname)) {
-						c = &this->s.channels[*r];
-						for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
-							if (i->first == &this->c)
-								continue;
-							else if (i->first->away){
-								this->args["nickname"].push_front(*r);
-								this->args["message"].push_front(i->first->away_message);
-								this->reply_nbr(RPL_AWAY);
-								this->replied = false;
-							}
-							else
-								this->send(this->c, this->name, *r + " :" + text, *i->first);
-						}
-					}
-					else
-						this->reply_nbr(ERR_CANNOTSENDTOCHAN);
-				}
-				else if (this->s.users.count(*r)) {
-					if (!this->s.users[*r]->away)
-						this->send(this->c, this->name, *r + " :" + text, *this->s.users[*r]);
-					else {
-						this->args["nickname"].push_front(*r);
-						this->args["message"].push_front(this->s.users[*r]->away_message);
-						this->reply_nbr(RPL_AWAY);
-						this->replied = false;
-					}
-				}
+					this->send_channel(*r, text);
+				else if (this->s.users.count(*r))
+					this->send_user(*r, name);
 				else
 				{
 					this->args["nickname"].push_front(*r);
