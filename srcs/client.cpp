@@ -1,10 +1,10 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client(server &s) : nickname("*"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
+client::client(server &s) : nickname("*"), sock(-1), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(), alive(true){
 	bzero(this->buf, 512);
 }
-client::client(int fd, server &s) : nickname("*"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(){
+client::client(int fd, server &s) : nickname("*"), sock(fd), end(0), begin(0), channels(), identified(false), last_activity(std::time(NULL)), ping_send(false), s(s), nick_history(), alive(true){
 	bzero(this->buf, 512);
 	fcntl(fd, F_SETFL, O_NONBLOCK);
 	this->log("new client");

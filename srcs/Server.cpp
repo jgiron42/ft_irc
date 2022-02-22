@@ -149,7 +149,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 			current_cli->bufappend(buf, ret);
 			current_cli->pong();
 		}
-		if (!ret) {
+		if (!ret || current_cli->alive != false) {
 			this->disconnect(fd.fd);
 			return;
 		} else if (ret > 0)

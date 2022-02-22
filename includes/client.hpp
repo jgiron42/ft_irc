@@ -63,7 +63,7 @@ public:
 	int		sock;
 	time_t	last_activity;
 	bool	ping_send;
-
+    bool    alive;
 	void	set_nick(std::string &);
 };
 
