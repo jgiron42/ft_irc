@@ -52,7 +52,7 @@ public:
 		}
 		else if (chanit->second.members.size() >= chanit->second.user_limit)
 			this->reply_nbr(ERR_CHANNELISFULL);
-		else if (!chanit->second.invite_only)
+		else if (chanit->second.invite_only)
 		{
 			if (chanit->second.invites.count(this->c.nickname))
 				connecting(this->c, this->s, canal);
