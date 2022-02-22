@@ -11,8 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c5b2c170-1c82-4411-95eb-8f0aeaa1c6f9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ft_irc.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -65,7 +65,7 @@
       <option name="presentableId" value="Default" />
       <updated>1645527105172</updated>
       <workItem from="1645527106936" duration="1528000" />
-      <workItem from="1645532535920" duration="5555000" />
+      <workItem from="1645532535920" duration="8024000" />
     </task>
     <servers />
   </component>
