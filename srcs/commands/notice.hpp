@@ -14,6 +14,31 @@ public:
 		syntax = "<receiver> { ',' <receiver> } <text to be sent>";
 		this->generate_token(this->syntax);
 	};
+
+	void send_channel(const std::string &name, const std::string &text)
+	{
+		channel *c;
+		if (!this->c.channels.count(name))
+			return;
+		c = &this->s.channels[name];
+		if (c->moderated && !c->speakers.count(this->c.nickname))
+			return;
+		for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
+			if (i->first == &this->c)
+				continue;
+			else if (!i->first->away)
+				this->send(this->c, this->name, name + " :" + text, *i->first);
+		}
+
+	}
+
+	void	send_user(const std::string &name, const std::string &text)
+	{
+		if (!this->s.users[name]->away)
+			this->send(this->c, this->name, name + " :" + text, *this->s.users[name]);
+
+	}
+
 	void execute() {
 		channel *c;
 		std::list<std::string> receivers;
@@ -25,22 +50,10 @@ public:
 		else
 			for (std::list<std::string>::iterator r = receivers.begin(); r != receivers.end(); r++)
 			{
-				if (is_channel(*r) && !c->moderated || c->speakers.count(this->c.nickname))
-				{
-					if (this->c.channels.count(*r)) {
-						c = &this->s.channels[*r];
-						for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
-							if (i->first == &this->c)
-								continue;
-							if (!i->first->away)
-								this->send(this->c, this->name, *r + " :" + text, *i->first);
-						}
-					}
-				}
-				else if (this->s.users.count(*r)) {
-					if (!this->s.users[*r]->away)
-						this->send(this->c, this->name, *r + " :" + text, *this->s.users[*r]);
-				}
+				if (is_channel(*r) && (!c->moderated || c->speakers.count(this->c.nickname)))
+					this->send_channel(*r, text);
+				else if (this->s.users.count(*r))
+					this->send_user(*r, text);
 				// user@host
 				// channel
 				// nick
