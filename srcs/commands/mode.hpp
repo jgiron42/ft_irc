@@ -196,7 +196,10 @@ public:
                             this->s.channels[arg["channel"].front()].moderated = -1;
                         break ;
                     case 'v':
-                        // need to talk about it FIX
+                        if (op && this->s.channels[arg["channel"].front()].speakers.find(this->c.nickname) == this->s.channels[arg["channel"].front()].speakers.end())
+                            this->s.channels[arg["channel"].front()].speakers.insert(this->c.nickname);
+                        if (!op)
+                            this->s.channels[arg["channel"].front()].speakers.erase(this->c.nickname);
                         break ;
                     case 'k':
                         if (op){
