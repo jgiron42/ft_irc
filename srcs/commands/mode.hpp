@@ -139,6 +139,7 @@ public:
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
         std::string str_channel = arg["channel"].front();
         std::string str_limits = arg["limits"].front();
+        channel &p_chan = this->s.channels[str_channel];
         if (!user) {
             for(int i = 0; i < flags.length(); i++) {
                 if (is_allready_set(flags.at(i), op, str_channel, user))
@@ -155,7 +156,7 @@ public:
                             if (!is_member(str_limits))
                                 this->reply_nbr(ERR_NOSUCHNICK);
                             if (is_member_channel(str_limits, str_channel))
-                                this->s.channels[str_channel].members[get_client(str_limits)] = op;
+                                p_chan.members[get_client(str_limits)] = op;
                             else
                                 this->reply_nbr(ERR_NOTONCHANNEL);
                         }
@@ -163,54 +164,54 @@ public:
                            this->reply_nbr(ERR_NEEDMOREPARAMS);
                         break ;
                     case 'p':
-                        this->s.channels[str_channel].private_channel = op;
+                        p_chan.private_channel = op;
                         break ;
                     case 's':
-                        this->s.channels[str_channel].secret_channel = op;
+                        p_chan.secret_channel = op;
                         break ;
                     case 'i':
-                        this->s.channels[str_channel].invite_only = op;
+                        p_chan.invite_only = op;
                         break ;
                     case 't':
                         if (op) {
-                            this->s.channels[str_channel].topic_only_operator = 0;
-                            this->s.channels[str_channel].topic = args["limits"].front(); // ?
+                            p_chan.topic_only_operator = 0;
+                            p_chan.topic = args["limits"].front(); // ?
                         }
                         else
-                            this->s.channels[str_channel].topic_only_operator = 1;
+                            p_chan.topic_only_operator = 1;
                         break ;
                     case 'n':
-                        this->s.channels[str_channel].server_clients_only = op;
+                        p_chan.server_clients_only = op;
                         break ;
                     case 'm':
-                        this->s.channels[str_channel].moderated = op;
+                        p_chan.moderated = op;
                         break ;
                     case 'l':
                         if (op)
-                            this->s.channels[str_channel].user_limit = std::atoi(str_limits.c_str());
+                            p_chan.user_limit = std::atoi(str_limits.c_str());
                         else
-                            this->s.channels[str_channel].user_limit = 15;
+                            p_chan.user_limit = 15;
                         break ;
                     case 'b':
                         if (op)
-                            this->s.channels[str_channel].ban_mask = std::atoi(str_limits.c_str());
+                            p_chan.ban_mask = std::atoi(str_limits.c_str());
                         else
-                            this->s.channels[str_channel].moderated = -1;
+                            p_chan.moderated = -1;
                         break ;
                     case 'v':
-                        if (op && this->s.channels[str_channel].speakers.find(this->c.nickname) == this->s.channels[str_channel].speakers.end())
-                            this->s.channels[str_channel].speakers.insert(this->c.nickname);
+                        if (op && p_chan.speakers.find(this->c.nickname) == p_chan.speakers.end())
+                            p_chan.speakers.insert(this->c.nickname);
                         if (!op)
-                            this->s.channels[str_channel].speakers.erase(this->c.nickname);
+                            p_chan.speakers.erase(this->c.nickname);
                         break ;
                     case 'k':
                         if (op){
                             if (!args["limits"].empty()) {
-                                this->s.channels[str_channel].password = str_limits;
+                                p_chan.password = str_limits;
                                 break ;
                             }
                         }
-                        this->s.channels[str_channel].password = "";
+                        p_chan.password = "";
                         break ;
                     default:
                         this->reply_nbr(ERR_UMODEUNKNOWNFLAG);
