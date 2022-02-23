@@ -6,30 +6,9 @@
 message *parse_msg(std::string str);
 
 server::server(void) :  clients(), fds(), history_size(0), hostname(SERVERNAME) { // syscall
-	this->open_socket(INADDR_ANY, PORT);
-	this->open_socket("/tmp/test_unix_socket");
+	/*this->open_socket(INADDR_ANY, PORT);
+	this->open_socket("/tmp/test_unix_socket");*/
 //	this->open_socket(INADDR_ANY, PORT + 1);
-	this->info.motd = "On veut plus de jaune dans les œufs\n"
-					  "On veut plus de sauce dans les sandwiches\n"
-					  "On veut plus de basses dans le reggae\n"
-					  "On veut plus de buts dans les matchs de foot\n"
-					  "On veut plus dе semelles dans lеs baskets\n"
-					  "On veut plus de dérapages de chat sur le carrelage\n"
-					  "On veut plus de kicks\n"
-					  "On veut plus de hand spinners lumineux\n"
-					  "On veut des selfie-sticks plus longs\n"
-					  "On veut plus de GIFs animés\n"
-					  "On veut plus d’open spaces et d’espaces de coworking\n"
-					  "On veut plus de fromages et moins de nouilles\n"
-					  "On veut plus de chevaux au galop, de feux d’artifice, de crêpes et de drifts\n"
-					  "On veut plus de portes à claquer\n"
-					  "On veut plus de grosses pierres à lancer\n"
-					  "On veut plus de pétards à faire péter\n"
-					  "On veut plus de tonnerre pendant les orages\n"
-					  "Il n’y a pas assez de fossiles dans le sol\n"
-					  "Ni de champignons dans les forêts\n"
-					  "Et pourtant toutes ces choses nous procurent du plaisir\n"
-					  "Et c’est pour cela qu’on en veut plus";
 	this->log("server created");
 }
 
@@ -42,9 +21,11 @@ void server::open_socket(long ip, short port) {
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
 	struct sockaddr_in sin = {};
-	sin.sin_addr.s_addr = htonl(ip);
+	sin.sin_addr.s_addr = ip;
+    //sin.sin_addr.s_addr = htonl(ip);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
+    //sin.sin_port = htons(port);
 	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));
 	if(listen(sock, MAX_CLIENT) == -1) // syscall
@@ -235,7 +216,7 @@ bool server::check_liveness(client &c, time_t now) {
 
 void server::print_info() {
     std::cout << "IP > " << this->info.ip << std::endl;
-    std::cout << "host_name > " << this->info.host_name << std::endl;
+    std::cout << "host_name > " << this->hostname << std::endl;
     std::cout << "location > " << this->info.location << std::endl;
     std::cout << "port > " << this->info.port << std::endl;
     std::cout << "sid > " << this->info.sid << std::endl;

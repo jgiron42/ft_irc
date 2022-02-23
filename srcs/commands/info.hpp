@@ -10,7 +10,7 @@ class info_command : public command {
 public:
     info_command(class client &c, class server &s) : command(c, s) {
         name = "INFO";
-        syntax = "[<server>]";
+        syntax = "[ <server> ]";
         generate_token(std::string(syntax));
     };
     void execute() {
@@ -21,7 +21,7 @@ public:
             this->reply_nbr(ERR_NOSUCHSERVER);
         }
         std::string str;
-        str += "Host name = " + s.info.host_name + "\n";
+        str += "Host name = " + s.hostname + "\n";
         str += "Location = " + s.info.location + "\n";
         str += "Name location = " + s.info.name_location + "\n";
         str += "Mail = " + s.info.mail + "\n";
