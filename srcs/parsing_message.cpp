@@ -77,6 +77,8 @@ message *get_command(std::string str, message *res) {
     res->command_str = cmd;
 	size_t end = cmd.find_last_not_of(" ");
 	res->command_str = (end == std::string::npos) ? std::string("") : cmd.substr(0, end + 1);
+	for(unsigned int i = 0; i < res->command_str.length(); i++)
+	    res->command_str[i] = toupper(res->command_str[i]);
 	return res;
 }
 
@@ -151,8 +153,8 @@ void aff_parse(message *res){
         ntm = "IRC Network ccoe!ccoe@192.168.1.59";
         std::cout << "==========================" << std::endl;
         std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
+//        m_tmp = parse_msg(ntm);
+//        aff_parse(m_tmp);
         ntm = ":irc.botspot.com 003 ccoe :This server was created";
         std::cout << "==========================" << std::endl;
         std::cout << ntm << std::endl;

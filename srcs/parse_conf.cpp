@@ -60,7 +60,6 @@ static void allow_port(std::string target, server &serv) {
     in_addr addr;
     std::string ip = get_value(1, target);
     std::string port = get_value(4, target);
-    std::cout << "IP = " << ip << std::endl << "Port = " << port << std::endl;
     if (inet_aton(ip.c_str(), &addr))
         serv.open_socket(addr.s_addr, (short)atoi(port.c_str()));
     else
