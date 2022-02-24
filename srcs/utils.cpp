@@ -45,7 +45,7 @@ bool glob_include(char * glob, char * str)
 
 bool	is_channel(const std::string &name)
 {
-	for (int i = 0; i < name.length() ; i++)
+	for (unsigned long i = 0; i < name.length() ; i++)
 		if (name[i] ==  ' ' || name[i] == 7 || name[i] == ',')
 			return (false);
 	return ((name[0] == '&' || name[0] == '#') && name.length() <= CHAN_MAX_L);
@@ -60,7 +60,7 @@ bool	is_valid_nickname(const std::string &nick)
 {
 	if (!isalpha(nick[0]) || nick.size() > NICK_MAX_L)
 		return (false);
-	for (int i = 0; i < nick.length(); i++)
+	for (unsigned long i = 0; i < nick.length(); i++)
 		if (!isalnum(nick[i]) && !isspecial(nick[i]))
 			return (false);
 	return (true);

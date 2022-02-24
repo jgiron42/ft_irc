@@ -31,7 +31,6 @@ int main(int ac, char **av)
             usage();
             return(1);
         }
-        in_addr addr;
         server s;
         if (ac == 2) {
             parse_conf(s, av[1]);

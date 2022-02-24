@@ -6,7 +6,6 @@
 #include "string"
 #include <cstdlib>
 #include "iostream"
-#include <cstdlib>
 #include <cstring>
 
 message *init_msg(void){
@@ -63,12 +62,15 @@ message *get_command(std::string str, message *res) {
         cmd = str;
     while ( (i = cmd.find_first_of(" ", 0)) == 0)
         cmd = cmd.substr(i, cmd.length()); // TODO: <- sous optimal
-    if (i > cmd.length())
+    if (i > cmd.length()) {
         i = cmd.length() - 1;
-	if (i == std::string::npos)
+    }
+	if(i == std::string::npos) {
         res->tmp_to_parse = "";
-    else
-        res->tmp_to_parse = cmd.substr(i + 1, cmd.length() );
+    }
+    else {
+        res->tmp_to_parse = cmd.substr(i + 1, cmd.length());
+    }
 	cmd = cmd.substr(0, i + 1);
 	if (std::isdigit(cmd.at(0)) != 0){
         res->command_nbr = atoi(cmd.c_str());

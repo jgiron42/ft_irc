@@ -12,7 +12,9 @@ channel::channel(const channel &src) {
 	*this = src;
 }
 
-channel::channel(client creator) : id(), members(),  password(), topic(), user_limit(USER_PER_CHANNEL) {}
+channel::channel(client creator) : id(), topic(), members(), user_limit(USER_PER_CHANNEL),  password(){
+    (void)creator;
+}
 
 channel::~channel() {
 	this->log("destroyed");

@@ -141,12 +141,12 @@ public:
         std::string str_limits = arg["limits"].front();
         channel &p_chan = this->s.channels[str_channel];
         if (!user) {
-            for(int i = 0; i < flags.length(); i++) {
+            for(unsigned  long i = 0; i < flags.length(); i++) {
                 if (is_allready_set(flags.at(i), op, str_channel, user))
                     continue ;
             }
         }
-        for (int i = 0; i < flags.length(); i++) // TODO: pas beau
+        for (unsigned long i = 0; i < flags.length(); i++) // TODO: pas beau
         {
             if (!user) {
                 switch (flags.at(i)) {
