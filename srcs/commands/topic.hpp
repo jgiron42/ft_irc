@@ -23,9 +23,10 @@ public:
 	void execute() {
         std::string channel;
         std::string topic;
+        bool        topic_exist = false;
 
         this->get_arg("channel", channel);
-        this->get_arg("topic", topic);
+        topic_exist = this->get_arg("topic", topic);
         if (channel.empty()) {
             this->reply_nbr(ERR_NEEDMOREPARAMS);
             return ;
@@ -49,6 +50,7 @@ public:
             this->s.channels[channel].topic = topic;
             this->args[topic].push_back(this->s.channels[channel].topic);
             this->reply_nbr(RPL_TOPIC);
+            this->c.notice(this->s.channels[channel], "TOPIC", channel+" : "+topic);
         }
 	}
 };
