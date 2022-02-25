@@ -2,16 +2,39 @@
 #include "channel.hpp"
 #include <stdlib.h>
 
-channel::channel(void) : user_limit(USER_PER_CHANNEL){}
+channel::channel(void) :	id(),
+							topic(),
+							members(),
+							invites(),
+							speakers(),
+							private_channel(0),
+							secret_channel(0),
+							invite_only(0),
+							topic_only_operator(0),
+							server_clients_only(0),
+							moderated(0),
+							user_limit(USER_PER_CHANNEL),
+							ban_mask(0),
+							password()
+{}
 
-channel::channel(std::string id) : id(id), members(), user_limit(USER_PER_CHANNEL){}
-
+channel::channel(std::string id) :	id(id),
+									  topic(),
+									  members(),
+									  invites(),
+									  speakers(),
+									  private_channel(0),
+									  secret_channel(0),
+									  invite_only(0),
+									  topic_only_operator(0),
+									  server_clients_only(0),
+									  moderated(0),
+									  user_limit(USER_PER_CHANNEL),
+									  ban_mask(0),
+									  password()
+{}
 channel::channel(const channel &src) {
 	*this = src;
-}
-
-channel::channel(client creator) : id(), topic(), members(), user_limit(USER_PER_CHANNEL),  password(){
-    (void)creator;
 }
 
 channel::~channel() {}
