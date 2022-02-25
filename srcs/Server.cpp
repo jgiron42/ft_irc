@@ -32,8 +32,10 @@ void server::open_socket(long ip, short port) {
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
 	this->sockets.insert(sock);
+#ifdef __OSX__
 	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+#endif
 }
 
 void server::open_socket(std::string const &path) {
@@ -54,8 +56,10 @@ void server::open_socket(std::string const &path) {
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
 	this->sockets.insert(sock);
+#ifdef __OSX__
 	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+#endif
 }
 
 server::server(const server &src) : clients(src.clients), fds(src.fds),password(src.password), history_size(src.history_size) {}
@@ -243,8 +247,7 @@ void server::print_info() {
 }
 
 channel	&server::create_chan(const std::string &name, client &creator, std::string key = "") {
-	channel &chan = this->channels[name] = channel(creator);
-	chan.id = name;
+	channel &chan = this->channels[name] = channel(name);
 	chan.log("created");
 	if (!key.empty())
 		chan.setPass(key);
