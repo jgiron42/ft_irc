@@ -29,7 +29,7 @@ public:
 				return;
 			}
 			comment = this->args["comment"].front();
-			this->send(this->c, "KILL", ":" + comment, *this->s.users[nick]);
+			this->s.users[nick]->send(this->c, "KILL", ":" + comment);
 			this->s.users[nick]->to_send.push_back("");
 		}
 	}

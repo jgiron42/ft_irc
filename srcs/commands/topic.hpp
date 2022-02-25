@@ -23,22 +23,21 @@ public:
 	void execute() {
         std::string channel;
         std::string topic;
+        bool        topic_exist = false;
 
         this->get_arg("channel", channel);
-        this->get_arg("topic", topic);
+        topic_exist = this->get_arg("topic", topic);
         if (channel.empty()) {
             this->reply_nbr(ERR_NEEDMOREPARAMS);
             return ;
         }
-        else {
-            if (this->s.channels.find(channel) == this->s.channels.end()) {
+        else if (this->s.channels.find(channel) == this->s.channels.end()) {
                 this->reply_nbr(ERR_NOSUCHCHANNEL);
                 return ;
-            }
-        }
+		}
         if (this->s.channels[channel].members.find(&this->c) == this->s.channels[channel].members.end())
             this->reply_nbr(ERR_NOTONCHANNEL);
-        else if (!this->s.channels[channel].members[&this->c])
+        else if (!this->s.channels[channel].members[&this->c] && this->s.channels[channel].topic_only_operator)
             this->reply_nbr(ERR_CHANOPRIVSNEEDED);
         else if (topic.empty()) {
             if (this->s.channels[channel].topic.empty()) {
@@ -51,6 +50,7 @@ public:
             this->s.channels[channel].topic = topic;
             this->args[topic].push_back(this->s.channels[channel].topic);
             this->reply_nbr(RPL_TOPIC);
+            this->c.notice(this->s.channels[channel], "TOPIC", channel+" : "+topic);
         }
 	}
 };

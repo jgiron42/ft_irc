@@ -39,7 +39,7 @@ public:
 				this->replied = false;
 			}
 			else
-				this->send(this->c, this->name, name + " :" + text, *i->first);
+				i->first->send(this->c, this->name, name + " :" + text);
 		}
 
 	}
@@ -47,7 +47,7 @@ public:
 	void	send_user(const std::string &name, const std::string &text)
 	{
 		if (!this->s.users[name]->away)
-			this->send(this->c, this->name, name + " :" + text, *this->s.users[name]);
+			this->s.users[name]->send(this->c, this->name, name + " :" + text);
 		else {
 			this->args["nickname"].push_front(name);
 			this->args["message"].push_front(this->s.users[name]->away_message);
@@ -70,7 +70,7 @@ public:
 				if (is_channel(*r))
 					this->send_channel(*r, text);
 				else if (this->s.users.count(*r))
-					this->send_user(*r, name);
+					this->send_user(*r, text);
 				else
 				{
 					this->args["nickname"].push_front(*r);

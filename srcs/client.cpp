@@ -1,12 +1,60 @@
 #include <unistd.h>
 #include "client.hpp"
 
-client::client(server &s) : s(s), identified(false), channels(), nickname("*"), nick_history(), end(0), begin(0), sock(-1), last_activity(std::time(NULL)), ping_send(false), alive(true){
+client::client(server &s) : s(s),
+							identified(false),
+							channels(),
+							password(),
+							username(),
+							nickname("*"),
+							nickname_tmp(),
+							nick_history(),
+							hostname(),
+							realname(),
+							ip(),
+							away_message(),
+							away(0),
+							invisible(0),
+							notices(0),
+							wallops(0),
+							op(0),
+							end(0),
+							begin(0),
+							sock(-1),
+							last_activity(std::time(NULL)),
+							ping_send(false)
+{
 	bzero(this->buf, 512);
 }
-client::client(int fd, server &s) : s(s), identified(false), channels(), nickname("*"), nick_history(), end(0), begin(0), sock(fd), last_activity(std::time(NULL)), ping_send(false), alive(true){
+client::client(int fd, server &s)  : s(s),
+									 identified(false),
+									 channels(),
+									 password(),
+									 username(),
+									 nickname("*"),
+									 nickname_tmp(),
+									 nick_history(),
+									 hostname(),
+									 realname(),
+									 ip(),
+									 away_message(),
+									 away(0),
+									 invisible(0),
+									 notices(0),
+									 wallops(0),
+									 op(0),
+									 end(0),
+									 begin(0),
+									 sock(fd),
+									 last_activity(std::time(NULL)),
+									 ping_send(false)
+{
 	bzero(this->buf, 512);
-	fcntl(fd, F_SETFL, O_NONBLOCK);
+#ifdef __OSX__
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) // syscall
+		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+#endif
+
 	this->log("new client");
 }
 
@@ -17,15 +65,28 @@ client::client(const client &src) : s(src.s){
 client::~client() {}
 
 client &client::operator=(const client &src) {
+	this->channels = src.channels;
+	this->password = src.password;
+	this->username = src.username;
 	this->nickname = src.nickname;
 	this->nickname_tmp = src.nickname_tmp;
-	this->sock = src.sock;
-	memcpy(this->buf, src.buf, 512);
-	this->begin = src.begin;
-	this->end = src.end;
-	this->channels = src.channels;
-	this->last_activity = src.last_activity;
+	this->nick_history = src.nick_history;
+	this->hostname = src.hostname;
+	this->realname = src.realname;
+	this->ip = src.ip;
+	this->away_message = src.away_message;
 	this->identified = src.identified;
+	this->away = src.away;
+	this->invisible = src.invisible;
+	this->notices = src.notices;
+	this->wallops = src.wallops;
+	this->op = src.op;
+	memcpy(this->buf, src.buf, 512);
+	this->end = src.end;
+	this->begin = src.begin;
+	this->sock = src.sock;
+	this->last_activity = src.last_activity;
+	this->ping_send = src.ping_send;
 	return (*this);
 }
 
@@ -80,9 +141,50 @@ std::string client::popLine() {
 	return (ret);
 }
 
+
+void client::send(const client &from, int command, const std::string &str) {
+	std::string prefix = from.nickname;
+	if (!from.username.empty())
+		prefix.append("!" + from.username);
+	if (!from.username.empty())
+		prefix.append("@" + from.hostname);
+	this->send(prefix, command, str);
+}
+
+void client::send(const client &from, const std::string & command, const std::string &str) {
+	std::string prefix = from.nickname;
+	if (!from.username.empty())
+		prefix.append("!" + from.username);
+	if (!from.username.empty())
+		prefix.append("@" + from.hostname);
+	this->send(prefix, command, str);
+}
+
+void client::send(int command, const std::string &str) {
+	this->send(this->s.hostname, command, str);
+}
+
+void client::send(const std::string & command, const std::string &str) {
+	this->send(this->s.hostname, command, str);
+}
+
+void client::send(const std::string &prefix, int command, const std::string &params) {
+	this->send(":" + prefix + " " + SSTR(command) + " " + this->nickname + " " + params);
+}
+
+void client::send(const std::string &prefix, const std::string &command, const std::string &params) {
+	this->send(":" + prefix + " " + SSTR(command) + " " + params);
+}
+
+
 void client::send(const std::string &str) {
 	::log("[" + this->nickname + "](" + this->getIP() + ") => ", str, MSG_OUT);
-	this->to_send.push_back(str);
+	this->to_send.push_back(str + CRLF);
+}
+
+void client::notice(channel &c, const std::string &command, const std::string &str) {
+	for (std::map<client *, bool>::iterator i = c.members.begin(); i != c.members.end(); i++)
+		i->first->send(*this,command,str);
 }
 
 std::string client::getIP() const {
@@ -122,11 +224,18 @@ void client::set_nick(std::string &str) {
 void client::join_chan(channel &chan, bool as_op) {
 	this->channels[chan.id] = &chan;
 	chan.members[this] = as_op;
+	chan.log(this->nickname + " joined");
 }
 
 void client::leave_chan(channel &chan) {
 	this->channels.erase(chan.id);
 	chan.members.erase(this);
+	chan.log(this->nickname + " left");
+	if (chan.members.empty())
+	{
+		chan.log("destroyed");
+		this->s.channels.erase(chan.id);
+	}
 }
 
 bool	client::can_see(channel &chan) {

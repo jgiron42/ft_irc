@@ -137,8 +137,13 @@ public:
     }
 
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
-        std::string str_channel = arg["channel"].front();
-        std::string str_limits = arg["limits"].front();
+		std::string str_channel;
+		std::string str_limits;
+
+		if (arg.count("channel") && !arg["channel"].empty())
+			str_channel = arg["channel"].front();
+		if (arg.count("limits") && !arg["limits"].empty())
+	        str_limits = arg["limits"].front();
         channel &p_chan = this->s.channels[str_channel];
         if (!user) {
             for(unsigned  long i = 0; i < flags.length(); i++) {
@@ -173,12 +178,7 @@ public:
                         p_chan.invite_only = op;
                         break ;
                     case 't':
-                        if (op) {
-                            p_chan.topic_only_operator = 0;
-                            p_chan.topic = args["limits"].front(); // ?
-                        }
-                        else
-                            p_chan.topic_only_operator = 1;
+                        p_chan.topic_only_operator = op;
                         break ;
                     case 'n':
                         p_chan.server_clients_only = op;
@@ -306,7 +306,8 @@ public:
         if (!arguments["channel"].empty() && arguments["flags"].empty()) {
             this->args["channel"].push_back(arguments["channel"].front());
             this->args["mode"].push_back(get_modes(arguments["channel"].front()));
-            this->args["mode params"].push_back(arguments["limits"].front());
+            if (!arguments["limits"].empty())
+                this->args["mode params"].push_back(arguments["limits"].front());
             this->reply_nbr(RPL_CHANNELMODEIS);
             return ;
         }

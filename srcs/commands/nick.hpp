@@ -34,7 +34,7 @@ public:
 			}
 			else
 			{
-				this->send("KILL", ":nickname overridden", *this->s.users.find(tmp)->second);
+				this->s.users.find(tmp)->second->send("KILL", ":nickname overridden");
 				this->s.users.find(tmp)->second->to_send.push_back("");
 			}
 		}

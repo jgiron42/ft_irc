@@ -14,6 +14,7 @@
 #define ABS(n) ((n) > 0 ? (n) : -(n))
 
 class channel;
+
 class server;
 class client {
 public:
@@ -28,6 +29,13 @@ public:
 	std::string popLine();
 	std::deque<std::string> to_send;
 	void	send(const std::string &);
+	void	send(const std::string &prefix, int command, const std::string &str);
+	void	send(const std::string &prefix, const std::string &command, const std::string &str);
+	void	send(const client &from, int command, const std::string &str);
+	void	send(const client &from, const std::string & command, const std::string &str);
+	void	send(int command, const std::string &str);
+	void	send(const std::string & command, const std::string &str);
+	void	notice(channel &, const std::string &command, const std::string &);
 	std::string getIP() const;
 	void	setIP(const std::string &);
 	void	pong();
@@ -36,22 +44,20 @@ public:
 	void	leave_chan(channel &);
 	bool	can_see(channel &);
 	void	log(const std::string &);
+	void	set_nick(std::string &);
 	//private:
 	server	&s;
-	bool identified;
 	std::map<std::string, channel *> channels;
 	std::string password;
 	std::string username;
 	std::string nickname;
-
-
 	std::string nickname_tmp;
 	std::deque<std::string> nick_history;
 	std::string hostname;
-	std::string servername;
 	std::string realname;
 	std::string ip;
 	std::string away_message;
+	bool identified;
 	bool	away : 1;
 	bool	invisible : 1;
 	bool 	notices : 1;
@@ -63,8 +69,6 @@ public:
 	int		sock;
 	time_t	last_activity;
 	bool	ping_send;
-    bool    alive;
-	void	set_nick(std::string &);
 };
 
 

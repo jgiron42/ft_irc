@@ -29,7 +29,7 @@ public:
 			this->reply_nbr(ERR_NOSUCHNICK);
 		else if (!this->s.channels.count(chan))
 		{
-			this->send(this->c, "INVITE", nickname + " :" + chan, *it->second);
+			it->second->send(this->c, "INVITE", nickname + " :" + chan);
 			this->reply_nbr(RPL_INVITING);
 		}
 		else if (chanit == this->c.channels.end())
@@ -45,7 +45,7 @@ public:
 		}
 		else
 		{
-			this->send(this->c, "INVITE", nickname + " :" + chan, *it->second);
+			it->second->send(this->c, "INVITE", nickname + " :" + chan);
 			chanit->second->invites.insert(nickname);
 			this->reply_nbr(RPL_INVITING);
 		}

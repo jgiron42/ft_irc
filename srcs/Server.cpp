@@ -13,7 +13,9 @@ server::server(void) :  clients(), fds(), hostname(SERVERNAME), history_size(0){
 }
 
 void server::open_socket(long ip, short port) {
-	this->log(SSTR("opening socket on " << ip << " " << port));
+	char *ipstr = inet_ntoa(*(struct in_addr *)&ip);
+	this->log(SSTR("opening socket on " << ipstr << " " << port));
+//	free(ipstr);
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 		throw syscall_failure(my_strerror((char *)"socket: ", errno));
@@ -22,18 +24,18 @@ void server::open_socket(long ip, short port) {
 		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
 	struct sockaddr_in sin = {};
 	sin.sin_addr.s_addr = ip;
-    //sin.sin_addr.s_addr = htonl(ip);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
-    //sin.sin_port = htons(port);
 	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));
 	if(listen(sock, MAX_CLIENT) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
 	this->sockets.insert(sock);
+#ifdef __OSX__
 	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+#endif
 }
 
 void server::open_socket(std::string const &path) {
@@ -54,8 +56,10 @@ void server::open_socket(std::string const &path) {
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
 	this->sockets.insert(sock);
+#ifdef __OSX__
 	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+#endif
 }
 
 server::server(const server &src) : clients(src.clients), fds(src.fds),password(src.password), history_size(src.history_size) {}
@@ -130,7 +134,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 			current_cli->bufappend(buf, ret);
 			current_cli->pong();
 		}
-		if (!ret || current_cli->alive != false) {
+		if (!ret) {
 			this->disconnect(fd.fd);
 			return;
 		} else if (ret > 0)
@@ -187,8 +191,8 @@ void server::dispatch(client &c) {
 void server::disconnect(int fd) {
 	client &c = this->clients.find(fd)->second;
 	c.log("disconnected");
-	for (std::map<std::string, channel *>::iterator i = c.channels.begin(); i != c.channels.end(); i++)
-		i->second->members.erase(&c);
+	while (!c.channels.empty())
+		c.leave_chan(*c.channels.begin()->second);
 	this->users.erase(c.nickname);
 	this->clients.erase(fd);
 	std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
@@ -243,8 +247,8 @@ void server::print_info() {
 }
 
 channel	&server::create_chan(const std::string &name, client &creator, std::string key = "") {
-	channel &chan = this->channels[name] = channel(creator);
-	chan.id = name;
+	channel &chan = this->channels[name] = channel(name);
+	chan.log("created");
 	if (!key.empty())
 		chan.setPass(key);
 	creator.channels[name] = &chan;

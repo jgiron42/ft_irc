@@ -26,7 +26,7 @@ public:
 			get_arg("username", this->c.username);
 			get_arg("hostname", this->c.hostname);
 			this->c.hostname = this->c.hostname.substr(0, 9);
-			get_arg("servername", this->c.servername);
+			get_arg("servername", this->s.hostname);
 			get_arg("realname", this->c.realname);
 			if (this->c.try_login()) {
 				if (this->c.identified)
