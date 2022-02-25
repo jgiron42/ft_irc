@@ -178,12 +178,7 @@ public:
                         p_chan.invite_only = op;
                         break ;
                     case 't':
-                        if (op) {
-                            p_chan.topic_only_operator = 0;
-                            p_chan.topic = args["limits"].front(); // ?
-                        }
-                        else
-                            p_chan.topic_only_operator = 1;
+                        p_chan.topic_only_operator = op;
                         break ;
                     case 'n':
                         p_chan.server_clients_only = op;

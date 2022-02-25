@@ -30,15 +30,13 @@ public:
             this->reply_nbr(ERR_NEEDMOREPARAMS);
             return ;
         }
-        else {
-            if (this->s.channels.find(channel) == this->s.channels.end()) {
+        else if (this->s.channels.find(channel) == this->s.channels.end()) {
                 this->reply_nbr(ERR_NOSUCHCHANNEL);
                 return ;
-            }
-        }
+		}
         if (this->s.channels[channel].members.find(&this->c) == this->s.channels[channel].members.end())
             this->reply_nbr(ERR_NOTONCHANNEL);
-        else if (!this->s.channels[channel].members[&this->c])
+        else if (!this->s.channels[channel].members[&this->c] && this->s.channels[channel].topic_only_operator)
             this->reply_nbr(ERR_CHANOPRIVSNEEDED);
         else if (topic.empty()) {
             if (this->s.channels[channel].topic.empty()) {
