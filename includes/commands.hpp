@@ -30,6 +30,7 @@
 #include "info.hpp"
 #include "admin.hpp"
 #include "who.hpp"
+#include "oper.hpp"
 #include "command_not_found.hpp"
 
 typedef command *creator(client &, server &);
@@ -68,6 +69,7 @@ creator *get_command(std::string name)
         map["INFO"] = &f<info_command>;
         map["ADMIN"] = &f<admin_command>;
         map["WHO"] = &f<who_command>;
+        map["OPER"] = &f<oper_command>;
 	}
 	try {
 		return (map.at(name));

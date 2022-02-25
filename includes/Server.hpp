@@ -76,6 +76,7 @@ public:
 	    std::string other_info;
 	    std::string network_name;
 	    std::vector<t_client_authorization> authorization;
+        std::vector<t_oper_auth> oper;
 		std::string motd;
 	} info;
   //  std::string motd;

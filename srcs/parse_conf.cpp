@@ -11,7 +11,7 @@
 #include "parse_conf.hpp"
 #include "stdlib.h"
 
-#define NB_OPT 5
+#define NB_OPT 6
 
 std::string get_value(size_t target, std::string to_parse) {
     std::string res;
@@ -92,6 +92,19 @@ static void special(std::string target, server &serv){
     ifs.close();
 }
 
+static void oper_author(std::string target, server &serv){
+    t_oper_auth fill;
+
+    fill.host_name = get_value(1, target);
+    fill.password = get_value(2, target);
+    fill.nickname = get_value(3, target);
+    std:: string port_str = get_value(4, target);
+    fill.port = (short)atoi(port_str.c_str());
+    fill.classes = get_value(5, target);
+    fill.flags = get_value(6, target);
+    serv.info.oper.push_back(fill);
+}
+
 void parse_conf (server &s, const std::string &file){
     std::ifstream ifs;
     ifs.open(file.data());
@@ -107,7 +120,8 @@ void parse_conf (server &s, const std::string &file){
             {'A', &administrative_information},
             {'P', &allow_port},
             {'I', &client_authorization},
-            {'X', &special}
+            {'X', &special},
+            {'O', &oper_author}
     };
     int i;
     int line = 0;

@@ -11,17 +11,16 @@
 class who_command : public command {
 private:
 
-    bool check_op_client(class channel &chan, class client &cli, bool op)
+    bool check_op_client(class client &cli, bool op)
     {
-        bool op_or_not = chan.members.find(&cli)->second;
+        bool op_or_not = cli.op;
         if (op && !op_or_not)
             return true;
         return false;
     }
 
     void who_reply(class channel &chan, client &cli, bool op){
-        std::cout << "PASSE ICI " << cli.nickname << std::endl;
-        if (cli.invisible && check_op_client(chan, cli, op))
+        if (cli.invisible && check_op_client(cli, op))
             return;
         this->args["channel"].push_front(chan.id);
         this->args["username"].push_front(cli.username);
@@ -30,7 +29,7 @@ private:
         this->args["nickname"].push_front(cli.nickname);
         this->args["hopcount"].push_front("1");
         this->args["H|G"].push_front("H");
-        if (check_op_client(chan, cli, true))
+        if (check_op_client(cli, true))
             this->args["[*][@|+]"].push_front("@");
         else
             this->args["[*][@|+]"].push_front("+");
