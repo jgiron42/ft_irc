@@ -10,12 +10,6 @@
 #include "t_token.hpp"
 extern char replies[512][100];
 
-template <typename T> std::string toStr(T tmp)
-{
-	std::ostringstream out;
-	out << tmp;
-	return out.str();
-}
 // Need to delete the below func later (DEBUG only)
 std::string block_enum_printer(block b)
 {
@@ -266,7 +260,7 @@ void command::reply_nbr(int nbr) {
 void command::reply(std::string command, std::string str) {
 	if (!this->replied)
 	{
-		this->send(this->s.hostname, command, str, this->c);
+		this->c.send(this->s.hostname, command, str);
 		this->replied = true;
 	}
 }
@@ -289,7 +283,7 @@ void command::send_numeric(const std::string &prefix, int n, client &dst) {
 		else
 			reply += format[i];
 	}
-	this->send(prefix, n, reply, this->c);
+	this->c.send(prefix, n, reply);
 }
 
 void command::send_numeric(int n, client &dst) {
@@ -303,42 +297,6 @@ void command::send_numeric(const client &from, int n, client &dst) {
 	if (!from.username.empty())
 		prefix.append("@" + from.getIP());
 	this->send_numeric(prefix, n, dst);
-}
-
-void command::send(const std::string &prefix, const std::string &command, const std::string &params, client &dst) {
-	dst.send(":" + prefix + " " + command + " " + params + CRLF);
-//		dst.send(":" + this->s.hostname + " " + command + " " + dst.username + " " + params + CRLF);
-}
-
-void command::send(const client &from, const std::string &command, const std::string &str, client &dst) {
-	std::string prefix = from.nickname;
-	if (!from.username.empty())
-		prefix.append("!" + from.username);
-	if (!from.username.empty())
-		prefix.append("@" + from.hostname);
-	this->send(prefix, command, str, dst);
-}
-
-void command::send(const std::string &command, const std::string &str, client &dst) {
-	this->send(this->s.hostname, command, str, dst);
-}
-
-void command::send(const client &from, const int command, const std::string &str, client &dst) {
-	std::string prefix = from.nickname;
-	if (!from.username.empty())
-		prefix.append("!" + from.username);
-	if (!from.username.empty())
-		prefix.append("@" + from.getIP());
-	this->send(prefix, command, str, dst);
-}
-
-void command::send(const int command, const std::string &str, client &dst) {
-	this->send(this->s.hostname, command, str, dst);
-}
-
-void command::send(const std::string &prefix, const int command, const std::string &params, client &dst)
-{
-	dst.send(":" + prefix + " " + toStr(command) + " " + dst.nickname + " " + params + CRLF);
 }
 
 void command::send_names(channel &chan) {

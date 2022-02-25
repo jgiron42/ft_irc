@@ -80,9 +80,50 @@ std::string client::popLine() {
 	return (ret);
 }
 
+
+void client::send(const client &from, int command, const std::string &str) {
+	std::string prefix = from.nickname;
+	if (!from.username.empty())
+		prefix.append("!" + from.username);
+	if (!from.username.empty())
+		prefix.append("@" + from.hostname);
+	this->send(prefix, command, str);
+}
+
+void client::send(const client &from, const std::string & command, const std::string &str) {
+	std::string prefix = from.nickname;
+	if (!from.username.empty())
+		prefix.append("!" + from.username);
+	if (!from.username.empty())
+		prefix.append("@" + from.hostname);
+	this->send(prefix, command, str);
+}
+
+void client::send(int command, const std::string &str) {
+	this->send(this->s.hostname, command, str);
+}
+
+void client::send(const std::string & command, const std::string &str) {
+	this->send(this->s.hostname, command, str);
+}
+
+void client::send(const std::string &prefix, int command, const std::string &params) {
+	this->send(":" + prefix + " " + SSTR(command) + " " + params + CRLF);
+}
+
+void client::send(const std::string &prefix, const std::string &command, const std::string &params) {
+	this->send(":" + prefix + " " + SSTR(command) + " " + params + CRLF);
+}
+
+
 void client::send(const std::string &str) {
 	::log("[" + this->nickname + "](" + this->getIP() + ") => ", str, MSG_OUT);
 	this->to_send.push_back(str);
+}
+
+void client::notice(channel &c, const std::string &command, const std::string &str) {
+	for (std::map<client *, bool>::iterator i = c.members.begin(); i != c.members.end(); i++)
+		i->first->send(*this,command,str);
 }
 
 std::string client::getIP() const {

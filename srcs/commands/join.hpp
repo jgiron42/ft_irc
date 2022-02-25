@@ -27,7 +27,7 @@ public:
 			this->send_numeric(RPL_TOPIC, this->c);
 		}
 		for (std::map<client *, bool>::iterator i = chan.members.begin(); i != chan.members.end(); i++)
-			this->send(this->c, "JOIN", chan.id, *i->first);
+			i->first->send(this->c, "JOIN", chan.id);
 		this->send_names(chan);
 	}
 

@@ -26,17 +26,15 @@ public:
 		for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
 			if (i->first == &this->c)
 				continue;
-			else if (!i->first->away)
-				this->send(this->c, this->name, name + " :" + text, *i->first);
+			else
+				i->first->send(this->c, this->name, name + " :" + text);
 		}
 
 	}
 
 	void	send_user(const std::string &name, const std::string &text)
 	{
-		if (!this->s.users[name]->away)
-			this->send(this->c, this->name, name + " :" + text, *this->s.users[name]);
-
+		this->s.users[name]->send(this->c, this->name, name + " :" + text);
 	}
 
 	void execute() {
