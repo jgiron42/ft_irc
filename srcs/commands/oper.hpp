@@ -34,15 +34,12 @@ public:
         std::vector<t_oper_auth> oper = c.s.info.oper;
         bool ok = false;
         if (oper.empty()) {
-            std::cout << "prout" << std::endl;
             this->reply_nbr(ERR_NOOPERHOST);
             return;
         }
         for (std::vector<t_oper_auth>::iterator i = oper.begin(); i != oper.end(); i++) {
-            std::cout << "Hostname client = " << c.hostname << std::endl << "Target hostname = " << i->host_name << std::endl;
             if (c.hostname == i->host_name){
                 ok = true;
-                std::cout << "Nickname = " << i->nickname << std::endl << "Password = " << i->password << std::endl;
                 if (name == i->nickname && pass == i->password){
                     c.op = true;
                     this->reply_nbr(RPL_YOUREOPER);
