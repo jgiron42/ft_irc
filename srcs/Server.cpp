@@ -13,7 +13,9 @@ server::server(void) :  clients(), fds(), history_size(0), hostname(SERVERNAME) 
 }
 
 void server::open_socket(long ip, short port) {
-	this->log(SSTR("opening socket on " << ip << " " << port));
+	char *ipstr = inet_ntoa(*(struct in_addr *)&ip);
+	this->log(SSTR("opening socket on " << ipstr << " " << port));
+//	free(ipstr);
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 		throw syscall_failure(my_strerror((char *)"socket: ", errno));
@@ -22,10 +24,8 @@ void server::open_socket(long ip, short port) {
 		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
 	struct sockaddr_in sin = {};
 	sin.sin_addr.s_addr = ip;
-    //sin.sin_addr.s_addr = htonl(ip);
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
-    //sin.sin_port = htons(port);
 	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));
 	if(listen(sock, MAX_CLIENT) == -1) // syscall

@@ -137,8 +137,13 @@ public:
     }
 
     void handle_flags(bool op, std::string flags, bool user, std::map<std::string, std::list<std::string> > &arg) {
-        std::string str_channel = arg["channel"].front();
-        std::string str_limits = arg["limits"].front();
+		std::string str_channel;
+		std::string str_limits;
+
+		if (arg.count("channel") && !arg["channel"].empty())
+			str_channel = arg["channel"].front();
+		if (arg.count("limits") && !arg["limits"].empty())
+	        str_limits = arg["limits"].front();
         channel &p_chan = this->s.channels[str_channel];
         if (!user) {
             for(int i = 0; i < flags.length(); i++) {
