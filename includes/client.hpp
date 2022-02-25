@@ -44,22 +44,20 @@ public:
 	void	leave_chan(channel &);
 	bool	can_see(channel &);
 	void	log(const std::string &);
+	void	set_nick(std::string &);
 	//private:
 	server	&s;
-	bool identified;
 	std::map<std::string, channel *> channels;
 	std::string password;
 	std::string username;
 	std::string nickname;
-
-
 	std::string nickname_tmp;
 	std::deque<std::string> nick_history;
 	std::string hostname;
-	std::string servername;
 	std::string realname;
 	std::string ip;
 	std::string away_message;
+	bool identified;
 	bool	away : 1;
 	bool	invisible : 1;
 	bool 	notices : 1;
@@ -71,8 +69,6 @@ public:
 	int		sock;
 	time_t	last_activity;
 	bool	ping_send;
-    bool    alive;
-	void	set_nick(std::string &);
 };
 
 

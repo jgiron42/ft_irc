@@ -4,9 +4,7 @@
 
 channel::channel(void) : user_limit(USER_PER_CHANNEL){}
 
-channel::channel(std::string id) : id(id), members(), user_limit(USER_PER_CHANNEL){
-	this->log("created");
-}
+channel::channel(std::string id) : id(id), members(), user_limit(USER_PER_CHANNEL){}
 
 channel::channel(const channel &src) {
 	*this = src;
@@ -16,9 +14,7 @@ channel::channel(client creator) : id(), topic(), members(), user_limit(USER_PER
     (void)creator;
 }
 
-channel::~channel() {
-	this->log("destroyed");
-}
+channel::~channel() {}
 
 channel &channel::operator=(const channel &src) {
 	this->id = src.id;

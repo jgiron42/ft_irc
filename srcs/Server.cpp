@@ -130,7 +130,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 			current_cli->bufappend(buf, ret);
 			current_cli->pong();
 		}
-		if (!ret || current_cli->alive != false) {
+		if (!ret) {
 			this->disconnect(fd.fd);
 			return;
 		} else if (ret > 0)
@@ -187,8 +187,8 @@ void server::dispatch(client &c) {
 void server::disconnect(int fd) {
 	client &c = this->clients.find(fd)->second;
 	c.log("disconnected");
-	for (std::map<std::string, channel *>::iterator i = c.channels.begin(); i != c.channels.end(); i++)
-		i->second->members.erase(&c);
+	while (!c.channels.empty())
+		c.leave_chan(*c.channels.begin()->second);
 	this->users.erase(c.nickname);
 	this->clients.erase(fd);
 	std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
@@ -245,6 +245,7 @@ void server::print_info() {
 channel	&server::create_chan(const std::string &name, client &creator, std::string key = "") {
 	channel &chan = this->channels[name] = channel(creator);
 	chan.id = name;
+	chan.log("created");
 	if (!key.empty())
 		chan.setPass(key);
 	creator.channels[name] = &chan;

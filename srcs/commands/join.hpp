@@ -24,7 +24,7 @@ public:
 		if (!chan.topic.empty())
 		{
 			this->args["topic"].push_front(chan.topic);
-			this->send_numeric(RPL_TOPIC);
+			this->send_numeric(RPL_TOPIC, this->c);
 		}
 		for (std::map<client *, bool>::iterator i = chan.members.begin(); i != chan.members.end(); i++)
 			i->first->send(this->c, "JOIN", chan.id);

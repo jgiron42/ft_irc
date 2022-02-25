@@ -27,16 +27,15 @@ public:
 			chan_name = channels.front();
 			if (this->s.channels.find(chan_name) == this->s.channels.end()) {
                 this->reply_nbr(ERR_NOSUCHCHANNEL);
-				continue;
             }
-			chan = this->s.channels.find(chan_name)->second;
-            if (chan.members.find(&this->c) == chan.members.end())
-				this->reply_nbr(ERR_NOTONCHANNEL);
-			else
-			{
-				this->c.notice(chan, "PART", chan.id + " :");
-				chan.members.erase(chan.members.find(&this->c));
-				this->c.channels.erase(chan_name);
+			else {
+				chan = this->s.channels.find(chan_name)->second;
+				if (chan.members.find(&this->c) == chan.members.end())
+					this->reply_nbr(ERR_NOTONCHANNEL);
+				else {
+					this->c.notice(chan, "PART", chan.id + " :");
+					this->c.leave_chan(chan);
+				}
 			}
 			channels.pop_front();
         }

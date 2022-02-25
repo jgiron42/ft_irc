@@ -253,8 +253,8 @@ bool command::get_arg(const std::string &key, std::list<std::string> &dst) { // 
 
 }
 
-void command::reply_nbr(int nbr) {
-	this->send_numeric(nbr);
+void command::reply_nbr(int n) {
+	this->send_numeric(n, this->c);
 }
 
 void command::reply(std::string command, std::string str) {
@@ -265,7 +265,7 @@ void command::reply(std::string command, std::string str) {
 	}
 }
 
-void command::send_numeric(const std::string &prefix, int n) {
+void command::send_numeric(const std::string &prefix, int n, client &dst) {
 	std::string format(replies[n]);
 	std::string reply;
 	std::map<std::string, std::list<std::string> >::iterator tmp;
@@ -283,20 +283,20 @@ void command::send_numeric(const std::string &prefix, int n) {
 		else
 			reply += format[i];
 	}
-	this->c.send(prefix, n, reply);
+	dst.send(prefix, n, reply);
 }
 
-void command::send_numeric(int n) {
-	this->send_numeric(this->s.hostname, n);
+void command::send_numeric(int n, client &dst) {
+	this->send_numeric(this->s.hostname, n, dst);
 }
 
-void command::send_numeric(const client &from, int n) {
+void command::send_numeric(const client &from, int n, client &dst) {
 	std::string prefix = from.nickname;
 	if (!from.username.empty())
 		prefix.append("!" + from.username);
 	if (!from.username.empty())
 		prefix.append("@" + from.getIP());
-	this->send_numeric(prefix, n);
+	this->send_numeric(prefix, n, dst);
 }
 
 void command::send_names(channel &chan) {
@@ -317,16 +317,16 @@ void command::send_names(channel &chan) {
 		user_list += flag +  it->first->nickname; // 68 + this.s.hostname.length();
 		if (user_list.length() + usable_length >= 499) {
 			this->args["user_list"].push_front(user_list);
-			this->send_numeric(RPL_NAMREPLY);
+			this->send_numeric(RPL_NAMREPLY, this->c);
 			user_list.clear();
 		} else
 			user_list.append(" ");
 	}
 	if (!user_list.empty()) {
 		this->args["user_list"].push_front(user_list);
-		this->send_numeric(RPL_NAMREPLY);
+		this->send_numeric(RPL_NAMREPLY, this->c);
 	}
-	this->send_numeric(RPL_ENDOFNAMES);
+	this->send_numeric(RPL_ENDOFNAMES, this->c);
 }
 
 void command::send_names(void) {
@@ -346,7 +346,7 @@ void command::send_names(void) {
 			user_list += it->first; // 68 + this.s.hostname.length();
 			if (user_list.length() + usable_length >= 499) {
 				this->args["user_list"].push_front(user_list);
-				this->send_numeric(RPL_NAMREPLY);
+				this->send_numeric(RPL_NAMREPLY, this->c);
 				user_list.clear();
 			} else
 				user_list.append(" ");
@@ -354,9 +354,9 @@ void command::send_names(void) {
 	}
 	if (!user_list.empty()) {
 		this->args["user_list"].push_front(user_list);
-		this->send_numeric(RPL_NAMREPLY);
+		this->send_numeric(RPL_NAMREPLY, this->c);
 	}
-	this->send_numeric(RPL_ENDOFNAMES);
+	this->send_numeric(RPL_ENDOFNAMES, this->c);
 
 }
 
@@ -369,7 +369,7 @@ void command::send_names(const std::string &chan) {
 	else
 	{
 		this->args["channel"].push_front(chan);
-		this->send_numeric(RPL_ENDOFNAMES);
+		this->send_numeric(RPL_ENDOFNAMES, this->c);
 	}
 }
 
