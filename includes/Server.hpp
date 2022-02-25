@@ -58,6 +58,7 @@ public:
 	channel	&create_chan(const std::string &name, client &creator, std::string key);
 	std::map<std::string, channel> channels;
 	std::map<std::string, client *> users; // map nickname to user
+	std::set<client *> operators;
 	std::string password;
 	std::string hostname;
 	int		history_size;
