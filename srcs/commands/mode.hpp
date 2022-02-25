@@ -160,8 +160,12 @@ public:
                         {
                             if (!is_member(str_limits))
                                 this->reply_nbr(ERR_NOSUCHNICK);
-                            if (is_member_channel(str_limits, str_channel))
-                                p_chan.members[get_client(str_limits)] = op;
+                            if (is_member_channel(str_limits, str_channel)) {
+                                if (!op && p_chan.members[get_client(str_limits)] && this->c.nickname.compare(str_limits) == 0) {
+                                    p_chan.members[get_client(str_limits)] = op;
+                                    this->c.remove_oper_set();
+                                }
+                            }
                             else
                                 this->reply_nbr(ERR_NOTONCHANNEL);
                         }
