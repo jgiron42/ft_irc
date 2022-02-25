@@ -52,6 +52,12 @@ public:
                 break ;
             //case 'm':
             //    break ;
+            //case 'o':
+            //      break ;
+            //case 'y':
+            //      break ;
+            //case 'v':
+            //      break ;
             default :
                 return ;
         }
