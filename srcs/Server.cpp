@@ -5,7 +5,7 @@
 
 message *parse_msg(std::string str);
 
-server::server(void) :  clients(), fds(), history_size(0), hostname(SERVERNAME) { // syscall
+server::server(void) :  clients(), fds(), hostname(SERVERNAME), history_size(0){ // syscall
 	/*this->open_socket(INADDR_ANY, PORT);
 	this->open_socket("/tmp/test_unix_socket");*/
 //	this->open_socket(INADDR_ANY, PORT + 1);

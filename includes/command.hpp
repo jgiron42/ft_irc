@@ -21,9 +21,10 @@
 //extern char **replies;
 template <class C>
 class token_it;
+
 class command {
 public:
-	command(client &c, server &s) : replied(false), c(c), s(s), must_register(true) {};
+	command(client &c, server &s) : must_register(true), replied(false), c(c), s(s){};
 	virtual ~command() {};
 	virtual void		parse(message);
 	virtual void		execute() {  };

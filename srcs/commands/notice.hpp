@@ -38,7 +38,7 @@ public:
 	}
 
 	void execute() {
-		channel *c;
+		channel *c = NULL;
 		std::list<std::string> receivers;
 		std::string text;
 		if (!this->get_arg("receiver", receivers))

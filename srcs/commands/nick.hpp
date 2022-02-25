@@ -55,7 +55,7 @@ public:
 				this->reply_nbr(RPL_MOTDSTART);
 				this->args["text"].push_front("");
 				std::string &text = this->args["text"].front();
-				for (int i = 0; i < this->s.info.motd.size(); i += 507)
+				for (unsigned long i = 0; i < this->s.info.motd.size(); i += 507)
 				{
 					text = this->s.info.motd.substr(i, 507);
 					this->reply_nbr(RPL_MOTD);

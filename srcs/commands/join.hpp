@@ -16,7 +16,7 @@ public:
 		generate_token(std::string(syntax));
 	};
 
-	void connecting(class client &c, class server &s, std::string &canal, bool as_op = false) {
+	void connecting(class client &c, std::string &canal, bool as_op = false) {
 		channel &chan = this->s.channels[canal];
 
 		c.join_chan(chan, as_op);
@@ -24,7 +24,7 @@ public:
 		if (!chan.topic.empty())
 		{
 			this->args["topic"].push_front(chan.topic);
-			this->send_numeric(RPL_TOPIC, this->c);
+			this->send_numeric(RPL_TOPIC);
 		}
 		for (std::map<client *, bool>::iterator i = chan.members.begin(); i != chan.members.end(); i++)
 			i->first->send(this->c, "JOIN", chan.id);
@@ -48,14 +48,14 @@ public:
 		std::map<std::string, channel>::iterator chanit = this->s.channels.find(canal);
 		if (chanit == this->s.channels.end()) {
 			this->s.create_chan(canal, this->c, key);
-			connecting(this->c, this->s, canal, true);
+			connecting(this->c, canal, true);
 		}
-		else if (chanit->second.members.size() >= chanit->second.user_limit)
+		else if (chanit->second.members.size() >= (unsigned long)chanit->second.user_limit)
 			this->reply_nbr(ERR_CHANNELISFULL);
 		else if (chanit->second.invite_only)
 		{
 			if (chanit->second.invites.count(this->c.nickname))
-				connecting(this->c, this->s, canal);
+				connecting(this->c, canal);
 			else
 				this->reply_nbr(ERR_INVITEONLYCHAN);
 		}
@@ -64,10 +64,10 @@ public:
 			if (key.compare(this->s.channels[canal].getPass()))
 				this->reply_nbr(ERR_BADCHANNELKEY);
 			else
-				connecting(this->c, this->s, canal);
+				connecting(this->c, canal);
 		}
 		else
-			connecting(this->c, this->s, canal);
+			connecting(this->c, canal);
 	}
 };
 

@@ -6,7 +6,6 @@
 #include "string"
 #include <cstdlib>
 #include "iostream"
-#include <cstdlib>
 #include <cstring>
 
 message *init_msg(void){
@@ -63,12 +62,15 @@ message *get_command(std::string str, message *res) {
         cmd = str;
     while ( (i = cmd.find_first_of(" ", 0)) == 0)
         cmd = cmd.substr(i, cmd.length()); // TODO: <- sous optimal
-    if (i > cmd.length())
+    if (i > cmd.length()) {
         i = cmd.length() - 1;
-	if (i == std::string::npos)
+    }
+	if(i == std::string::npos) {
         res->tmp_to_parse = "";
-    else
-        res->tmp_to_parse = cmd.substr(i + 1, cmd.length() );
+    }
+    else {
+        res->tmp_to_parse = cmd.substr(i + 1, cmd.length());
+    }
 	cmd = cmd.substr(0, i + 1);
 	if (std::isdigit(cmd.at(0)) != 0){
         res->command_nbr = atoi(cmd.c_str());
@@ -77,6 +79,8 @@ message *get_command(std::string str, message *res) {
     res->command_str = cmd;
 	size_t end = cmd.find_last_not_of(" ");
 	res->command_str = (end == std::string::npos) ? std::string("") : cmd.substr(0, end + 1);
+	for(unsigned int i = 0; i < res->command_str.length(); i++)
+	    res->command_str[i] = toupper(res->command_str[i]);
 	return res;
 }
 
@@ -151,8 +155,8 @@ void aff_parse(message *res){
         ntm = "IRC Network ccoe!ccoe@192.168.1.59";
         std::cout << "==========================" << std::endl;
         std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
+//        m_tmp = parse_msg(ntm);
+//        aff_parse(m_tmp);
         ntm = ":irc.botspot.com 003 ccoe :This server was created";
         std::cout << "==========================" << std::endl;
         std::cout << ntm << std::endl;
