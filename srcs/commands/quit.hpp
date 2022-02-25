@@ -17,7 +17,15 @@ public:
 	void execute() {
 		std::string message;
 		if (this->get_arg("quit message", message))
-			;//what TODO?
+		{
+			for (std::map<std::string, channel *>::iterator i = this->c.channels.begin(); i != this->c.channels.end(); i++)
+				for (std::map<client *, bool>::iterator j = i->second->members.begin(); j != i->second->members.end(); j++)
+				{
+					std::cout << j->first->nickname << std::endl;
+					if (j->first != &this->c)
+						j->first->send(this->c,"QUIT", ":" + message);
+				}
+		}
 		this->c.to_send.push_back("");
 	}
 };

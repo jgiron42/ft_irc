@@ -15,24 +15,30 @@ public:
 		generate_token(std::string(syntax));
 	};
 	void execute() {
-        std::string channel;
-
-        this->get_arg("channel", channel);
-        if (channel.empty()) {
+        if (this->args.size() < 2) {
             this->reply_nbr(ERR_NEEDMOREPARAMS);
             return ;
         }
-        while (!channel.empty()) {
-            if (this->s.channels.find(channel) == this->s.channels.end()) {
+		std::list<std::string> &channels = this->args["channel"];
+		std::string chan_name;
+		while (!channels.empty())
+		{
+			channel chan;
+			chan_name = channels.front();
+			if (this->s.channels.find(chan_name) == this->s.channels.end()) {
                 this->reply_nbr(ERR_NOSUCHCHANNEL);
-                return ;
+				continue;
             }
-            if (this->s.channels[channel].members.find(&this->c) == this->s.channels[channel].members.end()) {
-                this->reply_nbr(ERR_NOTONCHANNEL);
-                return ;
-            }
-            this->s.channels[channel].members.erase(this->s.channels[channel].members.find(&this->c));
-            this->get_arg("channel", channel);
+			chan = this->s.channels.find(chan_name)->second;
+            if (chan.members.find(&this->c) == chan.members.end())
+				this->reply_nbr(ERR_NOTONCHANNEL);
+			else
+			{
+				this->c.notice(chan, "PART", chan.id + " :");
+				chan.members.erase(chan.members.find(&this->c));
+				this->c.channels.erase(chan_name);
+			}
+			channels.pop_front();
         }
 	}
 };
