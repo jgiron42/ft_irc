@@ -26,6 +26,7 @@
 #include "time.hpp"
 #include "mode.hpp"
 #include "quit.hpp"
+#include "stats.hpp"
 #include "topic.hpp"
 #include "info.hpp"
 #include "admin.hpp"
@@ -68,6 +69,7 @@ creator *get_command(std::string name)
         map["INFO"] = &f<info_command>;
         map["ADMIN"] = &f<admin_command>;
         map["WHO"] = &f<who_command>;
+		map["STATS"] = &f<who_command>;
 	}
 	try {
 		return (map.at(name));
