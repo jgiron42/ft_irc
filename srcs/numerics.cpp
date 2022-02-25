@@ -79,7 +79,7 @@ char replies[512][100] = {
 		[RPL_INVITING] = "<channel> <nickname>",
 		[RPL_SUMMONING] = "<user> :Summoning user to IRC",
 		[RPL_VERSION] = "<version>.<debuglevel> <server> :<comments>",
-		[RPL_WHOREPLY] = "<channel> <username> <host> <server> <nickname>  <H|G>[*][@|+] :<hopcount> <real name>",
+		[RPL_WHOREPLY] = "<channel> <username> <host> <server> <nickname>  <H|G> <[*][@|+]> : <hopcount> <real name>",
 		[RPL_ENDOFWHO] = "<name> :End of /WHO list",
 		[RPL_NAMREPLY] = "= <channel> :<user_list>",
 		[RPL_ENDOFNAMES] = "<channel> :End of /NAMES list",
