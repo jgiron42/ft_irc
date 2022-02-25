@@ -21,7 +21,7 @@ void usage(){
     std::cout << "X:<motd_path>" << std::endl;
     std::cout << "A:<Your Name/Location>:<Your E-Mail Addr>:<other info>::<network name>:" << std::endl;
     std::cout << "I:<TARGET Host Addr>:<Password>:<TARGET Hosts NAME>:<Port>:<Class>:<Flags>:" << std::endl;
-    std::cout << "O:<TARGET Host NAME>:<Password>:<Nickname>:<Port>:<Class>:<Flags>:" std::endl
+    std::cout << "O:<TARGET Host NAME>:<Password>:<Nickname>:<Port>:<Class>:<Flags>:" << std::endl;
 
 }
 
