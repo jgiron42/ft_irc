@@ -50,7 +50,11 @@ client::client(int fd, server &s)  : s(s),
 									 ping_send(false)
 {
 	bzero(this->buf, 512);
-	fcntl(fd, F_SETFL, O_NONBLOCK);
+#ifdef __OSX__
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) // syscall
+		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+#endif
+
 	this->log("new client");
 }
 
@@ -165,7 +169,7 @@ void client::send(const std::string & command, const std::string &str) {
 }
 
 void client::send(const std::string &prefix, int command, const std::string &params) {
-	this->send(":" + prefix + " " + SSTR(command) + " " + params);
+	this->send(":" + prefix + " " + SSTR(command) + " " + this->nickname + " " + params);
 }
 
 void client::send(const std::string &prefix, const std::string &command, const std::string &params) {
