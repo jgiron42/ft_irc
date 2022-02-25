@@ -15,7 +15,8 @@ channel::channel(void) :	id(),
 							moderated(0),
 							user_limit(USER_PER_CHANNEL),
 							ban_mask(0),
-							password()
+							password(),
+                            topic_exist(0)
 {}
 
 channel::channel(std::string id) :	id(id),
@@ -31,7 +32,8 @@ channel::channel(std::string id) :	id(id),
 									  moderated(0),
 									  user_limit(USER_PER_CHANNEL),
 									  ban_mask(0),
-									  password()
+									  password(),
+                                      topic_exist(0)
 {}
 channel::channel(const channel &src) {
 	*this = src;

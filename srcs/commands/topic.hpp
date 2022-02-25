@@ -23,15 +23,16 @@ public:
 	void execute() {
         std::string channel;
         std::string topic;
-        bool        topic_exist = false;
+        bool        is_topic;
 
         this->get_arg("channel", channel);
-        topic_exist = this->get_arg("topic", topic);
+        is_topic = this->get_arg("topic", topic);
         if (channel.empty()) {
             this->reply_nbr(ERR_NEEDMOREPARAMS);
             return ;
         }
         else if (this->s.channels.find(channel) == this->s.channels.end()) {
+            std::cout << "noes goes" << std::endl;
                 this->reply_nbr(ERR_NOSUCHCHANNEL);
                 return ;
 		}
@@ -40,14 +41,20 @@ public:
         else if (!this->s.channels[channel].members[&this->c] && this->s.channels[channel].topic_only_operator)
             this->reply_nbr(ERR_CHANOPRIVSNEEDED);
         else if (topic.empty()) {
-            if (this->s.channels[channel].topic.empty()) {
+            if (this->s.channels[channel].topic.empty() && !this->s.channels[channel].topic_exist) {
                 this->reply_nbr(RPL_NOTOPIC);
                 return;
             }
+            if (is_topic) {
+                this->s.channels[channel].topic = "";
+                return ;
+            }
+            this->c.notice(this->s.channels[channel], "TOPIC", channel + " : " + topic);
             this->args[topic].push_back(this->s.channels[channel].topic);
             this->reply_nbr(RPL_TOPIC);
         } else {
             this->s.channels[channel].topic = topic;
+            this->s.channels[channel].topic_exist = true;
             this->args[topic].push_back(this->s.channels[channel].topic);
             this->reply_nbr(RPL_TOPIC);
             this->c.notice(this->s.channels[channel], "TOPIC", channel+" : "+topic);

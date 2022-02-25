@@ -1,11 +1,11 @@
 #X:<motd>  pour rajouter ce qu'on veut en plus
 X:./motd.txt
 #M:<Server NAME>:<YOUR Internet IP#>:<Geographic Location>:<Port>:<SID>:
-M:YOUR_SERVNAME:YOUR_IP:Paris:1111:000a:
+M:YOUR_SERVNAME:YOUR_IP:Paris:6667:000a:
 #A:<Your Name/Location>:<Your E-Mail Addr>:<other info>::<network name>:
 A:FT_IC:42@42.com:fait maison:FT_IC:
 #P:<YOUR Internet IP#>:<*>::<Port>:<Flags>
-P:127.0.0.1:ok:ok:1111:rien
+P:127.0.0.1:ok:ok:6667:rien
 #P:<Directory>:<*>:<*>:<Port>:<Flags>
 #Y:<Class>:<Ping Frequency>:<Connect freq>:<Max Links>:<SendQ>::
 #Y:<Class>:<Ping Frequency>::<Max Links>:<SendQ>:<Local Limit>:<Global Limit>:
