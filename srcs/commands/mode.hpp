@@ -311,7 +311,8 @@ public:
         if (!arguments["channel"].empty() && arguments["flags"].empty()) {
             this->args["channel"].push_back(arguments["channel"].front());
             this->args["mode"].push_back(get_modes(arguments["channel"].front()));
-            this->args["mode params"].push_back(arguments["limits"].front());
+            if (!arguments["limits"].empty())
+                this->args["mode params"].push_back(arguments["limits"].front());
             this->reply_nbr(RPL_CHANNELMODEIS);
             return ;
         }
