@@ -70,7 +70,7 @@ public:
 				if (is_channel(*r))
 					this->send_channel(*r, text);
 				else if (this->s.users.count(*r))
-					this->send_user(*r, name);
+					this->send_user(*r, text);
 				else
 				{
 					this->args["nickname"].push_front(*r);
