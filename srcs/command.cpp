@@ -8,7 +8,7 @@
 #include <stack>
 #include "exceptions.hpp"
 #include "t_token.hpp"
-extern char replies[512][100];
+extern char * replies[512];
 
 // Need to delete the below func later (DEBUG only)
 std::string block_enum_printer(block b)

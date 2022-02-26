@@ -1,6 +1,7 @@
 #include "Server.hpp"
 #include <signal.h>
 #include "parse_conf.hpp"
+#include "numerics.hpp"
 
 bool running = true;
 // TODO: c++98
@@ -28,6 +29,7 @@ void usage(){
 int main(int ac, char **av)
 {
     try {
+		init_array();
         if (ac != 2 && ac != 3) {
             usage();
             return(1);

@@ -13,7 +13,7 @@ public:
 		this->must_register = false;
 		name = "NICK";
 		syntax = "<nickname> [<hopcount>]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		std::string tmp;

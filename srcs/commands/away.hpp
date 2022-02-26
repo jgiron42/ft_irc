@@ -11,7 +11,7 @@ public:
 	away_command(class client &c, class server &s) : command(c, s) {
 		name = "AWAY";
 		syntax = "[ <message> ]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		if (get_arg("message", this->c.away_message))

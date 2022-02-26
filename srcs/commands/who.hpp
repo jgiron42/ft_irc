@@ -54,7 +54,7 @@ public:
     who_command(class client &c, class server &s) : command(c, s) {
         this->name = "WHO";
         this->syntax = "[ <name> [ <o> ] ]";
-        generate_token(std::string(syntax));
+		generate_token();
     };
 
     void execute() {

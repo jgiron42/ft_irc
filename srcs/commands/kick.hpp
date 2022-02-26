@@ -12,7 +12,7 @@ public:
 	kick_command(class client &c, class server &s) : command(c, s) {
 		name = "KICK";
 		syntax = "<channel> <user> [ <comment> ]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		if (this->args.size() <= 2)

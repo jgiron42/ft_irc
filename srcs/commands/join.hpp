@@ -13,7 +13,7 @@ public:
 	join_command(class client &c, class server &s) : command(c, s) {
 		name = "JOIN";
 		syntax = "<canal> { ',' <canal> } <key> { ',' <key> }";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 
 	void connecting(class client &c, std::string &canal, bool as_op = false) {

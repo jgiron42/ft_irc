@@ -30,7 +30,7 @@ public:
 	bool 				secret_channel : 1;
 	bool 				invite_only : 1;
     bool 				topic_only_operator : 1;
-	bool				server_clients_only : 1;
+	bool				no_messages_from_outside : 1;
 	bool				moderated : 1;
 	int					user_limit;
 	int 				ban_mask;

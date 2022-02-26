@@ -13,7 +13,7 @@ public:
 		this->must_register = false;
 		name = "PASS";
 		syntax = "<password>";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() { // TODO: masks
 		if (this->c.identified)
