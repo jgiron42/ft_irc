@@ -245,3 +245,13 @@ bool	client::can_see(channel &chan) {
 void client::log(const std::string &str) {
 	::log("[" + this->nickname + "@" + this->hostname + "] ", str, USER_EVENT);
 }
+
+void client::put_oper_set(){
+    this->op = true;
+    this->s.operators.insert(this);
+}
+
+void client::remove_oper_set(){
+    this->op = false;
+    this->s.operators.erase(this->s.operators.find(this));
+}

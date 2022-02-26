@@ -45,6 +45,8 @@ public:
 	bool	can_see(channel &);
 	void	log(const std::string &);
 	void	set_nick(std::string &);
+	void    put_oper_set();
+	void    remove_oper_set();
 	//private:
 	server	&s;
 	std::map<std::string, channel *> channels;

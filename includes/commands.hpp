@@ -32,6 +32,7 @@
 #include "admin.hpp"
 #include "who.hpp"
 #include "oper.hpp"
+#include "wallops.hpp"
 #include "command_not_found.hpp"
 
 typedef command *creator(client &, server &);
@@ -72,6 +73,7 @@ creator *get_command(std::string name)
         map["WHO"] = &f<who_command>;
         map["OPER"] = &f<oper_command>;
 		map["STATS"] = &f<who_command>;
+        map["WALLOPS"] = &f<wallops_command>;
 	}
 	try {
 		return (map.at(name));
