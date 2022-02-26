@@ -17,7 +17,7 @@ void usage(){
     std::cout << "OR" << std::endl;
     std::cout << "./ircserv <conf file>" << std::endl;
     std::cout << "format of the expected conf file :" << std::endl;
-    std::cout << "M:<Server NAME>:<YOUR Internet IP#>:<Geographic Location>:<Port>:<SID>:" << std::endl;
+    std::cout << "M:<Server NAME>:<YOUR Internet IP#>:<Geographic Location>:<Port>:<SID>:<Password>:" << std::endl;
     std::cout << "X:<motd_path>" << std::endl;
     std::cout << "A:<Your Name/Location>:<Your E-Mail Addr>:<other info>::<network name>:" << std::endl;
     std::cout << "I:<TARGET Host Addr>:<Password>:<TARGET Hosts NAME>:<Port>:<Class>:<Flags>:" << std::endl;

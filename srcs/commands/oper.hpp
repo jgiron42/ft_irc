@@ -41,7 +41,7 @@ public:
             if (c.hostname == i->host_name){
                 ok = true;
                 if (name == i->nickname && pass == i->password){
-                    c.op = true;
+                    c.put_oper_set();
                     this->reply_nbr(RPL_YOUREOPER);
                     return;
                 }

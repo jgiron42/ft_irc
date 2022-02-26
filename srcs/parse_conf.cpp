@@ -43,6 +43,8 @@ static void set_server(std::string target, server &serv) {
     else
         serv.info.port = (short) atoi(port_str.c_str());
     serv.info.sid = get_value(5, target);
+    serv.password = get_value(6, target);
+    std::cout << "PASS = " << serv.password << std::endl;
 }
 
 static void administrative_information(std::string target, server &serv) {
