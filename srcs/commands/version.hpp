@@ -18,7 +18,7 @@ public:
 	version_command(class client &c, class server &s) : command(c, s) {
 		name = "VERSION";
 		syntax = " [ <server> ]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		this->args["version"].push_front(s.info.version);

@@ -12,7 +12,7 @@ public:
 	time_command(class client &c, class server &s) : command(c, s) {
 		name = "TIME";
 		syntax = "[ <server> ]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		std::time_t t = std::time(0);   // get time now

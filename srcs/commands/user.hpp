@@ -13,7 +13,7 @@ public:
 		this->must_register = false;
 		this->name = "USER";
 		this->syntax = "<username> <hostname> <servername> <realname>";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		if (this->args.size() <= 4)

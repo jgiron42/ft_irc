@@ -130,7 +130,7 @@
 #define     RPL_ADMINLOC2				258
 #define     RPL_ADMINEMAIL				259
 
-
+void init_array();
 
 
 #endif //FT_IRC_NUMERICS_HPP

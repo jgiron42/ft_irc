@@ -12,7 +12,7 @@ public:
 	privmsg_command(class client &c, class server &s) : command(c, s) {
 		name = "PRIVMSG";
 		syntax = "<receiver> { ',' <receiver> } <text to be sent>";
-		this->generate_token(this->syntax);
+		this->generate_token();
 	};
 
 	void send_channel(const std::string &name, const std::string &text)
@@ -27,6 +27,11 @@ public:
 		if (c->moderated && !c->speakers.count(this->c.nickname))
 		{
 			this->reply_nbr(ERR_CANNOTSENDTOCHAN);
+			return;
+		}
+		if (c->no_messages_from_outside && !c->members.count(&this->c))
+		{
+			this->reply_nbr(ERR_NOTONCHANNEL);
 			return;
 		}
 		for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {

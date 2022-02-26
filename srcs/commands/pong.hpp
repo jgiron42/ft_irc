@@ -12,7 +12,7 @@ public:
 	pong_command(class client &c, class server &s) : command(c, s) {
 		name = "PONG";
 		syntax = "<server1> [ <server2> ]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() { // TODO: masks
 //		if (this->args.size() < 2)

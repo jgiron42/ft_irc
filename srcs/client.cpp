@@ -2,7 +2,6 @@
 #include "client.hpp"
 
 client::client(server &s) : s(s),
-							identified(false),
 							channels(),
 							password(),
 							username(),
@@ -13,6 +12,7 @@ client::client(server &s) : s(s),
 							realname(),
 							ip(),
 							away_message(),
+							identified(false),
 							away(0),
 							invisible(0),
 							notices(0),
@@ -27,7 +27,6 @@ client::client(server &s) : s(s),
 	bzero(this->buf, 512);
 }
 client::client(int fd, server &s)  : s(s),
-									 identified(false),
 									 channels(),
 									 password(),
 									 username(),
@@ -38,6 +37,7 @@ client::client(int fd, server &s)  : s(s),
 									 realname(),
 									 ip(),
 									 away_message(),
+									 identified(false),
 									 away(0),
 									 invisible(0),
 									 notices(0),
@@ -239,7 +239,7 @@ void client::leave_chan(channel &chan) {
 }
 
 bool	client::can_see(channel &chan) {
-	return (((!chan.private_channel && !chan.secret_channel) || chan.members.count(this) || this->op));
+	return (((!chan.secret_channel) || chan.members.count(this) || this->op));
 }
 
 void client::log(const std::string &str) {

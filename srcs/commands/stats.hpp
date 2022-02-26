@@ -15,7 +15,7 @@ public:
         this->must_register = false;
         name = "STATS";
         syntax = "[ <query> [ <server> ] ]";
-        generate_token(std::string(syntax));
+		generate_token();
     }
 
     void end_stats(std::string query) {

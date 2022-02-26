@@ -50,7 +50,7 @@ protected:
 	void	add_elem_str(std::string, std::list<block>::iterator it);
 	void	add_list(std::string str, std::list<block>::iterator &it, std::vector<std::string> *);
 	void	token_displayer(std::list<struct block> token);
-	void	generate_token(std::string syntax);
+	void generate_token();
 	void	send_names(const std::string &chan);
 	void	send_names(channel &chan);
 	void	send_names(void);

@@ -12,7 +12,7 @@ public:
 	list_command(class client &c, class server &s) : command(c, s) {
 		this->name = "LIST";
 		this->syntax = "[ <canal> { ',' <canal> } [ <serveur> ] ]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 
 	void send_channel(std::string name, std::string topic) {

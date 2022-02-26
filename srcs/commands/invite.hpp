@@ -12,7 +12,7 @@ public:
 	invite_command(class client &c, class server &s) : command(c, s) {
 		name = "INVITE";
 		syntax = "<nickname> <channel>";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		std::string nickname;

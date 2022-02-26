@@ -14,7 +14,7 @@ public:
     oper_command(class client &c, class server &s) : command(c, s) {
         name = "OPER";
         syntax = "<name> <password>";
-        generate_token(std::string(syntax));
+		generate_token();
     };
 
     void execute() {

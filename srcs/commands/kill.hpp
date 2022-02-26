@@ -11,7 +11,7 @@ public:
 	kill_command(class client &c, class server &s) : command(c, s) {
 		name = "KILL";
 		syntax = "<nickname> <comment>";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		std::string nick;

@@ -12,7 +12,7 @@ public:
 	quit_command(class client &c, class server &s) : command(c, s) {
 		name = "QUIT";
 		syntax = "[ <quit message> ]";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 	void execute() {
 		std::string message;

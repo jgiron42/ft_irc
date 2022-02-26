@@ -2,7 +2,7 @@
 
 #include "../includes/command.hpp"
 
-static void elem_parser(std::string str, int *i, std::list<struct block> &token) {
+static void elem_parser(const std::string &str, int *i, std::list<struct block> &token) {
     block b;
     b.bloc_type = ELEM;
     if (str.find(">") == std::string::npos)
@@ -12,7 +12,7 @@ static void elem_parser(std::string str, int *i, std::list<struct block> &token)
     token.push_back(b);
 }
 
-static void char_parser(std::string str, int *i, std::list<struct block> &token) {
+static void char_parser(const std::string &str, int *i, std::list<struct block> &token) {
     block b;
     b.bloc_type = CHAR;
     if (str.find("'") == std::string::npos)
@@ -22,7 +22,7 @@ static void char_parser(std::string str, int *i, std::list<struct block> &token)
     token.push_back(b);
 }
 
-static void string_parser(std::string str, int *i, std::list<struct block> &token) {
+static void string_parser(const std::string &str, int *i, std::list<struct block> &token) {
     block b;
     b.bloc_type = STR;
     if (str.find("\"") == std::string::npos)
@@ -32,7 +32,7 @@ static void string_parser(std::string str, int *i, std::list<struct block> &toke
     token.push_back(b);
 }
 
-static void opt_start_parser(std::string str, int *i, std::list<struct block> &token) {
+static void opt_start_parser(const std::string &, int*, std::list<struct block> &token) {
     block b;
     b.bloc_type = OPT;
     b.value = "";
@@ -40,58 +40,58 @@ static void opt_start_parser(std::string str, int *i, std::list<struct block> &t
 }
 
 
-static void or_parser(std::string str, int *i, std::list<struct block> &token) {
+static void or_parser(const std::string &, int*, std::list<struct block> &token) {
     block b;
     b.bloc_type = OR;
     b.value = "";
     token.push_back(b);
 }
 
-static void rep_start_parser(std::string str, int *i, std::list<struct block> &token) {
+static void rep_start_parser(const std::string &, int*, std::list<struct block> &token) {
     block b;
     b.bloc_type = REP;
     b.value = "";
     token.push_back(b);
 }
 
-static void rep_end_parser(std::string str, int *i, std::list<struct block> &token) {
+static void rep_end_parser(const std::string &, int*, std::list<struct block> &token) {
     block b;
     b.bloc_type = REPE;
     b.value = "";
     token.push_back(b);
 }
 
-static void opt_end_parser(std::string str, int *i, std::list<struct block> &token) {
+static void opt_end_parser(const std::string &, int*, std::list<struct block> &token) {
     block b;
     b.bloc_type = OPTE;
     b.value = "";
     token.push_back(b);
 }
 
-void command::generate_token(std::string syntax) {
-    std::list<struct block> token;
+void command::generate_token() {
+    std::list<struct block> tokenn;
     int i = 0;
 
     std::string bnf = syntax;
     while (syntax[i] != '\0') {
 		if (syntax[i] == '<')
-			elem_parser(&syntax[i+1], &i, token);
+			elem_parser(&syntax[i+1], &i, tokenn);
 		else if (syntax[i] == '[')
-			opt_start_parser(&syntax[i+1], &i, token);
+			opt_start_parser(&syntax[i+1], &i, tokenn);
 		else if (syntax[i] == '{')
-			rep_start_parser(&syntax[i+1], &i, token);
+			rep_start_parser(&syntax[i+1], &i, tokenn);
 		else if (syntax[i] == '"')
-			string_parser(&syntax[i+1], &i, token);
+			string_parser(&syntax[i+1], &i, tokenn);
 		else if (syntax[i] == '\'')
-			char_parser(&syntax[i+1], &i, token);
+			char_parser(&syntax[i+1], &i, tokenn);
 		else if (syntax[i] == '|')
-			or_parser(&syntax[i+1], &i, token);
+			or_parser(&syntax[i+1], &i, tokenn);
 		if (syntax[i] == '}')
-			rep_end_parser(&syntax[i+1], &i, token);
+			rep_end_parser(&syntax[i+1], &i, tokenn);
 		else if (syntax[i] == ']')
-			opt_end_parser(&syntax[i+1], &i, token);
+			opt_end_parser(&syntax[i+1], &i, tokenn);
 		i++;
     }
-    this->token = token;
+    this->token = tokenn;
 }
 

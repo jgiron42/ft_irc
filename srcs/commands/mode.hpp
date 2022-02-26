@@ -13,7 +13,7 @@ public:
 	mode_command(class client &c, class server &s) : command(c, s) {
 		name = "mode";
 		syntax = "<args> { <args> ' ' }";
-		generate_token(std::string(syntax));
+		generate_token();
 	};
 
     void sort_args(std::map<std::string, std::list< std::string > > &argument) {
@@ -117,7 +117,7 @@ public:
                 }
                 break ;
             case 'n':
-                if (this->s.channels[channel].server_clients_only == op) {
+                if (this->s.channels[channel].no_messages_from_outside == op) {
                     this->args["channel"].push_back(channel);
                     this->reply_nbr(ERR_KEYSET);
                     return 1;
@@ -181,7 +181,7 @@ public:
                         p_chan.topic_only_operator = op;
                         break ;
                     case 'n':
-                        p_chan.server_clients_only = op;
+                        p_chan.no_messages_from_outside = op;
                         break ;
                     case 'm':
                         p_chan.moderated = op;
@@ -288,7 +288,7 @@ public:
             ret.append("s");
         if (this->s.channels[channel].topic_only_operator)
             ret.append("t");
-        if (this->s.channels[channel].server_clients_only)
+        if (this->s.channels[channel].no_messages_from_outside)
             ret.append("n");
         if (this->s.channels[channel].invite_only)
             ret.append("i");
