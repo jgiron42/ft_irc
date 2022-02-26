@@ -13,7 +13,7 @@ public:
     wallops_command(class client &c, class server &s) : command(c, s) {
         name = "WALLOPS";
         syntax = "<param>";
-        generate_token(std::string(syntax));
+        generate_token();
     };
 
     void execute() {
