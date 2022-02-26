@@ -68,7 +68,7 @@ public:
         for (std::map<std::string, channel *>::iterator i = c.channels.begin(); i != c.channels.end(); i++){
             if (i->first == name){
                 this->who_chan(i->second, op);
-                this->args[name].push_back(name);
+                this->args["name"].push_back(name);
                 this->reply_nbr(RPL_ENDOFWHO);
                 return;
             }
@@ -79,7 +79,7 @@ public:
                     who_reply(*i->second, *j->first, op);
             }
         }
-        this->args[name].push_back(name);
+        this->args["name"].push_back(name);
         this->reply_nbr(RPL_ENDOFWHO);
     };
 };
