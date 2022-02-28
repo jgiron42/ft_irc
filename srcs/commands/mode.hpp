@@ -208,11 +208,14 @@ public:
                                 return ;
                             }
                             client *cli = get_client(str_limits);
-                            if (op && p_chan.speakers.find(cli->nickname) == p_chan.speakers.end())
+                            if (op && p_chan.speakers.find(cli->nickname) == p_chan.speakers.end()) {
                                 p_chan.speakers.insert(cli->nickname);
-                            if (!op)
+                                cli->invisible = true;
+                            }
+                            if (!op) {
                                 p_chan.speakers.erase(cli->nickname);
-
+                                cli->invisible = false;
+                            }
                         }
                         else {
                             if (op && p_chan.speakers.find(this->c.nickname) == p_chan.speakers.end())
@@ -329,10 +332,8 @@ public:
             this->reply_nbr(RPL_CHANNELMODEIS);
             return ;
         }
-        if (!arguments["channel"].empty()){
-            if (this->c.channels[arguments["channel"].front()])
-                std::cout << "pass is " << this->c.channels[arguments["channel"].front()]->password << std::endl;
-            channel_mode(arguments);}
+        if (!arguments["channel"].empty())
+            channel_mode(arguments);
         else if (!arguments["user"].empty()) {
             user_mode(arguments);
             std::cout << "user mode" << std::endl;
