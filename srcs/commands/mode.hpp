@@ -202,19 +202,33 @@ public:
                             p_chan.moderated = -1;
                         break ;
                     case 'v':
-                        if (op && p_chan.speakers.find(this->c.nickname) == p_chan.speakers.end())
-                            p_chan.speakers.insert(this->c.nickname);
-                        if (!op)
-                            p_chan.speakers.erase(this->c.nickname);
+                        if (!arg["limits"].empty()) {
+                            if (!is_member_channel(str_limits, str_channel)) {
+                                this->reply_nbr(ERR_NOSUCHNICK);
+                                return ;
+                            }
+                            client *cli = get_client(str_limits);
+                            if (op && p_chan.speakers.find(cli->nickname) == p_chan.speakers.end())
+                                p_chan.speakers.insert(cli->nickname);
+                            if (!op)
+                                p_chan.speakers.erase(cli->nickname);
+
+                        }
+                        else {
+                            if (op && p_chan.speakers.find(this->c.nickname) == p_chan.speakers.end())
+                                p_chan.speakers.insert(this->c.nickname);
+                            if (!op)
+                                p_chan.speakers.erase(this->c.nickname);
+                        }
                         break ;
                     case 'k':
                         if (op){
-                            if (!args["limits"].empty()) {
-                                p_chan.password = str_limits;
-                                break ;
+                            if (!arg["limits"].empty()) {
+                                p_chan.setPass(str_limits);
+                                return ;
                             }
                         }
-                        p_chan.password = "";
+                        p_chan.password.clear();
                         break ;
                     default:
                         this->reply_nbr(ERR_UMODEUNKNOWNFLAG);
@@ -252,7 +266,7 @@ public:
                 return ;
             }
             if (this->s.channels[*it].members[get_client(this->c.nickname)] == false) {
-                this->reply_nbr(RPL_UMODEIS);
+                this->reply_nbr(ERR_CHANOPRIVSNEEDED);
                 return ;
             }
             for (std::list<std::string>::iterator it = arguments["flags"].begin(); it != arguments["flags"].end(); it++) {
@@ -315,8 +329,10 @@ public:
             this->reply_nbr(RPL_CHANNELMODEIS);
             return ;
         }
-        if (!arguments["channel"].empty())
-            channel_mode(arguments);
+        if (!arguments["channel"].empty()){
+            if (this->c.channels[arguments["channel"].front()])
+                std::cout << "pass is " << this->c.channels[arguments["channel"].front()]->password << std::endl;
+            channel_mode(arguments);}
         else if (!arguments["user"].empty()) {
             user_mode(arguments);
             std::cout << "user mode" << std::endl;
