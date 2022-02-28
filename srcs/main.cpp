@@ -40,7 +40,7 @@ int main(int ac, char **av)
             //s.print_info();
         }
         else{
-            s.open_socket(INADDR_ANY, (short)atoi(av[1]));
+            s.open_socket(16777343, (short)atoi(av[1]));
             s.password = av[2];
         }
 
