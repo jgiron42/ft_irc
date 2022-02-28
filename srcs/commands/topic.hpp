@@ -32,32 +32,31 @@ public:
             return ;
         }
         else if (this->s.channels.find(channel) == this->s.channels.end()) {
-            std::cout << "noes goes" << std::endl;
                 this->reply_nbr(ERR_NOSUCHCHANNEL);
                 return ;
 		}
-        if (this->s.channels[channel].members.find(&this->c) == this->s.channels[channel].members.end())
+        if (this->c.channels.find(channel) == this->c.channels.end())
             this->reply_nbr(ERR_NOTONCHANNEL);
-        else if (!this->s.channels[channel].members[&this->c] && this->s.channels[channel].topic_only_operator)
+        else if (!this->c.channels[channel]->members[&this->c] && this->c.channels[channel]->topic_only_operator)
             this->reply_nbr(ERR_CHANOPRIVSNEEDED);
         else if (topic.empty()) {
-            if (this->s.channels[channel].topic.empty() && !this->s.channels[channel].topic_exist) {
+            if (this->c.channels[channel]->topic.empty() && !this->c.channels[channel]->topic_exist) {
                 this->reply_nbr(RPL_NOTOPIC);
                 return;
             }
             if (is_topic) {
-                this->s.channels[channel].topic = "";
+                this->c.channels[channel]->topic = "";
                 return ;
             }
-            this->c.notice(this->s.channels[channel], "TOPIC", channel + " : " + topic);
-            this->args[topic].push_back(this->s.channels[channel].topic);
+            this->c.notice(*this->c.channels[channel], "TOPIC", channel + " : " + topic);
+            this->args[topic].push_back(this->c.channels[channel]->topic);
             this->reply_nbr(RPL_TOPIC);
         } else {
-            this->s.channels[channel].topic = topic;
-            this->s.channels[channel].topic_exist = true;
-            this->args[topic].push_back(this->s.channels[channel].topic);
+            this->c.channels[channel]->topic = topic;
+            this->c.channels[channel]->topic_exist = true;
+            this->args[topic].push_back(this->c.channels[channel]->topic);
             this->reply_nbr(RPL_TOPIC);
-            this->c.notice(this->s.channels[channel], "TOPIC", channel+" : "+topic);
+            this->c.notice(*this->c.channels[channel], "TOPIC", channel+" : "+topic);
         }
 	}
 };
