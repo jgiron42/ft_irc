@@ -45,6 +45,7 @@ public:
 			this->reply_nbr(ERR_NOSUCHCHANNEL);
 			return;
 		}
+		this->get_arg("key", key);
 		std::map<std::string, channel>::iterator chanit = this->s.channels.find(canal);
 		if (chanit == this->s.channels.end()) {
 			this->s.create_chan(canal, this->c, key);
@@ -61,7 +62,7 @@ public:
 		}
 		else if (!chanit->second.getPass().empty())
 		{
-			if (key.compare(this->s.channels[canal].getPass()))
+			if (key != this->s.channels[canal].password)
 				this->reply_nbr(ERR_BADCHANNELKEY);
 			else
 				connecting(this->c, canal);

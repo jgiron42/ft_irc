@@ -231,6 +231,9 @@ public:
                                 return ;
                             }
                         }
+                        else {
+                            p_chan.password = "";
+                        }
                         p_chan.password.clear();
                         break ;
                     default:
