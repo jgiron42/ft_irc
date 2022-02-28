@@ -163,7 +163,6 @@ public:
                             if (is_member_channel(str_limits, str_channel)) {
                                 if (!op && p_chan.members[get_client(str_limits)] && this->c.nickname.compare(str_limits) == 0) {
                                     p_chan.members[get_client(str_limits)] = op;
-                                    this->c.remove_oper_set();
                                 }
                             }
                             else
@@ -233,7 +232,8 @@ public:
                         this->s.users[arg["user"].front()]->wallops = op;
                         break ;
                     case 'o':
-                        this->s.users[arg["user"].front()]->op = op;
+                        if (this->c.nickname == arg["user"].front() && !op)
+                            this->c.remove_oper_set();
                         break ;
                     default:
                         this->reply_nbr(ERR_UMODEUNKNOWNFLAG);

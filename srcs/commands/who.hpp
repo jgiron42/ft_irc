@@ -30,9 +30,9 @@ private:
         this->args["hopcount"].push_front("1");
         this->args["H|G"].push_front("H");
         if (check_op_client(cli, true))
-            this->args["[*][@|+]"].push_front("@");
-        else
             this->args["[*][@|+]"].push_front("+");
+        else
+            this->args["[*][@|+]"].push_front("@");
         this->args["real name"].push_front(cli.realname);
         this->reply_nbr(RPL_WHOREPLY);
     }
