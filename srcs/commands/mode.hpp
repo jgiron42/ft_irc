@@ -160,11 +160,8 @@ public:
                         {
                             if (!is_member(str_limits))
                                 this->reply_nbr(ERR_NOSUCHNICK);
-                            if (is_member_channel(str_limits, str_channel)) {
-                                if (!op && p_chan.members[get_client(str_limits)] && this->c.nickname.compare(str_limits) == 0) {
-                                    p_chan.members[get_client(str_limits)] = op;
-                                }
-                            }
+                            if (is_member_channel(str_limits, str_channel))
+                                p_chan.members[get_client(str_limits)] = op;
                             else
                                 this->reply_nbr(ERR_NOTONCHANNEL);
                         }
@@ -326,8 +323,13 @@ public:
 
         arguments.clear();
         sort_args(arguments);
-//        debug_args(arguments);
+        debug_args(arguments);
+
         if (!arguments["channel"].empty() && arguments["flags"].empty()) {
+            if (this->s.channels.find(arguments["channel"].front()) == this->s.channels.end()) {
+                this->reply_nbr(ERR_NOSUCHCHANNEL);
+                return ;
+            }
             this->args["channel"].push_back(arguments["channel"].front());
             this->args["mode"].push_back(get_modes(arguments["channel"].front()));
             if (!arguments["limits"].empty())
