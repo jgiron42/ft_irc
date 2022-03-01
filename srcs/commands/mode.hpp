@@ -8,6 +8,8 @@
 #include "command.hpp"
 #include "channel.hpp"
 
+enum infos {MODE, FLAGS, TARGET, BAN};
+
 class mode_command : public command {
 public:
 	mode_command(class client &c, class server &s) : command(c, s) {
@@ -26,14 +28,14 @@ public:
                     this->reply_nbr(ERR_NEEDMOREPARAMS);
                 return ;
             }
-            switch (iter) { // TODO: un enum serait le bienvenue
-                case 0:
+            switch (iter) {
+                case MODE:
                     if (is_channel(*it))
                         argument["channel"].push_back(*it);
                     else
                         argument["user"].push_back(*it);
                     break ;
-                case 1:
+                case FLAGS:
                     if ((*it).at(0) == '-' || (*it).at(0) == '+') {
                         argument["flags"].push_back(*it);
                         iter--;
@@ -41,10 +43,10 @@ public:
                     else
                         argument["limits"].push_back(*it);
                     break ;
-                case 2:
+                case TARGET:
                     argument["user"].push_back(*it);
                     break ;
-                case 3:
+                case BAN:
                     argument["banmask"].push_back(*it);
                 default:
                     return ;
@@ -162,8 +164,6 @@ public:
                                 this->reply_nbr(ERR_NOSUCHNICK);
                             if (is_member_channel(str_limits, str_channel))
                                 p_chan.members[get_client(str_limits)] = op;
-                            else
-                                this->reply_nbr(ERR_NOTONCHANNEL);
                         }
 						else
                            this->reply_nbr(ERR_NEEDMOREPARAMS);
@@ -200,10 +200,9 @@ public:
                         break ;
                     case 'v':
                         if (!arg["limits"].empty()) {
-                            if (!is_member_channel(str_limits, str_channel)) {
-                                this->reply_nbr(ERR_NOSUCHNICK);
+                            if (!is_member(str_limits)) {this->reply_nbr(ERR_NOSUCHNICK); return ;}
+                            if (!is_member_channel(str_limits, str_channel))
                                 return ;
-                            }
                             client *cli = get_client(str_limits);
                             if (op && p_chan.speakers.find(cli->nickname) == p_chan.speakers.end()) {
                                 p_chan.speakers.insert(cli->nickname);
