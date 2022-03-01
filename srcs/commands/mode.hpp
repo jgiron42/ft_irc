@@ -322,7 +322,7 @@ public:
 
         arguments.clear();
         sort_args(arguments);
-        debug_args(arguments);
+        //debug_args(arguments);
 
         if (!arguments["channel"].empty() && arguments["flags"].empty()) {
             if (this->s.channels.find(arguments["channel"].front()) == this->s.channels.end()) {
