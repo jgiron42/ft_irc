@@ -41,10 +41,10 @@ public:
                 this->args["port"].push_back(port.str());
                 this->reply_nbr(RPL_STATSILINE);
                 break ;
-            case 'k':
-                std::cout << "show all host banned" << std::endl;
+         //   case 'k':
+         //     std::cout << "show all host banned" << std::endl;
                 //Need to handle this later FIX
-                break ;
+         //     break ;
             case 'l':
                 this->args["servername"].push_back(SERVERNAME);
                 this->args["maxdepth"].push_back("1");
@@ -73,13 +73,14 @@ public:
         if (query.empty())
             return ;
         else {
-            if (!server.empty() && this->s.hostname.compare(server) != 0) {
-                this->reply_nbr(ERR_NOSUCHSERVER);
-                return ;
+            if (!server.empty() && this->s.hostname != server && this->s.users.find(server) != this->s.users.end()){
+                    this->reply_nbr(ERR_NOSUCHSERVER);
+                    return ;
             }
             if (query.length() != 1)
                 return ;
-            if (server.empty()) {
+
+            if (!server.empty()) {
                 end_stats(query);
                 return ;
             }
