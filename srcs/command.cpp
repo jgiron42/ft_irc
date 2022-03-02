@@ -308,6 +308,8 @@ void command::send_names(channel &chan) {
 	//						 ':'  <hostname>                 ' ' <NUM> ' '  <nick>                     ' '  <chan_id>         ' :'
 	for (std::map<class client *, bool>::iterator it = chan.members.begin();
 		 it != chan.members.end(); it++) {
+		if (it->first->invisible)
+			continue;
 		if (it->second)
 			flag = '@';
 		else if (chan.moderated && chan.speakers.count(it->first->nickname))
@@ -364,7 +366,8 @@ void command::send_names(const std::string &chan) {
 	std::map<std::string, channel>::iterator i = this->s.channels.find(chan);
 	if (chan == "*")
 		this->send_names();
-	else if (i != this->s.channels.end() && this->c.can_see(i->second))
+	else if (i != this->s.channels.end() && this->c.can_see(i->second) &&
+	(!i->second.private_channel || this->c.channels.count(i->second.id)))
 		this->send_names(i->second);
 	else
 	{

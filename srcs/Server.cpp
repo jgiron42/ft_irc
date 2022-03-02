@@ -246,12 +246,12 @@ void server::print_info() {
 
 }
 
-channel	&server::create_chan(const std::string &name, client &creator, std::string key = "") {
-	channel &chan = this->channels[name] = channel(name);
-	chan.log("created");
+channel	&server::create_chan(const std::string &name, std::string key = "") {
+	this->channels[name] = channel(name);
+	channel &chan = this->channels[name];
+			chan.log("created");
 	if (!key.empty())
 		chan.setPass(key);
-	creator.channels[name] = &chan;
 	return (chan);
 }
 

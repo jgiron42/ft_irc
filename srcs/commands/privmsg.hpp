@@ -24,14 +24,10 @@ public:
 			return;
 		}
 		c = &this->s.channels[name];
-		if (c->moderated && !c->speakers.count(this->c.nickname))
+		if ((c->moderated && !c->speakers.count(this->c.nickname)) ||
+			((c->secret_channel || c->no_messages_from_outside) && !c->members.count(&this->c)))
 		{
 			this->reply_nbr(ERR_CANNOTSENDTOCHAN);
-			return;
-		}
-		if (c->no_messages_from_outside && !c->members.count(&this->c))
-		{
-			this->reply_nbr(ERR_NOTONCHANNEL);
 			return;
 		}
 		for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {

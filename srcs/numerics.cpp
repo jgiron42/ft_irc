@@ -77,7 +77,7 @@ void init_array() {
 	replies[RPL_VERSION] = (char *)"<version>.<debuglevel> <server> :<comments>";
 	replies[RPL_WHOREPLY] = (char *)"<channel> <username> <host> <server> <nickname>  <H|G> <[*][@|+]> : <hopcount> <real name>";
 	replies[RPL_ENDOFWHO] = (char *)"<name> :End of /WHO list";
-	replies[RPL_NAMREPLY] = (char *)"= (char *)<channel> :<user_list>";
+	replies[RPL_NAMREPLY] = (char *)"= <channel> :<user_list>";
 	replies[RPL_ENDOFNAMES] = (char *)"<channel> :End of /NAMES list";
 	replies[RPL_LINKS] = (char *)"<mask> <server> :<hopcount> <server info>";
 	replies[RPL_ENDOFLINKS] = (char *)"<mask> :End of /LINKS list";

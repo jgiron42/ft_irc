@@ -23,18 +23,18 @@ public:
 		std::string chan_name;
 		while (!channels.empty())
 		{
-			channel chan;
+			channel *chan;
 			chan_name = channels.front();
 			if (this->s.channels.find(chan_name) == this->s.channels.end()) {
                 this->reply_nbr(ERR_NOSUCHCHANNEL);
             }
 			else {
-				chan = this->s.channels.find(chan_name)->second;
-				if (chan.members.find(&this->c) == chan.members.end())
+				chan = &this->s.channels.find(chan_name)->second;
+				if (chan->members.find(&this->c) == chan->members.end())
 					this->reply_nbr(ERR_NOTONCHANNEL);
 				else {
-					this->c.notice(chan, "PART", chan.id + " :");
-					this->c.leave_chan(chan);
+					this->c.notice(*chan, "PART", chan->id + " :");
+					this->c.leave_chan(*chan);
 				}
 			}
 			channels.pop_front();

@@ -55,7 +55,7 @@ public:
 	void	send_ping(client &);
     void    print_info(void);
 	void	log(const std::string &);
-	channel	&create_chan(const std::string &name, client &creator, std::string key);
+	channel	&create_chan(const std::string &name, std::string key);
 	std::map<std::string, channel> channels;
 	std::map<std::string, client *> users; // map nickname to user
 	std::set<client *> operators;

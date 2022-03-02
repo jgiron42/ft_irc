@@ -48,7 +48,7 @@ public:
 		this->get_arg("key", key);
 		std::map<std::string, channel>::iterator chanit = this->s.channels.find(canal);
 		if (chanit == this->s.channels.end()) {
-			this->s.create_chan(canal, this->c, key);
+			this->s.create_chan(canal, key);
 			connecting(this->c, canal, true);
 		}
 		else if (chanit->second.members.size() >= (unsigned long)chanit->second.user_limit)
