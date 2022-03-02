@@ -72,7 +72,7 @@ creator *get_command(std::string name)
         map["ADMIN"] = &f<admin_command>;
         map["WHO"] = &f<who_command>;
         map["OPER"] = &f<oper_command>;
-		map["STATS"] = &f<who_command>;
+		map["STATS"] = &f<stats_command>;
         map["WALLOPS"] = &f<wallops_command>;
 	}
 	try {

@@ -40,6 +40,7 @@ int main(int ac, char **av)
             //s.print_info();
         }
         else{
+            std::cout << "Password = " << av[2] << std::endl;
             s.open_socket(16777343, (short)atoi(av[1]));
             s.password = av[2];
         }
