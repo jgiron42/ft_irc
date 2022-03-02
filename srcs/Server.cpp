@@ -194,6 +194,7 @@ void server::disconnect(int fd) {
 	while (!c.channels.empty())
 		c.leave_chan(*c.channels.begin()->second);
 	this->users.erase(c.nickname);
+    this->operators.erase(&c);
 	this->clients.erase(fd);
 	std::vector<struct pollfd>::iterator tmpit = this->fds.begin();
 	while (tmpit != this->fds.end() && tmpit->fd != fd)

@@ -230,6 +230,8 @@ void client::join_chan(channel &chan, bool as_op) {
 void client::leave_chan(channel &chan) {
 	this->channels.erase(chan.id);
 	chan.members.erase(this);
+    chan.speakers.erase(this->nickname);
+    chan.invites.erase(this->nickname);
 	chan.log(this->nickname + " left");
 	if (chan.members.empty())
 	{

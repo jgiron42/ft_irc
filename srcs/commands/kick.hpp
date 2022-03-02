@@ -15,31 +15,65 @@ public:
 		generate_token();
 	};
 	void execute() {
-		if (this->args.size() <= 2)
-			this->reply_nbr(ERR_NEEDMOREPARAMS);
-		std::string channel;
-		this->get_arg("channel", channel);
-		std::string user;
-		this->get_arg("user", user);
-		std::string comment;
-		this->get_arg("comment", comment);
-		if (!is_channel(channel)) {
-			this->reply_nbr(ERR_NOSUCHCHANNEL);
-			return ;
-		}
-		if (this->s.channels[channel].private_channel == 0) {
-			this->reply_nbr(ERR_CHANOPRIVSNEEDED);
-			return ;
-		}
-		if (is_member(user)) {
-			if (!is_member_channel(user, channel)) {
-				this->reply_nbr(ERR_NOTONCHANNEL);
-				return ;
-			}
-		}
-		else
-			return ;
-		this->s.channels[channel].members.erase(get_client(user));
+        std::string channel;
+        this->get_arg("channel", channel);
+        std::string user;
+        this->get_arg("user", user);
+        std::string comment;
+        this->get_arg("comment", comment);
+        if (channel.empty() || user.empty()){
+            this->args["command"].push_back("KICK");
+            this->reply_nbr(ERR_NEEDMOREPARAMS);
+            return;
+        }
+        if (s.channels.find(channel) == s.channels.end()){
+            this->args["channel"].push_back(channel);
+            this->reply_nbr(ERR_NOSUCHCHANNEL);
+            return;
+        }
+        if (c.channels.find(channel) == c.channels.end()){
+            this->args["channel"].push_back(channel);
+            this->reply_nbr(ERR_NOTONCHANNEL);
+            return;
+        }
+        class channel *chan = c.channels.find(channel)->second;
+        if (chan->members.find(&this->c)->second == false) {
+            this->args["channel"].push_back(channel);
+            this->reply_nbr(ERR_CHANOPRIVSNEEDED);
+            return;
+        }
+        class client *cli = s.users.find(user)->second;
+        cli->leave_chan(*chan);
+        this->c.notice(*chan, "KICK", chan->id + " :" + comment);
+
+            /*
+             if (this->args.size() <= 2)
+                 this->reply_nbr(ERR_NEEDMOREPARAMS);
+             std::string channel;
+             this->get_arg("channel", channel);
+             std::string user;
+             this->get_arg("user", user);
+             std::string comment;
+             this->get_arg("comment", comment);
+             class channel *chan = c.channels.find(channel)->second;
+             if (!is_channel(channel)) {
+                 this->reply_nbr(ERR_NOSUCHCHANNEL);
+                 return ;
+             }
+             if (chan->members.find(&this->c)->second == false) {
+                 this->reply_nbr(ERR_CHANOPRIVSNEEDED);
+                 return ;
+             }
+             if (is_member(user)) {
+                 if (!is_member_channel(user, channel)) {
+                     this->reply_nbr(ERR_NOTONCHANNEL);
+                     return ;
+                 }
+             }
+             else
+                 return ;
+             this->s.channels[channel].members.erase(get_client(user));
+             */
 	}
 };
 
@@ -57,9 +91,14 @@ public:
 
    Numeric Replies:
 
-           ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
-           ERR_BADCHANMASK                 ERR_CHANOPRIVSNEEDED
+           ERR_NEEDMOREPARAMS
+           "<command> :Not enough parameters"
+           ERR_NOSUCHCHANNEL
+           "<channel> :No such channel"
+           ERR_CHANOPRIVSNEEDED
+           "<channel> :you're not channel operator"
            ERR_NOTONCHANNEL
+           "<channel> :You're not on that channel"
 
    Examples:
 
