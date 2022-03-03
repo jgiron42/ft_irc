@@ -12,6 +12,7 @@ class wallops_command : public command {
 public:
     wallops_command(class client &c, class server &s) : command(c, s) {
         name = "WALLOPS";
+		this->s.commands_count[this->name]++;
         syntax = "<param>";
         generate_token();
     };

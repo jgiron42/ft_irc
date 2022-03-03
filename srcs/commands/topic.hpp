@@ -17,6 +17,7 @@ class topic_command : public command {
 public:
 	topic_command(class client &c, class server &s) : command(c, s) {
 		name = "TOPIC";
+		this->s.commands_count[this->name]++;
 		syntax = "<channel> [ <topic> ]";
 		generate_token();
 	};

@@ -14,6 +14,7 @@ class list_command : public command {
 public:
 	list_command(class client &c, class server &s) : command(c, s) {
 		this->name = "LIST";
+		this->s.commands_count[this->name]++;
 		this->syntax = "[ <canal> { ',' <canal> } [ <serveur> ] ]";
 		generate_token();
 	};

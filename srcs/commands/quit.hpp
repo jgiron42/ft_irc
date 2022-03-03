@@ -11,6 +11,7 @@ class quit_command : public command {
 public:
 	quit_command(class client &c, class server &s) : command(c, s) {
 		name = "QUIT";
+		this->s.commands_count[this->name]++;
 		syntax = "[ <quit message> ]";
 		generate_token();
 	};

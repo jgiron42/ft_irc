@@ -10,6 +10,7 @@ class info_command : public command {
 public:
     info_command(class client &c, class server &s) : command(c, s) {
         name = "INFO";
+		this->s.commands_count[this->name]++;
         syntax = "[ <server> ]";
 		generate_token();
     };

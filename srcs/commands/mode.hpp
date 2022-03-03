@@ -14,6 +14,7 @@ class mode_command : public command {
 public:
 	mode_command(class client &c, class server &s) : command(c, s) {
 		name = "mode";
+		this->s.commands_count[this->name]++;
 		syntax = "<args> { <args> ' ' }";
 		generate_token();
 	};

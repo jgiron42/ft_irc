@@ -13,6 +13,7 @@ class oper_command : public command {
 public:
     oper_command(class client &c, class server &s) : command(c, s) {
         name = "OPER";
+		this->s.commands_count[this->name]++;
         syntax = "<name> <password>";
 		generate_token();
     };

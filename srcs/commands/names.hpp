@@ -11,6 +11,7 @@ class names_command : public command {
 public:
 	names_command(class client &c, class server &s) : command(c, s) {
 		name = "NAMES";
+		this->s.commands_count[this->name]++;
 		syntax = "[ <channel> { ',' <channel> } ]";
 		generate_token();
 	};

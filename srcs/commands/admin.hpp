@@ -11,7 +11,9 @@ class admin_command : public command {
 public:
     admin_command(class client &c, class server &s) : command(c, s) {
         this->name = "ADMIN";
+		this->s.commands_count[this->name]++;
         this->syntax = "[ <server> ]";
+		this->s.commands_count[this->name]++;
 		generate_token();
     };
 

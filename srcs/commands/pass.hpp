@@ -12,6 +12,7 @@ public:
 	pass_command(class client &c, class server &s) : command(c, s){
 		this->must_register = false;
 		name = "PASS";
+		this->s.commands_count[this->name]++;
 		syntax = "<password>";
 		generate_token();
 	};

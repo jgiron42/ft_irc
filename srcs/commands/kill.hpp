@@ -10,6 +10,7 @@ class kill_command : public command {
 public:
 	kill_command(class client &c, class server &s) : command(c, s) {
 		name = "KILL";
+		this->s.commands_count[this->name]++;
 		syntax = "<nickname> <comment>";
 		generate_token();
 	};

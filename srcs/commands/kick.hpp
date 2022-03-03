@@ -11,6 +11,7 @@ class kick_command : public command {
 public:
 	kick_command(class client &c, class server &s) : command(c, s) {
 		name = "KICK";
+		this->s.commands_count[this->name]++;
 		syntax = "<channel> <user> [ <comment> ]";
 		generate_token();
 	};

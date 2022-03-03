@@ -12,6 +12,7 @@ public:
 	user_command(class client &c, class server &s) : command(c, s) {
 		this->must_register = false;
 		this->name = "USER";
+		this->s.commands_count[this->name]++;
 		this->syntax = "<username> <hostname> <servername> <realname>";
 		generate_token();
 	};

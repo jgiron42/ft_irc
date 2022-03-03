@@ -53,6 +53,7 @@ private:
 public:
     who_command(class client &c, class server &s) : command(c, s) {
         this->name = "WHO";
+		this->s.commands_count[this->name]++;
         this->syntax = "[ <name> [ <o> ] ]";
 		generate_token();
     };

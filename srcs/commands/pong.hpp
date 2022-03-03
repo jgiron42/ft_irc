@@ -11,6 +11,7 @@ class pong_command : public command {
 public:
 	pong_command(class client &c, class server &s) : command(c, s) {
 		name = "PONG";
+		this->s.commands_count[this->name]++;
 		syntax = "<server1> [ <server2> ]";
 		generate_token();
 	};

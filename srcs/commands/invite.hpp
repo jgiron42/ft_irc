@@ -11,6 +11,7 @@ class invite_command : public command {
 public:
 	invite_command(class client &c, class server &s) : command(c, s) {
 		name = "INVITE";
+		this->s.commands_count[this->name]++;
 		syntax = "<nickname> <channel>";
 		generate_token();
 	};

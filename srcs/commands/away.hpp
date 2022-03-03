@@ -10,6 +10,7 @@ class away_command : public command {
 public:
 	away_command(class client &c, class server &s) : command(c, s) {
 		name = "AWAY";
+		this->s.commands_count[this->name]++;
 		syntax = "[ <message> ]";
 		generate_token();
 	};

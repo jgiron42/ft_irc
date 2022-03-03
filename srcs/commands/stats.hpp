@@ -14,6 +14,7 @@ public:
     stats_command(class client &c, class server &s) : command(c, s) {
         this->must_register = false;
         name = "STATS";
+		this->s.commands_count[this->name]++;
         syntax = "[ <query> [ <server> ] ]";
 		generate_token();
     }
@@ -50,8 +51,8 @@ public:
                 this->args["maxdepth"].push_back("1");
                 this->reply_nbr(RPL_STATSLLINE);
                 break ;
-            //case 'm':
-            //    break ;
+            case 'm':
+                break ;
             //case 'o':
             //      break ;
             //case 'y':

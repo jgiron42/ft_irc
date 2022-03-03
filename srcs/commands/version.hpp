@@ -17,6 +17,7 @@ class version_command : public command {
 public:
 	version_command(class client &c, class server &s) : command(c, s) {
 		name = "VERSION";
+		this->s.commands_count[this->name]++;
 		syntax = " [ <server> ]";
 		generate_token();
 	};

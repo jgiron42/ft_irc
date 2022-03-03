@@ -11,6 +11,7 @@ class part_command : public command {
 public:
 	part_command(class client &c, class server &s) : command(c, s) {
 		name = "PART";
+		this->s.commands_count[this->name]++;
 		syntax = "<channel> { ',' <channel> }";
 		generate_token();
 	};

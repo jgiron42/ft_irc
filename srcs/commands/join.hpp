@@ -12,6 +12,7 @@ class join_command : public command {
 public:
 	join_command(class client &c, class server &s) : command(c, s) {
 		name = "JOIN";
+		this->s.commands_count[this->name]++;
 		syntax = "<canal> { ',' <canal> } <key> { ',' <key> }";
 		generate_token();
 	};

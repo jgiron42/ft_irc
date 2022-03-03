@@ -11,6 +11,7 @@ class time_command : public command {
 public:
 	time_command(class client &c, class server &s) : command(c, s) {
 		name = "TIME";
+		this->s.commands_count[this->name]++;
 		syntax = "[ <server> ]";
 		generate_token();
 	};

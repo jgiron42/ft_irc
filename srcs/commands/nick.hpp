@@ -12,6 +12,7 @@ public:
 	nick_command(class client &c, class server &s) : command(c, s) {
 		this->must_register = false;
 		name = "NICK";
+		this->s.commands_count[this->name]++;
 		syntax = "<nickname> [<hopcount>]";
 		generate_token();
 	};
