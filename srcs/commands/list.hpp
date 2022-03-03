@@ -6,6 +6,9 @@
 #define FT_IRC_LIST_HPP
 
 #include "command.hpp"
+#include <string>
+#include <iostream>
+#include <sstream>
 
 class list_command : public command {
 public:
@@ -15,10 +18,20 @@ public:
 		generate_token();
 	};
 
-	void send_channel(const std::string &name, const std::string &topic) {
-		if (name.empty())
+	void visible_channel(channel &chan) {
+		unsigned int visible = 0;
+		for (std::map<client *, bool>::iterator it = chan.members.begin(); it != chan.members.end(); it++) {
+			if (it->first->invisible)
+				visible++;
+		}
+		this->args["visible"].push_front(SSTR(visible));
+	}
+
+	void send_channel(channel &chan, std::string topic, std::string name) {
+		if (chan.id.empty())
 			return ;
 		this->args["channel"].push_front(name);
+		visible_channel(chan);
 		this->args["topic"].push_front(topic);
 		this->reply_nbr(RPL_LIST);
 	}
@@ -28,12 +41,12 @@ public:
 
 		while (channels != this->s.channels.end()) {
 			if (channels->second.members.find(&this->c) != channels->second.members.end())
-				send_channel(channels->first, channels->second.topic);
+				send_channel(channels->second, channels->second.topic, channels->first);
 			else {
 				if (!channels->second.private_channel && channels->second.secret_channel == false)
-					send_channel(channels->first, channels->second.topic);
+					send_channel(channels->second, channels->second.topic, channels->first);
 				else if (channels->second.private_channel && channels->second.secret_channel == false)
-					send_channel(channels->first, "");
+					send_channel(channels->second, "", channels->first);
 			}
 			channels++;
 		}
@@ -47,17 +60,15 @@ public:
 
 		while (channels != channel_list.end()) {
 			if (is_member_channel(this->c.nickname, *channels))
-				send_channel(*channels, this->c.channels[*channels]->topic);
+				send_channel(*this->c.channels[*channels], this->c.channels[*channels]->topic, *channels);
 			else {
-				if (this->s.channels.find(*channels) == this->s.channels.end()) {
-					channels++;
-					continue ;
-				}
+				if (this->s.channels.find(*channels) == this->s.channels.end())
+					return ;
 				tmp = this->s.channels.find(*channels)->second;
 				if (!tmp.private_channel && tmp.secret_channel == false)
-					send_channel(*channels, tmp.topic);
+					send_channel(tmp, tmp.topic, *channels);
 				else if (tmp.private_channel && tmp.secret_channel == false)
-					send_channel(*channels, "");
+					send_channel(tmp, "Prv", *channels);
 			}
 			channels++;
 		}
