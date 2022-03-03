@@ -29,6 +29,7 @@ public:
 		for (std::map<client *, bool>::iterator i = chan.members.begin(); i != chan.members.end(); i++)
 			i->first->send(this->c, "JOIN", chan.id);
 		this->send_names(chan);
+		this->send_numeric(RPL_ENDOFNAMES, this->c);
 	}
 
 	void execute() { // TODO: join on invite

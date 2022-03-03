@@ -43,8 +43,8 @@ public:
             return;
         }
         class client *cli = s.users.find(user)->second;
-        cli->leave_chan(*chan);
         this->c.notice(*chan, "KICK", chan->id + " :" + comment);
+        cli->leave_chan(*chan);
 
             /*
              if (this->args.size() <= 2)

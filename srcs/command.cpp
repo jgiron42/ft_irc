@@ -328,7 +328,6 @@ void command::send_names(channel &chan) {
 		this->args["user_list"].push_front(user_list);
 		this->send_numeric(RPL_NAMREPLY, this->c);
 	}
-	this->send_numeric(RPL_ENDOFNAMES, this->c);
 }
 
 void command::send_names(void) {
@@ -358,8 +357,6 @@ void command::send_names(void) {
 		this->args["user_list"].push_front(user_list);
 		this->send_numeric(RPL_NAMREPLY, this->c);
 	}
-	this->send_numeric(RPL_ENDOFNAMES, this->c);
-
 }
 
 void command::send_names(const std::string &chan) {
@@ -372,7 +369,6 @@ void command::send_names(const std::string &chan) {
 	else
 	{
 		this->args["channel"].push_front(chan);
-		this->send_numeric(RPL_ENDOFNAMES, this->c);
 	}
 }
 

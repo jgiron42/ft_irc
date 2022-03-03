@@ -27,6 +27,7 @@ public:
 				this->send_names(i->second);
 			this->send_names("*");
 		}
+        this->send_numeric(RPL_ENDOFNAMES, this->c);
 	}
 };
 

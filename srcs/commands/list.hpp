@@ -21,7 +21,7 @@ public:
 	void visible_channel(channel &chan) {
 		unsigned int visible = 0;
 		for (std::map<client *, bool>::iterator it = chan.members.begin(); it != chan.members.end(); it++) {
-			if (it->first->invisible)
+			if (!it->first->invisible)
 				visible++;
 		}
 		this->args["visible"].push_front(SSTR(visible));
