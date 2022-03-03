@@ -378,7 +378,11 @@ void command::send_names(const std::string &chan) {
 
 
 bool command::is_member_channel(std::string &name, std::string &channel) {
+	if (this->s.users.find(name) == this->s.users.end())
+		return false;
     if (this->s.users[name]) {
+		if (this->s.channels.find(channel) == this->s.channels.end())
+			return false;
         client *to_find = this->s.users[name];
         if (this->s.channels[channel].members.find(to_find) != this->s.channels[channel].members.end())
             return true;

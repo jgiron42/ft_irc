@@ -15,31 +15,62 @@ public:
 		generate_token();
 	};
 
-	void send_channel(std::string name, std::string topic) {
-		this->args["channel"].push_back(name);
-		this->args["topic"].push_back(topic);
+	void send_channel(const std::string &name, const std::string &topic) {
+		if (name.empty())
+			return ;
+		this->args["channel"].push_front(name);
+		this->args["topic"].push_front(topic);
 		this->reply_nbr(RPL_LIST);
+	}
+
+	void print_canals() {
+		std::map<std::string, channel>::iterator channels = this->s.channels.begin();
+
+		while (channels != this->s.channels.end()) {
+			if (channels->second.members.find(&this->c) != channels->second.members.end())
+				send_channel(channels->first, channels->second.topic);
+			else {
+				if (!channels->second.private_channel && channels->second.secret_channel == false)
+					send_channel(channels->first, channels->second.topic);
+				else if (channels->second.private_channel && channels->second.secret_channel == false)
+					send_channel(channels->first, "");
+			}
+			channels++;
+		}
+	}
+
+	void print_choosen_canals() {
+		std::list<std::string> channel_list;
+		this->get_arg("canal", channel_list);
+		std::list<std::string>::iterator channels = channel_list.begin();
+		channel tmp;
+
+		while (channels != channel_list.end()) {
+			if (is_member_channel(this->c.nickname, *channels))
+				send_channel(*channels, this->c.channels[*channels]->topic);
+			else {
+				if (this->s.channels.find(*channels) == this->s.channels.end()) {
+					channels++;
+					continue ;
+				}
+				tmp = this->s.channels.find(*channels)->second;
+				if (!tmp.private_channel && tmp.secret_channel == false)
+					send_channel(*channels, tmp.topic);
+				else if (tmp.private_channel && tmp.secret_channel == false)
+					send_channel(*channels, "");
+			}
+			channels++;
+		}
 	}
 
 	void execute() {
 		std::string canal;
 		this->get_arg("canal", canal);
-		std::map<std::string, channel>::iterator channels = this->s.channels.begin();
-
 		this->reply_nbr(RPL_LISTSTART);
-		if (canal.empty()) {
-			while (channels != this->s.channels.end()) {
-				if (channels->second.members.find(&this->c) != channels->second.members.end())
-					send_channel(channels->first, channels->second.topic);
-				else {
-					if (channels->second.private_channel)
-						send_channel(channels->first, "");
-					else if (channels->second.secret_channel == false)
-						send_channel(channels->first, channels->second.topic);
-				}
-				channels++;
-			}
-		}
+		if (canal.empty())
+			print_canals();
+		else
+			print_choosen_canals();
 		this->reply_nbr(RPL_LISTEND);
 	};
 };
