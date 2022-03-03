@@ -10,6 +10,31 @@ server::server(void) :  clients(), fds(), hostname(SERVERNAME), history_size(0){
 	this->open_socket("/tmp/test_unix_socket");*/
 //	this->open_socket(INADDR_ANY, PORT + 1);
 	this->log("server created");
+	commands_count["AWAY"] = 0;
+	commands_count["INVITE"] = 0;
+	commands_count["JOIN"] = 0;
+	commands_count["KILL"] = 0;
+	commands_count["NICK"] = 0;
+	commands_count["NAMES"] = 0;
+	commands_count["NOTICE"] = 0;
+	commands_count["PASS"] = 0;
+	commands_count["PONG"] = 0;
+	commands_count["PRIVMSG"] = 0;
+	commands_count["QUIT"] = 0;
+	commands_count["TIME"] = 0;
+	commands_count["USER"] = 0;
+	commands_count["VERSION"] = 0;
+	commands_count["MODE"] = 0;
+	commands_count["KICK"] = 0;
+	commands_count["PART"] = 0;
+	commands_count["TOPIC"] = 0;
+	commands_count["LIST"] = 0;
+    commands_count["INFO"] = 0;
+    commands_count["ADMIN"] = 0;
+    commands_count["WHO"] = 0;
+    commands_count["OPER"] = 0;
+	commands_count["STATS"] = 0;
+    commands_count["WALLOPS"] = 0;
 }
 
 void server::open_socket(long ip, short port) {
