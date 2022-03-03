@@ -52,6 +52,11 @@ public:
                 this->reply_nbr(RPL_STATSLLINE);
                 break ;
             case 'm':
+				for (std::map<std::string, unsigned int>::iterator it = this->s.commands_count.begin(); it != this->s.commands_count.end(); it++) {
+					this->args["command"].push_front(it->first);
+					this->args["count"].push_front(SSTR(it->second));
+					this->reply_nbr(RPL_STATSCOMMANDS);
+				}
                 break ;
             //case 'o':
             //      break ;
