@@ -102,7 +102,7 @@ void server::routine() {
 	int ret;
 	time_t now = time(NULL);
 
-	ret = poll(this->fds.begin().operator->(), this->fds.size(), 100);
+	ret = poll(this->fds.begin().operator->(), this->fds.size(), 10);
 	if (ret == -1 && errno != EINTR)
 		throw syscall_failure(my_strerror((char *)"poll: ", errno));
 	if (ret == 0)
@@ -195,12 +195,19 @@ void server::dispatch(client &c) {
 		std::cout << "command: |" << parse->command_str << "|" << std::endl;
 #endif
 		command *com = get_command(parse->command_str)(c, *this);
-		com->name = parse->command_str;
-		if (com->must_register && !c.identified)
-			com->reply_nbr(ERR_NOTREGISTERED);
-		else {
-			com->parse(*parse);
-			com->execute();
+		try {
+			com->name = parse->command_str;
+			if (com->must_register && !c.identified)
+				com->reply_nbr(ERR_NOTREGISTERED);
+			else {
+				com->parse(*parse);
+				com->execute();
+			}
+		}
+		catch (std::exception &e)
+		{
+			delete com;
+			throw e;
 		}
 		delete com;
 		delete parse;

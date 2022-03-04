@@ -87,10 +87,17 @@ message *get_command(std::string str, message *res) {
 message *parse_msg(std::string str)
 {
     message *res = init_msg();
-    if (str.at(0) == ':')
-        res->prefix = get_prefix(str);
-    res = get_command(str, res);
-    res->params = res->tmp_to_parse;
+    try {
+        if (str.at(0) == ':')
+            res->prefix = get_prefix(str);
+        res = get_command(str, res);
+        res->params = res->tmp_to_parse;
+    }
+    catch (std::exception &e)
+    {
+        delete res;
+        throw e;
+    }
     return res;
 }
 
