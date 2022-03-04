@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include "iostream"
 #include <cstring>
+#include "utils.hpp"
 
 message *init_msg(void){
     message *res = new message;
@@ -79,8 +80,8 @@ message *get_command(std::string str, message *res) {
     res->command_str = cmd;
 	size_t end = cmd.find_last_not_of(" ");
 	res->command_str = (end == std::string::npos) ? std::string("") : cmd.substr(0, end + 1);
-	for(unsigned int i = 0; i < res->command_str.length(); i++)
-	    res->command_str[i] = toupper(res->command_str[i]);
+	for(unsigned long int i = 0; i < res->command_str.length(); i++)
+	    res->command_str[i] = ft_toupper(res->command_str[i]);
 	return res;
 }
 

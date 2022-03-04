@@ -21,5 +21,11 @@ const char *my_strerror(char *s1, int err);
 bool	is_channel(const std::string &);
 bool	is_valid_nickname(const std::string &nick);
 void	log(const std::string &prefix, const std::string &str, log_type type);
+void	ft_memcpy(char *dst, const char *src, size_t size);
+void	ft_bzero(void *s, size_t n);
+char	ft_toupper(char c);
+int	ft_isdigit(int c);
+int	ft_isalpha(int c);
+int	ft_isalnum(int c);
 
 #endif //FT_IRC_UTILS_HPP

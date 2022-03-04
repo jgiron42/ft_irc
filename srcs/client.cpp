@@ -24,7 +24,7 @@ client::client(server &s) : s(s),
 							last_activity(std::time(NULL)),
 							ping_send(false)
 {
-	bzero(this->buf, 512);
+	ft_bzero(this->buf, 512);
 }
 client::client(int fd, server &s)  : s(s),
 									 channels(),
@@ -49,7 +49,7 @@ client::client(int fd, server &s)  : s(s),
 									 last_activity(std::time(NULL)),
 									 ping_send(false)
 {
-	bzero(this->buf, 512);
+	ft_bzero(this->buf, 512);
 #ifdef __OSX__
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1) // syscall
 		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
@@ -81,7 +81,7 @@ client &client::operator=(const client &src) {
 	this->notices = src.notices;
 	this->wallops = src.wallops;
 	this->op = src.op;
-	memcpy(this->buf, src.buf, 512);
+	ft_memcpy((char *)this->buf, (const char *)src.buf, 512);
 	this->end = src.end;
 	this->begin = src.begin;
 	this->sock = src.sock;

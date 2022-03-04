@@ -69,7 +69,7 @@ void server::open_socket(std::string const &path) {
 	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1)
 		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
 	struct sockaddr_un sun = {};
-	memcpy(sun.sun_path, path.data(), path.length() + 1);
+	ft_memcpy((char *)sun.sun_path, (const char *)path.data(), path.length() + 1);
 	sun.sun_family = AF_UNIX;
 	if(bind(sock, (sockaddr *) &sun, sizeof sun) == -1)
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));

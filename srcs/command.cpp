@@ -172,18 +172,6 @@ void command::parse_recurse(std::string str)
     }
 }
 
-
-char *ft_string_dup(std::string str)
-{
-	const char *data = str.data();
-	char *ret = (char*)malloc(str.length() + 1);
-
-	for (unsigned long i = 0; i < str.length(); i++)
-		ret[i] = data[i];
-	ret[str.length()] = 0;
-	return (ret);
-}
-
 void command::parse(message m) {
 	try {
 		this->args["command"].push_back(m.command_str);
