@@ -44,7 +44,7 @@ public:
             return;
         }
         class client *cli = s.users.find(user)->second;
-        this->c.notice(*chan, "KICK", chan->id + " :" + comment);
+        this->c.notice(*chan, "KICK", chan->id + " :" + cli->nickname);
         cli->leave_chan(*chan);
 	}
 };
