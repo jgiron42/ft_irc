@@ -160,8 +160,6 @@ void server::routine_client(struct pollfd &fd, time_t now)
 			return;
 		} else if (ret > 0)
 			this->dispatch(*current_cli);
-		else
-			throw syscall_failure(my_strerror((char *) "recv: ", errno));
 	}
 	if (fd.revents & POLLOUT && !current_cli->to_send.empty()) {
 		if (current_cli->to_send.front().empty())
