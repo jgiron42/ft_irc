@@ -24,8 +24,8 @@ public:
 	std::string			id;
 	std::string			topic;
 	std::map<client *, bool>	members;
-	std::set<std::string> invites;
-	std::set<std::string> speakers;
+	std::set<std::string, comp_nick> invites;
+	std::set<std::string, comp_nick> speakers;
 	bool 				private_channel : 1;
 	bool 				secret_channel : 1;
 	bool 				invite_only : 1;

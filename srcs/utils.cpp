@@ -134,3 +134,12 @@ int	ft_isalnum(int c)
 	return (ft_isdigit(c) || ft_isalpha(c));
 }
 
+bool	comp_nick::operator()(const std::string &n1, const std::string &n2) const {
+	unsigned long int i;
+	for (i = 0; i < n1.length() && i < n2.length(); i++)
+	{
+		if (ft_toupper(n1[i]) != ft_toupper(n2[i]))
+			break;
+	}
+	return (ft_toupper(n1[i]) < ft_toupper(n2[i]));
+}

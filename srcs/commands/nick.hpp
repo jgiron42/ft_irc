@@ -21,8 +21,6 @@ public:
 		if (this->args.size() <= 1)
 			this->reply_nbr(ERR_NONICKNAMEGIVEN);
 		this->get_arg("nickname", tmp);
-		for (unsigned long int i = 0; i < tmp.length(); i++)
-			tmp[i] = ft_toupper(tmp[i]);
 		if (!is_valid_nickname(tmp))
 		{
 			this->reply_nbr(ERR_ERRONEUSNICKNAME);

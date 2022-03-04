@@ -20,6 +20,7 @@
 #include <poll.h>
 #include "parse_conf.hpp"
 #include <stdlib.h>
+#include "utils.hpp"
 
 #define LIVENESS_TIMEOUT	120
 #define PING_TIMEOUT		10
@@ -57,7 +58,7 @@ public:
 	void	log(const std::string &);
 	channel	&create_chan(const std::string &name, std::string key);
 	std::map<std::string, channel> channels;
-	std::map<std::string, client *> users; // map nickname to user
+	std::map<std::string, client *, comp_nick> users; // map nickname to user
 	std::map<std::string, unsigned int> commands_count;
 	std::set<client *> operators;
 	std::string password;

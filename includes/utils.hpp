@@ -27,5 +27,11 @@ char	ft_toupper(char c);
 int	ft_isdigit(int c);
 int	ft_isalpha(int c);
 int	ft_isalnum(int c);
+class	comp_nick{
+public:
+	comp_nick(){}
+	comp_nick(const comp_nick &){}
+	bool	operator()(const std::string &n1, const std::string &n2) const;
+};
 
 #endif //FT_IRC_UTILS_HPP
