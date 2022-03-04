@@ -118,14 +118,14 @@ void parse_conf (server &s, const std::string &file){
         throw ft_irc::conf_file_name_error();
 
     std::string read;
-    typedef struct s_type{char c; void (*f)(std::string target, server &serv);} t_type;
+    typedef struct s_type{char c; void (*f)(std::string target, server &serv); bool o;} t_type;
     t_type lst_conf[NB_OPT] = {
-            {'M', &set_server},
-            {'A', &administrative_information},
-            {'P', &allow_port},
-            {'I', &client_authorization},
-            {'X', &special},
-            {'O', &oper_author}
+            {'M', &set_server, true},
+            {'A', &administrative_information, true},
+            {'P', &allow_port, false},
+            {'I', &client_authorization, true},
+            {'X', &special, true},
+            {'O', &oper_author, true}
     };
     int i;
     int line = 0;
@@ -135,12 +135,17 @@ void parse_conf (server &s, const std::string &file){
             for (i = 0; i < NB_OPT; i++) {
                 if (read[0] == lst_conf[i].c) {
                     lst_conf[i].f(read, s);
+                    lst_conf[i].o = true;
                     break;
                 }
             }
             if (read[0] != '#' && i == NB_OPT && read.length() != 0) {
                 throw ft_irc::conf_file_error();
             }
+        }
+        for (int i = 0; i < NB_OPT; i++){
+            if (lst_conf[i].o != true)
+                throw ft_irc::conf_file_name_error();
         }
     }
     catch (std::exception &a) {
