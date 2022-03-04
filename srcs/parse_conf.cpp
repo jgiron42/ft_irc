@@ -32,10 +32,16 @@ std::string get_value(size_t target, std::string to_parse) {
 
 static void set_server(std::string target, server &serv) {
     in_addr addr;
+	std::string tmp;
 
     serv.hostname = get_value(1, target);
-    inet_aton(get_value(2, target).c_str(), &addr);
-    serv.info.ip = addr.s_addr;
+	tmp = get_value(2, target);
+	if (!tmp.empty()) {
+		inet_aton(tmp.c_str(), &addr);
+		serv.info.ip = addr.s_addr;
+	}
+	else
+		serv.info.ip = INADDR_ANY;
     serv.info.location = get_value(3, target);
     std:: string port_str = get_value(4, target);
     if (port_str.empty())
@@ -58,7 +64,8 @@ static void allow_port(std::string target, server &serv) {
     in_addr addr;
     std::string ip = get_value(1, target);
     std::string port = get_value(4, target);
-    if (inet_aton(ip.c_str(), &addr))
+	addr.s_addr = INADDR_ANY;
+    if (ip.empty() || inet_aton(ip.c_str(), &addr))
         serv.open_socket(addr.s_addr, (short)atoi(port.c_str()));
     else
         serv.open_socket(ip);

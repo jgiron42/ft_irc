@@ -187,7 +187,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 void server::dispatch(client &c) {
 	std::string str;
 
-    while ((str = c.popLine()) != "\n" && !str.empty())
+    while ((str = c.popLine()) != CRLF && !str.empty())
 	{
 		::log("[" + c.nickname + "](" + c.getIP() + ") <= ", str, MSG_IN);
 		message *parse = parse_msg(str);
@@ -275,7 +275,7 @@ channel	&server::create_chan(const std::string &name, std::string key = "") {
 }
 
 void server::send_ping(client &c) {
-	c.send("PING " + this->hostname + "\n");
+	c.send("PING " + this->hostname + CRLF);
 	c.ping_send = true;
 }
 
