@@ -275,7 +275,7 @@ channel	&server::create_chan(const std::string &name, std::string key = "") {
 }
 
 void server::send_ping(client &c) {
-	c.send("PING " + this->hostname + CRLF);
+	c.send("PING", this->hostname);
 	c.ping_send = true;
 }
 

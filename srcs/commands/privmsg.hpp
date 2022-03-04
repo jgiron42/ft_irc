@@ -34,23 +34,17 @@ public:
 		for (std::map<client *, bool>::iterator i = c->members.begin(); i != c->members.end(); i++) {
 			if (i->first == &this->c)
 				continue;
-			else if (i->first->away){
-				this->args["nickname"].push_front(name);
-				this->args["message"].push_front(i->first->away_message);
-				this->reply_nbr(RPL_AWAY);
-				this->replied = false;
-			}
 			else
-				i->first->send(this->c, this->name, name + " :" + text);
+				i->first->send(this->c, this->name, text, name);
 		}
 
 	}
 
 	void	send_user(const std::string &name, const std::string &text)
 	{
-		if (!this->s.users[name]->away)
-			this->s.users[name]->send(this->c, this->name, name + " :" + text);
-		else {
+		this->s.users[name]->send(this->c, this->name, text, "");
+		if (this->s.users[name]->away)
+		{
 			this->args["nickname"].push_front(name);
 			this->args["message"].push_front(this->s.users[name]->away_message);
 			this->reply_nbr(RPL_AWAY);

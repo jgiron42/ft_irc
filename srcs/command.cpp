@@ -247,7 +247,7 @@ void command::reply_nbr(int n) {
 void command::reply(std::string command, std::string str) {
 	if (!this->replied)
 	{
-		this->c.send(this->s.hostname, command, str);
+		this->c.send(this->s.hostname, command, str, "");
 		this->replied = true;
 	}
 }

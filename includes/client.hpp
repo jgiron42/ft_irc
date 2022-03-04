@@ -29,12 +29,12 @@ public:
 	std::string popLine();
 	std::deque<std::string> to_send;
 	void	send(const std::string &);
-	void	send(const std::string &prefix, int command, const std::string &str);
-	void	send(const std::string &prefix, const std::string &command, const std::string &str);
-	void	send(const client &from, int command, const std::string &str);
-	void	send(const client &from, const std::string & command, const std::string &str);
-	void	send(int command, const std::string &str);
-	void	send(const std::string & command, const std::string &str);
+	void	send(const std::string &prefix, int command, const std::string &str, const std::string &dst = "");
+	void	send(const std::string &prefix, const std::string &command, std::string str, std::string dst = "");
+	void	send(const client &from, int command, const std::string &str, const std::string &dst = "");
+	void	send(const client &from, const std::string & command, const std::string &str, const std::string &dst = "");
+	void	send(int command, const std::string &str, const std::string &dst = "");
+	void	send(const std::string & command, const std::string &str, const std::string &dst = "");
 	void	notice(channel &, const std::string &command, const std::string &);
 	std::string getIP() const;
 	void	setIP(const std::string &);

@@ -136,44 +136,58 @@ std::string client::popLine() {
 	ret.find(CRLF) > (unsigned long)(ABS(this->end - this->begin)))
 		return ("");
 	ret = ret.substr(0, ret.find(CRLF));
-	this->begin += ret.length() + 1;
+	this->begin += ret.length() + 2;
 	this->begin %= 512;
 	return (ret);
 }
 
 
-void client::send(const client &from, int command, const std::string &str) {
+void client::send(const client &from, int command, const std::string &str, const std::string &dst) {
 	std::string prefix = from.nickname;
 	if (!from.username.empty())
 		prefix.append("!" + from.username);
 	if (!from.username.empty())
 		prefix.append("@" + from.hostname);
-	this->send(prefix, command, str);
+	this->send(prefix, command, str, dst);
 }
 
-void client::send(const client &from, const std::string & command, const std::string &str) {
+void client::send(const client &from, const std::string & command, const std::string &str, const std::string &dst) {
 	std::string prefix = from.nickname;
 	if (!from.username.empty())
 		prefix.append("!" + from.username);
 	if (!from.username.empty())
 		prefix.append("@" + from.hostname);
-	this->send(prefix, command, str);
+	this->send(prefix, command, str, dst);
 }
 
-void client::send(int command, const std::string &str) {
-	this->send(this->s.hostname, command, str);
+void client::send(int command, const std::string &str, const std::string &dst) {
+	this->send(this->s.hostname, command, str, dst);
 }
 
-void client::send(const std::string & command, const std::string &str) {
-	this->send(this->s.hostname, command, str);
+void client::send(const std::string & command, const std::string &str, const std::string &dst) {
+	this->send(this->s.hostname, command, str, dst);
 }
 
-void client::send(const std::string &prefix, int command, const std::string &params) {
-	this->send(":" + prefix + " " + SSTR(command) + " " + this->nickname + " " + params);
+void client::send(const std::string &prefix, int command, const std::string &params, const std::string &dst) {
+	this->send(prefix, SSTR(command), params, dst);
 }
 
-void client::send(const std::string &prefix, const std::string &command, const std::string &params) {
-	this->send(":" + prefix + " " + SSTR(command) + " " + params);
+void client::send(const std::string &prefix, const std::string &command, std::string params, std::string dst)
+{
+	if (dst.empty())
+		dst = this->nickname;
+	std::string str = ":" + prefix + " " + command + " " + dst + " ";
+	std::string tmp;
+	int	base_length = str.length();
+	while (!params.empty())
+	{
+		tmp = params.substr(0, 510 - base_length);
+		this->send(str + tmp);
+		if (base_length + params.length() > 510)
+			params = params.substr(510 - base_length, std::string::npos);
+		else
+			params = "";
+	}
 }
 
 
@@ -184,7 +198,7 @@ void client::send(const std::string &str) {
 
 void client::notice(channel &c, const std::string &command, const std::string &str) {
 	for (std::map<client *, bool>::iterator i = c.members.begin(); i != c.members.end(); i++)
-		i->first->send(*this,command,str);
+		i->first->send(*this, command, str);
 }
 
 std::string client::getIP() const {

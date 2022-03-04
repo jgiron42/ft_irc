@@ -26,7 +26,7 @@
 #define MAX_CLIENT			1000
 #define PORT				1111
 #define VERSION				"1"
-#define CRLF				"\n"
+#define CRLF				"\r\n"
 #define DEBUG_LVL			0
 #define SERVERNAME			"ft_ic"
 

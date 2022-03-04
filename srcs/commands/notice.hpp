@@ -30,14 +30,14 @@ public:
 			if (i->first == &this->c)
 				continue;
 			else
-				i->first->send(this->c, this->name, name + " :" + text);
+				i->first->send(this->c, this->name, text, c->id);
 		}
 
 	}
 
 	void	send_user(const std::string &name, const std::string &text)
 	{
-		this->s.users[name]->send(this->c, this->name, name + " :" + text);
+		this->s.users[name]->send(this->c, this->name, text);
 	}
 
 	void execute() {
