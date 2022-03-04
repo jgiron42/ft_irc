@@ -176,7 +176,7 @@ void client::send(const std::string &prefix, const std::string &command, std::st
 {
 	if (dst.empty())
 		dst = this->nickname;
-	std::string str = ":" + prefix + " " + command + " " + dst + " ";
+	std::string str = ":" + prefix + " " + command + " " + dst + " :";
 	std::string tmp;
 	int	base_length = str.length();
 	while (!params.empty())
