@@ -37,10 +37,11 @@ int main(int ac, char **av)
         if (ac == 2)
             parse_conf(s, av[1]);
         else {
-            std::cout << "Password = " << av[2] << std::endl;
-            s.open_socket(INADDR_ANY, (short)atoi(av[1]));
-            s.password = av[2];
-        }
+			s.open_socket(INADDR_ANY, (short)atoi(av[1]));
+			s.password = av[2];
+			if (!s.password.empty())
+				s.log("Password = " + s.password);
+		}
 
         signal(SIGTERM, stop);
         signal(SIGINT,  stop);

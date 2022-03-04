@@ -23,7 +23,7 @@ SRCS	 	=	./srcs/main.cpp		\
 
 NAME		=	ircserv
 
-FLAGS		=	 -std=c++98 -g3 -Wall -Wextra -Werror
+FLAGS		=	 -std=c++98 -g3 -Wall -Wextra -Werror -Ofast
 
 OBJS		=	$(SRCS:.cpp=.o)
 
