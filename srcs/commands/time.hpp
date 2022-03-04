@@ -16,7 +16,7 @@ public:
 		generate_token();
 	};
 	void execute() {
-		std::time_t t = std::time(0);   // get time now
+		std::time_t t = std::time(0);
 		std::tm* now = std::localtime(&t);
 		this->args["time"].push_front(SSTR(now->tm_mday << '-'
 				<< (now->tm_mon + 1) << '-'

@@ -66,7 +66,6 @@ public:
 	typedef std::runtime_error syscall_failure;
 	struct info {
 	    long ip;
-	  //  std::string host_name;
 	    std::string version;
 	    std::string version_comment;
 	    std::string debug_level;
@@ -81,7 +80,6 @@ public:
         std::vector<t_oper_auth> oper;
 		std::string motd;
 	} info;
-  //  std::string motd;
 };
 
 

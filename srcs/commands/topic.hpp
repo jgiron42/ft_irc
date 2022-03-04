@@ -7,12 +7,6 @@
 
 #include "command.hpp"
 
-
-/*
-    Petit probleme, topic str disparait FIX
-*/
-
-
 class topic_command : public command {
 public:
 	topic_command(class client &c, class server &s) : command(c, s) {

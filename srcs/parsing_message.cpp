@@ -61,7 +61,7 @@ message *get_command(std::string str, message *res) {
     else
         cmd = str;
     while ( (i = cmd.find_first_of(" ", 0)) == 0)
-        cmd = cmd.substr(i, cmd.length()); // TODO: <- sous optimal
+        cmd = cmd.substr(i, cmd.length());
     if (i > cmd.length()) {
         i = cmd.length() - 1;
     }
@@ -84,40 +84,13 @@ message *get_command(std::string str, message *res) {
 	return res;
 }
 
-//t_params *get_param(std::string str){
-//    if (str.length() == 0)
-//        return (NULL);
-//    t_params *res = new s_params;
-//    res->next = NULL;
-//    size_t i = str.find_first_of(" ", 0);
-//    if (i == std::string::npos)
-//        i = str.length();
-//    while (i == 0){
-//        str = str.substr(1, str.length());
-//        i = str.find_first_of(" ", 0);
-//    }
-//    i = str.find_first_of(" ", 0);
-//    if (i == std::string::npos)
-//        i = str.length();
-//    res->str = str.substr(0, i);
-//    str = str.substr(i, str.length());
-//    i = str.find_first_of(" ", 0);
-//    while (i == 0){
-//        str = str.substr(1, str.length());
-//        i = str.find_first_of(" ", 0);
-//    }
-//    if (str.length() != 0 || !(str.empty()))
-//        res->next = get_param(str);
-//    return res;
-//}
-
 message *parse_msg(std::string str)
 {
     message *res = init_msg();
     if (str.at(0) == ':')
         res->prefix = get_prefix(str);
     res = get_command(str, res);
-    res->params = res->tmp_to_parse; // get_param(res->tmp_to_parse);
+    res->params = res->tmp_to_parse;
     return res;
 }
 
@@ -139,57 +112,3 @@ void aff_parse(message *res){
             std::cout << "Servername = " << res->prefix->servername << std::endl;
     }
 }
-
-/*int main()
-{
-    std::string tmp;
-    message *m_tmp;
-
-        //std::getline(std::cin, tmp);
-        std::string ntm;
-        ntm = ":irc.botspot.com 266 ccoe :Current Global Users: 1";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-        ntm = "IRC Network ccoe!ccoe@192.168.1.59";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-//        m_tmp = parse_msg(ntm);
-//        aff_parse(m_tmp);
-        ntm = ":irc.botspot.com 003 ccoe :This server was created";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-        ntm = ":irc.botspot.com 004 ccoe irc.botspot.com";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-        ntm = "Unreal3.2.3 iowghraAsORTVSxNCWqBzvdHtGp";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-        ntm = ":irc.botspot.com 005 ccoe SAFELIST HCN";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-        ntm = ":irc.botspot.com 251 ccoe :There are 1 users and";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-        ntm = "NICK ok";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-        ntm = "NICK";
-        std::cout << "==========================" << std::endl;
-        std::cout << ntm << std::endl;
-        m_tmp = parse_msg(ntm);
-        aff_parse(m_tmp);
-}*/

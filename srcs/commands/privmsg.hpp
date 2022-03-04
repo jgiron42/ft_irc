@@ -77,10 +77,7 @@ public:
 				{
 					this->args["nickname"].push_front(*r);
 					this->reply_nbr(ERR_NOSUCHNICK);
-				} // TODO: masks
-				// user@host
-				// #mask
-				// $mask
+				}
 			}
 	}
 };

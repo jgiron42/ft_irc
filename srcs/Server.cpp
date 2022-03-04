@@ -5,10 +5,7 @@
 
 message *parse_msg(std::string str);
 
-server::server(void) :  clients(), fds(), hostname(SERVERNAME), history_size(0){ // syscall
-	/*this->open_socket(INADDR_ANY, PORT);
-	this->open_socket("/tmp/test_unix_socket");*/
-//	this->open_socket(INADDR_ANY, PORT + 1);
+server::server(void) :  clients(), fds(), hostname(SERVERNAME), history_size(0){
 	this->log("server created");
 	commands_count["AWAY"] = 0;
 	commands_count["INVITE"] = 0;
@@ -40,20 +37,19 @@ server::server(void) :  clients(), fds(), hostname(SERVERNAME), history_size(0){
 void server::open_socket(long ip, short port) {
 	char *ipstr = inet_ntoa(*(struct in_addr *)&ip);
 	this->log(SSTR("opening socket on " << ipstr << " " << port));
-//	free(ipstr);
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == -1)
 		throw syscall_failure(my_strerror((char *)"socket: ", errno));
 	int enable = 1;
-	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1) // syscall
+	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1)
 		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
 	struct sockaddr_in sin = {};
 	sin.sin_addr.s_addr = ip;
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
-	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1) // syscall
+	if(bind(sock, (sockaddr *) &sin, sizeof sin) == -1)
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));
-	if(listen(sock, MAX_CLIENT) == -1) // syscall
+	if(listen(sock, MAX_CLIENT) == -1)
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
 	this->sockets.insert(sock);
@@ -70,20 +66,20 @@ void server::open_socket(std::string const &path) {
 	if (sock == -1)
 		throw syscall_failure(my_strerror((char *)"socket: ", errno));
 	int enable = 1;
-	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1) // syscall
+	if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) == -1)
 		throw syscall_failure(my_strerror((char *)"setsockopt: ", errno));
 	struct sockaddr_un sun = {};
 	memcpy(sun.sun_path, path.data(), path.length() + 1);
 	sun.sun_family = AF_UNIX;
-	if(bind(sock, (sockaddr *) &sun, sizeof sun) == -1) // syscall
+	if(bind(sock, (sockaddr *) &sun, sizeof sun) == -1)
 		throw syscall_failure(my_strerror((char *)"bind: ", errno));
-	if(listen(sock, MAX_CLIENT) == -1) // syscall
+	if(listen(sock, MAX_CLIENT) == -1)
 		throw syscall_failure(my_strerror((char *)"listen: ", errno));
 	this->fds.push_back((struct pollfd){.fd = sock, .events = POLLIN});
 	this->sockets.insert(sock);
 #ifdef __OSX__
-	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1) // syscall
-		throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
+	if (fcntl(sock, F_SETFL, O_NONBLOCK) == -1)
+        throw syscall_failure(my_strerror((char *)"fcntl: ", errno));
 #endif
 }
 
@@ -106,11 +102,11 @@ void server::routine() {
 	int ret;
 	time_t now = time(NULL);
 
-	ret = poll(this->fds.begin().operator->(), this->fds.size(), 100); // syscall
+	ret = poll(this->fds.begin().operator->(), this->fds.size(), 100);
 	if (ret == -1 && errno != EINTR)
 		throw syscall_failure(my_strerror((char *)"poll: ", errno));
 	if (ret == 0)
-	{} // do something
+	{} // do the flop
 	for (size_t i = 0; i < this->fds.size(); i++)
 		if (!this->sockets.count(this->fds[i].fd))
 			this->routine_client(this->fds[i], now);
@@ -125,7 +121,7 @@ void server::routine_sock(struct pollfd fd)
 	socklen_t sinsize = sizeof csin;
 
 	if (fd.revents & POLLIN) {
-		if ((tmp = accept(fd.fd, (sockaddr *) &csin, &sinsize)) >= 0) // syscall
+		if ((tmp = accept(fd.fd, (sockaddr *) &csin, &sinsize)) >= 0)
 		{
 			if (this->fds.size() - this->sockets.size() > MAX_CLIENT)
 			{
@@ -154,7 +150,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 	if (!this->check_liveness(*current_cli, now))
 		return;
 	if (fd.revents & POLLIN) {
-		if ((ret = recv(fd.fd, buf, 10, 0)) > 0) // syscall
+		if ((ret = recv(fd.fd, buf, 10, 0)) > 0)
 		{
 			current_cli->bufappend(buf, ret);
 			current_cli->pong();
@@ -174,7 +170,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 			return;
 		}
 		if (send(fd.fd, current_cli->to_send.front().data(), current_cli->to_send.front().length(),
-				 0) == -1)  //syscall
+				 0) == -1)
 			throw syscall_failure(my_strerror((char *) "send: ", errno));
 		current_cli->to_send.pop_front();
 	}
@@ -191,9 +187,7 @@ void server::routine_client(struct pollfd &fd, time_t now)
 void server::dispatch(client &c) {
 	std::string str;
 
-    //if (this->users.find(c.nickname) == this->users.end())  //  Ajout de ces deux lignes pour eviter l'abort lors d'un /quit
-    //    return ;                                            //
-	while ((str = c.popLine()) != "\n" && !str.empty())
+    while ((str = c.popLine()) != "\n" && !str.empty())
 	{
 		::log("[" + c.nickname + "](" + c.getIP() + ") <= ", str, MSG_IN);
 		message *parse = parse_msg(str);
@@ -234,7 +228,6 @@ bool server::check_liveness(client &c, time_t now) {
 	{
 		if (now - c.last_activity > PING_TIMEOUT + LIVENESS_TIMEOUT)
 		{
-			// kill
 			this->disconnect(c.sock);
 			return (false);
 		}

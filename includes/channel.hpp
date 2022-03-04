@@ -23,7 +23,7 @@ public:
 
 	std::string			id;
 	std::string			topic;
-	std::map<client *, bool>	members; // the bool indicate if the member is a chop
+	std::map<client *, bool>	members;
 	std::set<std::string> invites;
 	std::set<std::string> speakers;
 	bool 				private_channel : 1;

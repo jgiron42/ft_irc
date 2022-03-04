@@ -46,35 +46,6 @@ public:
         class client *cli = s.users.find(user)->second;
         this->c.notice(*chan, "KICK", chan->id + " :" + comment);
         cli->leave_chan(*chan);
-
-            /*
-             if (this->args.size() <= 2)
-                 this->reply_nbr(ERR_NEEDMOREPARAMS);
-             std::string channel;
-             this->get_arg("channel", channel);
-             std::string user;
-             this->get_arg("user", user);
-             std::string comment;
-             this->get_arg("comment", comment);
-             class channel *chan = c.channels.find(channel)->second;
-             if (!is_channel(channel)) {
-                 this->reply_nbr(ERR_NOSUCHCHANNEL);
-                 return ;
-             }
-             if (chan->members.find(&this->c)->second == false) {
-                 this->reply_nbr(ERR_CHANOPRIVSNEEDED);
-                 return ;
-             }
-             if (is_member(user)) {
-                 if (!is_member_channel(user, channel)) {
-                     this->reply_nbr(ERR_NOTONCHANNEL);
-                     return ;
-                 }
-             }
-             else
-                 return ;
-             this->s.channels[channel].members.erase(get_client(user));
-             */
 	}
 };
 

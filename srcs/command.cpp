@@ -10,7 +10,6 @@
 #include "t_token.hpp"
 extern char * replies[512];
 
-// Need to delete the below func later (DEBUG only)
 std::string block_enum_printer(block b)
 {
 	if (b.bloc_type == ELEM)
@@ -32,9 +31,6 @@ std::string block_enum_printer(block b)
 
 	return ("unknown");
 }
-
-// END of debugging func
-
 
 void command::token_displayer(std::list<struct block> token) {
     std::list<struct block> tmp = token;
@@ -115,12 +111,6 @@ void
 
 
 enum scope {_OPT,_REP};
-
-// advance (char)
-// get_potential_delim
-
-//need to split the string
-//to handle this like before
 
 void command::parse_recurse(std::string str)
 {
@@ -224,12 +214,10 @@ void command::parse(message m) {
 			std::cerr << e.what()  << std::endl;
 			return ;
 		}
-//		else if (std::string(e.what()) == "syntax error")
-//				this->reply();
 	}
 }
 
-bool command::get_arg(const std::string &key, std::string &dst) { // true if successfull
+bool command::get_arg(const std::string &key, std::string &dst) {
 	std::map<std::string, std::list<std::string> >::iterator tmp =  this->args.find(key);
 	if (tmp == this->args.end())
 	{
@@ -237,11 +225,10 @@ bool command::get_arg(const std::string &key, std::string &dst) { // true if suc
 		return (false);
 	}
 	dst = tmp->second.front();
-//	tmp->second.pop_front();
 	return (true);
 }
 
-bool command::get_arg(const std::string &key, std::list<std::string> &dst) { // true if successfull
+bool command::get_arg(const std::string &key, std::list<std::string> &dst) {
 	std::map<std::string, std::list<std::string> >::iterator tmp =  this->args.find(key);
 	if (tmp == this->args.end())
 	{

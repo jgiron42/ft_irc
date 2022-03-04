@@ -46,12 +46,6 @@ public:
 		if (!this->c.identified && this->c.try_login()) {
 			if (this->c.identified)
 			{
-//				this->args["username"].push_front(this->c.username);
-//				this->args["hostname"].push_front(this->c.hostname);
-//				this->args["version"].push_front(this->s.info.version);
-//				this->args["date"].push_front(this->s.info.creation_date);
-//				this->args["date"].push_front(this->s.info.creation_date);
-//				this->reply_nbr(RPL_WELCOME);
 				this->args["servername"].push_front(this->s.hostname);
 				this->reply_nbr(RPL_MOTDSTART);
 				this->args["text"].push_front("");

@@ -42,10 +42,6 @@ public:
                 this->args["port"].push_back(port.str());
                 this->reply_nbr(RPL_STATSILINE);
                 break ;
-         //   case 'k':
-         //     std::cout << "show all host banned" << std::endl;
-                //Need to handle this later FIX
-         //     break ;
             case 'l':
                 this->args["servername"].push_back(SERVERNAME);
                 this->args["maxdepth"].push_back("1");
@@ -58,12 +54,6 @@ public:
 					this->reply_nbr(RPL_STATSCOMMANDS);
 				}
                 break ;
-            //case 'o':
-            //      break ;
-            //case 'y':
-            //      break ;
-            //case 'v':
-            //      break ;
             default :
                 return ;
         }

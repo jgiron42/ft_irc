@@ -32,9 +32,6 @@ public:
 			if (this->c.try_login()) {
 				if (this->c.identified)
 				{
-//					this->args["nickname"].push_front(this->c.nickname);
-//					this->reply_nbr(RPL_WELCOME);
-
 					this->args["servername"].push_front(this->s.hostname);
 					this->reply_nbr(RPL_MOTDSTART);
 					this->args["text"].push_front("");

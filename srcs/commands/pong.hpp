@@ -15,9 +15,7 @@ public:
 		syntax = "<server1> [ <server2> ]";
 		generate_token();
 	};
-	void execute() { // TODO: masks
-//		if (this->args.size() < 2)
-//			this->reply_nbr(ERR_NOORIGIN);
+	void execute() {
 		this->c.pong();
 	}
 };

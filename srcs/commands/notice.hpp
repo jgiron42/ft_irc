@@ -55,11 +55,6 @@ public:
 					this->send_channel(*r, text);
 				else if (this->s.users.count(*r))
 					this->send_user(*r, text);
-				// user@host
-				// channel
-				// nick
-				// #mask
-				// $mask
 			}
 	}
 };

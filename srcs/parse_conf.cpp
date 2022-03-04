@@ -53,10 +53,6 @@ static void administrative_information(std::string target, server &serv) {
     serv.info.other_info = get_value(3, target);
     serv.info.network_name = get_value(4, target);
 }
-//void    open_socket(long ip, short port);
-//void    open_socket(std::string dir , short port);
-
-
 
 static void allow_port(std::string target, server &serv) {
     in_addr addr;
@@ -115,7 +111,6 @@ void parse_conf (server &s, const std::string &file){
         throw ft_irc::conf_file_name_error();
 
     std::string read;
-    // TODO: ajouter un moyen de specifier un path pour le motd puis parser ce fichier -> le path est maitenant ranger dans la variable X, comment parser le fichier?
     typedef struct s_type{char c; void (*f)(std::string target, server &serv);} t_type;
     t_type lst_conf[NB_OPT] = {
             {'M', &set_server},

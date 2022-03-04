@@ -35,11 +35,9 @@ int main(int ac, char **av)
             return(1);
         }
         server s;
-        if (ac == 2) {
+        if (ac == 2)
             parse_conf(s, av[1]);
-            //s.print_info();
-        }
-        else{
+        else {
             std::cout << "Password = " << av[2] << std::endl;
             s.open_socket(16777343, (short)atoi(av[1]));
             s.password = av[2];
