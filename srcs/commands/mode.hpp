@@ -341,8 +341,6 @@ public:
             channel_mode(arguments);
         else if (!arguments["user"].empty()) {
             user_mode(arguments);
-            std::cout << "user mode" << std::endl;
-            std::cout << "is_user : " << is_member(arguments["user"].front()) << std::endl;
         }
         else {
             this->reply_nbr(ERR_NEEDMOREPARAMS);
